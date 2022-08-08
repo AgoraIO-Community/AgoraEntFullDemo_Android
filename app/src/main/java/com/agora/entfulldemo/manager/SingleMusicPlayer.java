@@ -1,0 +1,106 @@
+package com.agora.entfulldemo.manager;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.core.util.ObjectsCompat;
+
+import com.agora.entfulldemo.R;
+import com.agora.entfulldemo.api.model.User;
+import com.agora.entfulldemo.bean.MemberMusicModel;
+import com.agora.entfulldemo.utils.ToastUtil;
+
+import io.agora.musiccontentcenter.IAgoraMusicContentCenter;
+import io.agora.musiccontentcenter.IAgoraMusicPlayer;
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+public class SingleMusicPlayer extends BaseMusicPlayer {
+
+    public SingleMusicPlayer(Context mContext, int role, IAgoraMusicPlayer mPlayer) {
+        super(mContext, role, mPlayer);
+        RTCManager.getInstance().getRtcEngine().setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY_STEREO);
+    }
+
+    @Override
+    public void switchRole(int role) {
+        mLogger.d("switchRole() called with: role = [%s]", role);
+        mRole = role;
+
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishMediaPlayerId = mPlayer.getMediaPlayerId();
+        options.clientRoleType = role;
+        if (role == Constants.CLIENT_ROLE_BROADCASTER) {
+            options.publishAudioTrack = true;
+            options.publishMediaPlayerAudioTrack = true;
+        } else {
+            options.publishAudioTrack = false;
+            options.publishMediaPlayerAudioTrack = false;
+        }
+        RTCManager.getInstance().getRtcEngine().updateChannelMediaOptions(options);
+    }
+
+    @Override
+    public void prepare(@NonNull MemberMusicModel music) {
+        User mUser = UserManager.getInstance().getUser();
+        if (mUser == null) {
+            return;
+        }
+        onPrepareResource();
+        if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
+            switchRole(Constants.CLIENT_ROLE_BROADCASTER);
+            ResourceManager.Instance(mContext)
+                    .download(music, false)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<MemberMusicModel>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(@NonNull MemberMusicModel musicModel) {
+                            onResourceReady(musicModel);
+                            if (RTCManager.getInstance().preLoad(musicModel.songNo,true)) {
+                                open(musicModel);
+                            }
+//
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                        }
+                    });
+        } else {
+            switchRole(Constants.CLIENT_ROLE_AUDIENCE);
+            ResourceManager.Instance(mContext)
+                    .download(music, true)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<MemberMusicModel>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(@NonNull MemberMusicModel musicModel) {
+                            onResourceReady(musicModel);
+                            onMusicPlaingByListener();
+                            playByListener(musicModel);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                        }
+                    });
+        }
+    }
+}
