@@ -45,7 +45,7 @@ public class MainActivity extends BaseViewBindingActivity<ActivityMainBinding> {
         mainViewModel.setISingleCallback((type, data) -> {
             if (type == KtvConstant.CALLBACK_TYPE_USER_LOGOUT) {
                 UserManager.getInstance().logout();
-                mHealthActivityManager.popAllActivity();
+                finish();
                 PagePilotManager.pagePhoneLoginRegister();
             }
         });

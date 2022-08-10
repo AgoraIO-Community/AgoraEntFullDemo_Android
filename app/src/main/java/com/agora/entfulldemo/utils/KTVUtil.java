@@ -31,8 +31,8 @@ public class KTVUtil {
             Log.e("AGORA-KTV", e.getMessage());
     }
 
-    public static float dp2px(int dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
+    public static int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
     }
 
     public static <T> Class<T> getGenericClass(Class<?> clz, int index) {

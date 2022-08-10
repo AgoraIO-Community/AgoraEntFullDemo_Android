@@ -27,17 +27,17 @@ import com.agora.entfulldemo.dialog.MoreDialog;
 import com.agora.entfulldemo.dialog.MusicSettingDialog;
 import com.agora.entfulldemo.dialog.RoomChooseSongDialog;
 import com.agora.entfulldemo.dialog.UserLeaveSeatMenuDialog;
+import com.agora.entfulldemo.listener.OnButtonClickListener;
 import com.agora.entfulldemo.manager.PagePathConstant;
 import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.MVFragment;
 import com.agora.entfulldemo.models.room.live.holder.RoomPeopleHolder;
+import com.agora.entfulldemo.utils.ThreadManager;
 import com.agora.entfulldemo.utils.WifiUtils;
 import com.agora.entfulldemo.widget.DividerDecoration;
 import com.agora.entfulldemo.widget.LrcControlView;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.ThreadManager;
 import com.agora.data.model.AgoraMember;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
@@ -123,7 +123,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private void showUserLeaveSeatMenuDialog() {
         if (mUserLeaveSeatMenuDialog == null) {
             mUserLeaveSeatMenuDialog = new UserLeaveSeatMenuDialog(this);
-            mUserLeaveSeatMenuDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            mUserLeaveSeatMenuDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
 
@@ -197,14 +197,14 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                     }
                     getBinding().tvRoomName.setText(roomLivingViewModel.agoraRoom.name);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_EXIT) {
-                    mHealthActivityManager.popActivity();
+                    finish();
                 } else if (type == KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_CREATOR_EXIT) {
                     showCreatorExitDialog();
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_ROOM_INFO_CHANGED) {
                     //修改背景
                     getBinding().lrcControlView.setLrcViewBackground(R.mipmap.portrait02);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_EXIT) {
-                    mHealthActivityManager.popActivity();
+                    finish();
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_LEAVE) {
                     onMemberLeave((AgoraMember) o);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED) {
@@ -341,7 +341,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 exitDialog.setDescText("确认要关闭房间么？");
             }
             exitDialog.setDialogBtnText("取消", "确定");
-            exitDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            exitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
 
@@ -417,7 +417,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             changeMusicDialog.setDialogTitle(getString(R.string.ktv_room_change_music_title));
             changeMusicDialog.setDescText(getString(R.string.ktv_room_change_music_msg));
             changeMusicDialog.setDialogBtnText(getString(R.string.ktv_cancel), getString(R.string.ktv_confirm));
-            changeMusicDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            changeMusicDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
 
@@ -503,10 +503,10 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             creatorExitDialog.setDialogTitle("房间关闭");
             creatorExitDialog.setDescText("房主退出，并关闭了房间");
             creatorExitDialog.setDialogBtnText(getString(R.string.exit), null);
-            creatorExitDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            creatorExitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
-                    mHealthActivityManager.popActivity();
+                    finish();
                 }
 
                 @Override

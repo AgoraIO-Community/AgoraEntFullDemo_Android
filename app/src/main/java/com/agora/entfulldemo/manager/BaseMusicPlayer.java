@@ -32,6 +32,7 @@ import java.util.Map;
 import io.agora.mediaplayer.IMediaPlayerObserver;
 import io.agora.mediaplayer.data.PlayerUpdatedInfo;
 import io.agora.mediaplayer.data.SrcInfo;
+import io.agora.musiccontentcenter.IAgoraMusicContentCenter;
 import io.agora.musiccontentcenter.IAgoraMusicPlayer;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -175,10 +176,12 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         switchRole(role);
         EventBus.getDefault().register(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable PreLoadEvent event) {
         open(RoomManager.getInstance().mMusicModel);
     }
+
     private void reset() {
         mRecvedPlayPosition = 0;
         mLastRecvPlayPosTime = null;
@@ -220,11 +223,11 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
             return -3;
         }
 
-        File fileMusic = mMusicModel.fileMusic;
-        if (fileMusic.exists() == false) {
-            mLogger.e("open error: fileMusic is not exists");
-            return -4;
-        }
+//        File fileMusic = mMusicModel.fileMusic;
+//        if (fileMusic.exists() == false) {
+//            mLogger.e("open error: fileMusic is not exists");
+//            return -4;
+//        }
 
         File fileLrc = mMusicModel.fileLrc;
         if (fileLrc.exists() == false) {
@@ -241,7 +244,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         mAudioTrackIndex = 1;
         BaseMusicPlayer.mMusicModel = mMusicModel;
         mLogger.i("open() called with: mMusicModel = [%s]", mMusicModel);
-        mPlayer.open(fileMusic.getAbsolutePath(), 0);
+        mPlayer.open(Long.parseLong(mMusicModel.songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null, 0);
         return 0;
     }
 

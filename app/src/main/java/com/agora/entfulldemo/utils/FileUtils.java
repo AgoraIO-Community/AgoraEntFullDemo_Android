@@ -9,7 +9,7 @@ public class FileUtils {
 //        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 //            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 //        } else {
-        return AgoraApplication.mInstance.getExternalFilesDir("media").getAbsolutePath() + File.separator;
+        return AgoraApplication.the().getExternalFilesDir("media").getAbsolutePath() + File.separator;
 //        }
     }
 

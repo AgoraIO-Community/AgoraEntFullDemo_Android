@@ -17,7 +17,7 @@ import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.UserInfoChangeEvent;
 import com.agora.entfulldemo.event.UserLogoutEvent;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.utils.ToastUtils;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -68,7 +68,7 @@ public class MainViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -90,7 +90,7 @@ public class MainViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onSuccess(BaseResponse<User> data) {
-                        ToastUtils.INSTANCE.showToast("修改成功");
+                        ToastUtils.showToast("修改成功");
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_USER_INFO_CHANGE, null);
                         if (!TextUtils.isEmpty(name)) {
                             UserManager.getInstance().getUser().name = name;
@@ -104,7 +104,7 @@ public class MainViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 });
     }
@@ -126,7 +126,7 @@ public class MainViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -151,7 +151,7 @@ public class MainViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );

@@ -25,13 +25,13 @@ import com.agora.entfulldemo.databinding.FragmentHomeMineBinding;
 import com.agora.entfulldemo.dialog.CommonDialog;
 import com.agora.entfulldemo.dialog.EditNameDialog;
 import com.agora.entfulldemo.dialog.SelectPhotoFromDialog;
+import com.agora.entfulldemo.listener.OnButtonClickListener;
 import com.agora.entfulldemo.manager.PagePilotManager;
+import com.agora.entfulldemo.manager.RTCManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.utils.FileUtils;
 import com.agora.entfulldemo.utils.ImageCompressUtil;
 import com.agora.entfulldemo.utils.UriUtils;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.NetUtils;
 
 import java.io.File;
 
@@ -55,7 +55,8 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setLifecycleOwner(this);
 
-        getBinding().tvVersion.setText(getString(R.string.version_is, versionString));
+        String sdkVersionString = RTCManager.getInstance().getAgoraRTCSdkVersion();
+        getBinding().tvVersion.setText(getString(R.string.version_is, versionString, sdkVersionString));
     }
 
     @SuppressLint("SetTextI18n")
@@ -103,9 +104,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             editNameDialog.show();
         });
         getBinding().ivUserAvatar.setOnClickListener(view -> {
-            if (NetUtils.INSTANCE.isNetworkConnected()) {
-                showSelectPhotoFromDialog();
-            }
+            showSelectPhotoFromDialog();
         });
     }
 
@@ -116,7 +115,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     private void showSelectPhotoFromDialog() {
         if (selectPhotoFromDialog == null) {
             selectPhotoFromDialog = new SelectPhotoFromDialog(getContext());
-            selectPhotoFromDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            selectPhotoFromDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
                     openAlbum();
@@ -197,7 +196,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             logoffAccountDialog.setDialogTitle("确定注销账号？");
             logoffAccountDialog.setDescText("注销账号后，您将暂时无法使用该账号体验我们的服务，真的要注销吗？");
             logoffAccountDialog.setDialogBtnText(getString(R.string.logoff), getString(R.string.cancel));
-            logoffAccountDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            logoffAccountDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
                     mainViewModel.requestCancellation(UserManager.getInstance().getUser().userNo);
@@ -218,7 +217,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             logoutDialog.setDialogTitle("确定退出登录吗？");
             logoutDialog.setDescText("退出登录后，我们还会继续保留您的账户数据，记得再来体验哦～");
             logoutDialog.setDialogBtnText(getString(R.string.exit), getString(R.string.cancel));
-            logoutDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            logoutDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
                     UserManager.getInstance().logout();

@@ -8,7 +8,6 @@ import android.view.ViewGroup.LayoutParams;
 import androidx.viewbinding.ViewBinding;
 
 import com.agora.entfulldemo.R;
-import com.agora.baselibrary.base.BaseBindingFragment;
 
 /**
  * 带load的baseFragment

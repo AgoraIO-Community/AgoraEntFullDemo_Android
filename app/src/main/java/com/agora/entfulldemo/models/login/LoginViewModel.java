@@ -12,7 +12,7 @@ import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.base.BaseRequestViewModel;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.utils.ToastUtils;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import io.reactivex.disposables.Disposable;
 
@@ -27,7 +27,7 @@ public class LoginViewModel extends BaseRequestViewModel {
     public void requestLogin(String account, String vCode) {
         if (!account.equals(phone)) {
             getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_LOGIN_REQUEST_LOGIN_FAIL, null);
-            ToastUtils.INSTANCE.showToast("验证码错误");
+            ToastUtils.showToast("验证码错误");
             return;
         }
         ApiManager.getInstance().requestLogin(account, vCode)
@@ -40,7 +40,7 @@ public class LoginViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onSuccess(BaseResponse<User> data) {
-                        ToastUtils.INSTANCE.showToast("登录成功");
+                        ToastUtils.showToast("登录成功");
                         ApiManager.token = (data.getData().token);
                         UserManager.getInstance().saveUserInfo(data.getData());
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_LOGIN_REQUEST_LOGIN_SUCCESS, null);
@@ -48,7 +48,7 @@ public class LoginViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -73,12 +73,12 @@ public class LoginViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onSuccess(BaseResponse<String> stringBaseResponse) {
-                        ToastUtils.INSTANCE.showToast("验证码发送成功");
+                        ToastUtils.showToast("验证码发送成功");
                     }
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );

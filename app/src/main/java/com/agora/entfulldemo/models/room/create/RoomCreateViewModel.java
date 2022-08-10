@@ -14,8 +14,8 @@ import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.utils.ToastUtils;
 import com.agora.data.model.AgoraRoom;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import io.reactivex.disposables.Disposable;
 
@@ -53,7 +53,7 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
                     public void onFailure(@Nullable ApiException t) {
                         //创建失败
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_GET_ROOM_LIST_FAIL, null);
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -93,14 +93,14 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
                         RoomManager.getInstance().setAgoraRoom(room);
                         //创建成功 直接加入房间
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_SUCCESS, null);
-                        ToastUtils.INSTANCE.showToast("创建房间成功");
+                        ToastUtils.showToast("创建房间成功");
                     }
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
                         //创建失败
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_FAIL, null);
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );

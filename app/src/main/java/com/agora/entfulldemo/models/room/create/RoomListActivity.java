@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.agora.data.model.AgoraRoom;
 import com.agora.entfulldemo.base.BaseRecyclerViewAdapter;
 import com.agora.entfulldemo.base.BaseViewBindingActivity;
 import com.agora.entfulldemo.base.OnItemClickListener;
@@ -22,8 +23,7 @@ import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.create.holder.RoomHolder;
-import com.agora.baselibrary.utils.ToastUtils;
-import com.agora.data.model.AgoraRoom;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
 import java.util.List;
@@ -129,7 +129,7 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
                 RoomManager.getInstance().setAgoraRoom(data);
                 PagePilotManager.pageRoomLiving();
             } else {
-                ToastUtils.INSTANCE.showToast("密码不正确");
+                ToastUtils.showToast("密码不正确");
             }
         };
         inputPasswordDialog.show();

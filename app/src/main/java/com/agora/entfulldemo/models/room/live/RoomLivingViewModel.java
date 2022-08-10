@@ -32,8 +32,8 @@ import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.SimpleRoomEventCallback;
 import com.agora.entfulldemo.manager.SingleMusicPlayer;
 import com.agora.entfulldemo.manager.UserManager;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.agora.entfulldemo.widget.LrcControlView;
-import com.agora.baselibrary.utils.ToastUtils;
 import com.agora.data.model.AgoraMember;
 import com.agora.data.model.AgoraRoom;
 
@@ -145,7 +145,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                                 RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
                                 getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
                             } else {
-                                ToastUtils.INSTANCE.showToast(t.getMessage());
+                                ToastUtils.showToast(t.getMessage());
                             }
                         }
                     }
@@ -174,7 +174,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                         @Override
                         public void onFailure(@Nullable ApiException t) {
-                            ToastUtils.INSTANCE.showToast(t.getMessage());
+                            ToastUtils.showToast(t.getMessage());
                         }
                     }
             );
@@ -235,7 +235,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                     @Override
                     public void onFailure(@Nullable ApiException t) {
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_JOIN_FAIL, null);
-                        ToastUtils.INSTANCE.showToast("无法加入房间 " + t.getMessage());
+                        ToastUtils.showToast("无法加入房间 " + t.getMessage());
                     }
                 }
         );
@@ -278,7 +278,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 });
     }
@@ -317,7 +317,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 });
     }
@@ -349,7 +349,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 });
     }
@@ -370,7 +370,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 });
     }
@@ -470,7 +470,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
     @Override
     public void onRoomError(int error, String msg) {
         super.onRoomError(error, msg);
-        ToastUtils.INSTANCE.showToast(msg);
+        ToastUtils.showToast(msg);
     }
 
     @Override
@@ -851,12 +851,12 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
         if (RoomManager.mMine.role == AgoraMember.Role.Listener) {
-            ToastUtils.INSTANCE.showToast(R.string.ktv_need_up);
+            ToastUtils.showToast(R.string.ktv_need_up);
             return;
         }
     }
@@ -886,7 +886,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, false);
                     }
                 }
@@ -944,7 +944,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
             mMusicPlayer.toggleOrigle();
         } else {
             lrcControlView.setSwitchOriginalChecked(true);
-            ToastUtils.INSTANCE.showToast(R.string.ktv_error_cut);
+            ToastUtils.showToast(R.string.ktv_error_cut);
         }
     }
 
@@ -983,7 +983,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -1026,7 +1026,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                         if ("歌曲不存在".equals(t.getMessage())) {
                             startChangeMusic();
                         } else {
-                            ToastUtils.INSTANCE.showToast(t.getMessage());
+                            ToastUtils.showToast(t.getMessage());
                         }
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED, true);
 

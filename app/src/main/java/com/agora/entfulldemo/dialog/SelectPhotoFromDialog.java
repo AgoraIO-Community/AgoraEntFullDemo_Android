@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.agora.entfulldemo.R;
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.databinding.DialogSelectPhotoFromBinding;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 /**
  * 选择相册或拍照 对话框
@@ -47,7 +47,7 @@ public class SelectPhotoFromDialog extends BaseDialog<DialogSelectPhotoFromBindi
     protected void setGravity() {
         getWindow().setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ScreenUtils.dp2px(222)
+                KTVUtil.dp2px(222)
         );
         getWindow().getAttributes().gravity = Gravity.BOTTOM;
     }

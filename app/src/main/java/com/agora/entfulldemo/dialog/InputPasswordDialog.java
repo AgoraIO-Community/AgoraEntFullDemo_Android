@@ -9,10 +9,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.databinding.DialogInputPasswordBinding;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.listener.ISingleCallback;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.listener.ISingleCallback;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 public class InputPasswordDialog extends BaseDialog<DialogInputPasswordBinding> {
     public InputPasswordDialog(@NonNull Context context) {
@@ -79,8 +79,8 @@ public class InputPasswordDialog extends BaseDialog<DialogInputPasswordBinding> 
     @Override
     protected void setGravity() {
         getWindow().setLayout(
-                ScreenUtils.dp2px(300),
-                ScreenUtils.dp2px(230)
+                KTVUtil.dp2px(300),
+                KTVUtil.dp2px(230)
         );
         getWindow().getAttributes().gravity = Gravity.CENTER;
     }

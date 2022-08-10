@@ -20,7 +20,7 @@ import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.BeautyVoiceFragment;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.EffectVoiceFragment;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.MVFragment;
-import com.agora.entfulldemo.utils.ToastUtil;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.agora.data.model.AgoraMember;
 
 public class MoreDialog extends BaseBottomSheetDialogFragment<KtvDialogMoreBinding> {
@@ -47,7 +47,7 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<KtvDialogMoreBindi
     private void initView() {
         AgoraMember mMine = RoomManager.getInstance().getMine();
         if (mMine == null) {
-            ToastUtil.toastShort(requireContext(), "Self AgoraMember is null");
+            ToastUtils.showToast( "Self AgoraMember is null");
             dismiss();
         } else {
             mBinding.iBtnMV.setImageResource(mMine.isVideoMuted == 0 ? R.mipmap.ic_camera_on : R.mipmap.ic_camera_off);

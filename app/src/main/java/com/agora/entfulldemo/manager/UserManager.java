@@ -7,8 +7,8 @@ import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.UserInfoChangeEvent;
-import com.agora.baselibrary.utils.GsonUtil;
-import com.agora.baselibrary.utils.SPUtil;
+import com.agora.entfulldemo.utils.GsonUtil;
+import com.agora.entfulldemo.utils.SPUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,16 +42,16 @@ public final class UserManager {
 
     private void writeUserInfoToPrefs(boolean isLogOut) {
         if (isLogOut) {
-            SPUtil.Companion.getInstance(AgoraApplication.the()).putString(KtvConstant.CURRENT_USER, "");
+            SPUtil.putString(KtvConstant.CURRENT_USER, "");
         } else {
-            SPUtil.Companion.getInstance(AgoraApplication.the()).putString(KtvConstant.CURRENT_USER, getUserInfoJson());
+            SPUtil.putString(KtvConstant.CURRENT_USER, getUserInfoJson());
         }
     }
 
     private void readingUserInfoFromPrefs() {
-        String userInfo = SPUtil.Companion.getInstance(AgoraApplication.the()).getString(KtvConstant.CURRENT_USER, "");
+        String userInfo = SPUtil.getString(KtvConstant.CURRENT_USER, "");
         if (!TextUtils.isEmpty(userInfo)) {
-            mUser = GsonUtil.Companion.getInstance().fromJson(userInfo, User.class);
+            mUser = GsonUtil.getInstance().fromJson(userInfo, User.class);
             if (TextUtils.isEmpty(ApiManager.token)) {
                 ApiManager.token = mUser.token;
             }
@@ -59,7 +59,7 @@ public final class UserManager {
     }
 
     private String getUserInfoJson() {
-        return GsonUtil.Companion.getInstance().toJson(mUser);
+        return GsonUtil.getInstance().toJson(mUser);
     }
 
     public static UserManager getInstance() {

@@ -20,9 +20,9 @@ import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.live.RoomLivingViewModel;
-import com.agora.baselibrary.utils.ToastUtils;
 import com.agora.data.model.BaseMusicModel;
 import com.agora.data.model.MusicModelNew;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -68,7 +68,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -96,7 +96,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -124,7 +124,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -158,7 +158,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -192,7 +192,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );
@@ -217,7 +217,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.INSTANCE.showToast(t.getMessage());
+                        ToastUtils.showToast(t.getMessage());
                     }
                 }
         );

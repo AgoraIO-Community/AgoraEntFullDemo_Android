@@ -32,7 +32,7 @@ public abstract class ApiSubscriber<T> implements Observer<T> {
     public void onNext(@NonNull T t) {
         if (t instanceof BaseResponse) {
 //            if (((BaseResponse<?>) t).getCode() == 401) {
-//                ToastUtils.INSTANCE.showToast("登录超时，请重新登录");
+//                ToastUtils.showToast("登录超时，请重新登录");
 //                EventBus.getDefault().post(new UserLogoutEvent());
 //                onFailure(new ApiException(((BaseResponse<?>) t).getCode(), ((BaseResponse<?>) t).getMessage()));
 //            } else
@@ -40,7 +40,7 @@ public abstract class ApiSubscriber<T> implements Observer<T> {
                 String error = ((BaseResponse<?>) t).getMessage();
                 onFailure(new ApiException(((BaseResponse<?>) t).getCode(), error));
 //                if (!TextUtils.isEmpty(error)) {
-//                    ToastUtils.INSTANCE.showToast(error);
+//                    ToastUtils.showToast(error);
 //                }
             } else {
                 onSuccess(t);

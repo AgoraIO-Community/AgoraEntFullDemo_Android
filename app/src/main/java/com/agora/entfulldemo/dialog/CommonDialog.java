@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.databinding.DialogCommonBinding;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 public class CommonDialog extends BaseDialog<DialogCommonBinding> {
     public CommonDialog(@NonNull Context context) {
@@ -44,8 +44,8 @@ public class CommonDialog extends BaseDialog<DialogCommonBinding> {
         getBinding().tvDesc.setText(desc);
         getBinding().tvDesc.setVisibility(View.VISIBLE);
         getWindow().setLayout(
-                ScreenUtils.dp2px(300),
-                ScreenUtils.dp2px(220)
+                KTVUtil.dp2px(300),
+                KTVUtil.dp2px(220)
         );
     }
 
@@ -61,7 +61,7 @@ public class CommonDialog extends BaseDialog<DialogCommonBinding> {
     @Override
     protected void setGravity() {
         getWindow().setLayout(
-                ScreenUtils.dp2px(300),
+                KTVUtil.dp2px(300),
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         getWindow().getAttributes().gravity = Gravity.CENTER;

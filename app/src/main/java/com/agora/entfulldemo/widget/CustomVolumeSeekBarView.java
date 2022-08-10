@@ -9,7 +9,7 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 
 import com.agora.entfulldemo.R;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 public class CustomVolumeSeekBarView extends View {
     /**
@@ -22,7 +22,7 @@ public class CustomVolumeSeekBarView extends View {
      */
     public int currentPitch = 5;
 
-    private int paddingBottom = ScreenUtils.dp2px(3);
+    private int paddingBottom = KTVUtil.dp2px(3);
 
     private final int mSelectBlueColor = ContextCompat.getColor(getContext(), R.color.blue_9F);
     private final int mUnSelectBlueColor = ContextCompat.getColor(getContext(), R.color.white);
@@ -46,7 +46,7 @@ public class CustomVolumeSeekBarView extends View {
     }
 
     private void initView() {
-        mPaint.setStrokeWidth(ScreenUtils.dp2px(3));
+        mPaint.setStrokeWidth(KTVUtil.dp2px(3));
     }
 
     @Override
@@ -62,8 +62,8 @@ public class CustomVolumeSeekBarView extends View {
             } else {
                 mPaint.setColor(mUnSelectBlueColor);
             }
-            int left = i * ScreenUtils.dp2px(17);
-            int top = getBottom() - paddingBottom - ScreenUtils.dp2px((i + 1) * 2);
+            int left = i * KTVUtil.dp2px(17);
+            int top = getBottom() - paddingBottom - KTVUtil.dp2px((i + 1) * 2);
             int right = left + paddingBottom;
             int bottom = getBottom() - paddingBottom;
             canvas.drawRect(left, top, right, bottom, mPaint);

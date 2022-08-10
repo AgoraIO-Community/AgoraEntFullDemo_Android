@@ -14,7 +14,7 @@
     <string name="disagree">不同意</string>
     <string name="confirm">确认</string>
     <string name="confirm_deletion">确认删除？</string>
-    <string name="version_is">当前版本号：%s</string>
+    <string name="version_is">当前版本号：%s SDK %s</string>
     <string name="about_us">关于我们</string>
     <string name="about">关于</string>
     <string name="used_agree">使用该应用即表示您同意</string>
@@ -36,7 +36,7 @@
     <string name="logout">退出登录</string>
     <string name="logoff_account">注销账号</string>
     <string name="logoff">注销</string>
-    <string name="privacy_protection_tip">声网互动娱乐产品是由xxx有限公司，提供的K歌功能，如果需要快速、扼要了解我们如何收集您的信息，可以参考《隐私协议摘要》。\n1. 当您注册、登录声网互娱账号时，我们会收集您的xxxx\n2.这些条款和条件（“条款”）约束您访问声网网站（“网站”）中包含的信息，使用 声网应用程序界面（API）、示例软件代码和其他声网（“平台”）提供或made available的相关材料，使您能够在您拥有和控制的一个或多个网站、Web应用程序或网站（“您的产品”）上实施 声网（“服务”）提供的声网实时视频平台服务。</string>
+    <string name="privacy_protection_tip">我已阅读并同意 用户协议 及 隐私政策 我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意我已阅读并同意\n我已阅读并同意我已阅读并同意我已阅读并同意\n我已阅读并同意我已阅读并同意我已阅读并同意</string>
     <string name="ktv_online">在线K歌房</string>
     <string name="meta_live">元直播</string>
     <string name="meta_chatting">元语聊</string>

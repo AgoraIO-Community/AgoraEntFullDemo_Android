@@ -23,7 +23,7 @@ import com.agora.entfulldemo.databinding.ActivityRoomCreateBinding;
 import com.agora.entfulldemo.manager.PagePathConstant;
 import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.utils.ToastUtils;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
 import java.util.Random;
@@ -102,13 +102,13 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                 hideLoadingView();
             } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_CREATE_SUCCESS) {
                 PagePilotManager.pageRoomLiving();
-                mHealthActivityManager.popActivity();
+                finish();
                 hideLoadingView();
             } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_JOIN_SUCCESS) {
-                mHealthActivityManager.popActivity();
+                finish();
                 hideLoadingView();
             } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_JOIN_FAIL) {
-                mHealthActivityManager.popActivity();
+                finish();
                 hideLoadingView();
             }
         });
@@ -149,9 +149,9 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
 
         getBinding().btnCreate.setOnClickListener(view -> {
             if (getBinding().cbUnOpen.isChecked() && !isAllInput()) {
-                ToastUtils.INSTANCE.showToast(getString(R.string.please_input_4_pwd));
+                ToastUtils.showToast(getString(R.string.please_input_4_pwd));
                 if (TextUtils.isEmpty(getBinding().etRoomName.getText())) {
-                    ToastUtils.INSTANCE.showToast(getString(R.string.please_input_room_name));
+                    ToastUtils.showToast(getString(R.string.please_input_room_name));
                 } else {
                     createRoom(null);
                 }
@@ -162,9 +162,9 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                                 + getBinding().etCode3.getText()
                                 + getBinding().etCode4.getText();
                 if (TextUtils.isEmpty(getBinding().etRoomName.getText())) {
-                    ToastUtils.INSTANCE.showToast(getString(R.string.please_input_room_name));
+                    ToastUtils.showToast(getString(R.string.please_input_room_name));
                 } else if (code.length() > 4) {
-                    ToastUtils.INSTANCE.showToast(getString(R.string.please_input_4_pwd));
+                    ToastUtils.showToast(getString(R.string.please_input_4_pwd));
                 } else {
                     createRoom(code);
                 }
@@ -189,7 +189,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         showLoadingView();
         String roomName = getBinding().etRoomName.getText().toString();
         if (TextUtils.isEmpty(roomName)) {
-            ToastUtils.INSTANCE.showToast(R.string.please_input_room_name);
+            ToastUtils.showToast(R.string.please_input_room_name);
             return;
         }
         String userNo = UserManager.getInstance().getUser().userNo;

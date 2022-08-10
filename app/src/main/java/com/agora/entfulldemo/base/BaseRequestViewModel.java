@@ -1,6 +1,6 @@
 package com.agora.entfulldemo.base;
 
-import com.agora.baselibrary.base.BaseViewModel;
+import com.agora.entfulldemo.bean.BaseViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 

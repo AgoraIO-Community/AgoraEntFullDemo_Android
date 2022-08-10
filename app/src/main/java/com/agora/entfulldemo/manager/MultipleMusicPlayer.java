@@ -12,7 +12,7 @@ import com.agora.data.model.AgoraRoom;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.bean.MemberMusicModel;
-import com.agora.entfulldemo.utils.ToastUtil;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import org.json.JSONObject;
 
@@ -257,13 +257,12 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         if (mUser == null) {
             return;
         }
-
         if (ObjectsCompat.equals(mUser.userNo, music.userNo)
                 || ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
             switchRole(Constants.CLIENT_ROLE_AUDIENCE);
             onPrepareResource();
             ResourceManager.Instance(mContext)
-                    .download(music, false)
+                    .download(music, true)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleObserver<MemberMusicModel>() {
@@ -276,7 +275,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                         public void onSuccess(@NonNull MemberMusicModel musicModel) {
                             onResourceReady(musicModel);
                             musicModelReady = musicModel;
-                            if (RTCManager.getInstance().preLoad(musicModel.songNo, false)) {
+                            if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }
                             if (ObjectsCompat.equals(mUser.userNo, music.userNo)) {
@@ -288,7 +287,6 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                                 }
                                 musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
                                 musicModelReady.user1bgId = music.user1bgId;
-
                                 joinChannelEX();
 
                                 //修改 musicModelReady 的user1status = ready
@@ -303,7 +301,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                            ToastUtils.showToast(R.string.ktv_lrc_load_fail);
                         }
                     });
         }
@@ -377,7 +375,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                            ToastUtils.showToast(R.string.ktv_lrc_load_fail);
                         }
                     });
         }

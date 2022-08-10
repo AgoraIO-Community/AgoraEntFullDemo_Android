@@ -12,13 +12,13 @@ import com.agora.entfulldemo.bean.MemberMusicModel;
 import com.agora.entfulldemo.bean.room.RTMMessageBean;
 import com.agora.entfulldemo.event.MusicListChangeEvent;
 import com.agora.entfulldemo.listener.EventListener;
+import com.agora.entfulldemo.listener.ISingleCallback;
 import com.agora.entfulldemo.models.room.live.RoomLivingViewModel;
-import com.agora.baselibrary.listener.ISingleCallback;
-import com.agora.baselibrary.utils.ToastUtils;
 import com.agora.data.model.AgoraMember;
 import com.agora.data.model.AgoraRoom;
 import com.agora.data.model.MusicModelNew;
 import com.agora.data.sync.AgoraException;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 
@@ -342,7 +342,7 @@ public final class RoomManager {
 
         @Override
         public void onError(String error) {
-            ToastUtils.INSTANCE.showToast(error);
+            ToastUtils.showToast(error);
         }
 
         @Override

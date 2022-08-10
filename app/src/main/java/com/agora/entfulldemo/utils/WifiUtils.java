@@ -9,7 +9,7 @@ import com.agora.entfulldemo.base.AgoraApplication;
 
 public class WifiUtils {
     public static int getWifiStatus() {
-        WifiManager wifi_service = (WifiManager) AgoraApplication.mInstance.getSystemService(AppCompatActivity.WIFI_SERVICE);
+        WifiManager wifi_service = (WifiManager) AgoraApplication.the().getApplicationContext().getSystemService(AppCompatActivity.WIFI_SERVICE);
         WifiInfo wifiInfo = wifi_service.getConnectionInfo();
         return wifiInfo.getRssi();
     }

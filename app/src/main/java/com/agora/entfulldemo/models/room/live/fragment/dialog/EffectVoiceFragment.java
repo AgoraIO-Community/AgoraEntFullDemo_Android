@@ -79,5 +79,4 @@ public class EffectVoiceFragment extends BaseViewBindingFragment<FragmentEffectV
             getBinding().cbMajor.setChecked(true);
         }
     }
-
 }

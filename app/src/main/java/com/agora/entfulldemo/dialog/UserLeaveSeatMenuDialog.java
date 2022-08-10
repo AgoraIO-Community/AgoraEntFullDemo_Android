@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.agora.entfulldemo.R;
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.databinding.KtvDialogUserSeatMenuBinding;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.ScreenUtils;
 import com.agora.data.model.AgoraMember;
+import com.agora.entfulldemo.utils.KTVUtil;
 import com.bumptech.glide.Glide;
 
 /**
@@ -54,7 +54,7 @@ public class UserLeaveSeatMenuDialog extends BaseDialog<KtvDialogUserSeatMenuBin
     protected void setGravity() {
         getWindow().setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ScreenUtils.dp2px(220)
+                KTVUtil.dp2px(220)
         );
         getWindow().getAttributes().gravity = Gravity.BOTTOM;
     }

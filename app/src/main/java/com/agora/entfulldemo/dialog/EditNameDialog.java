@@ -9,11 +9,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.databinding.DialogEditNameBinding;
+import com.agora.entfulldemo.listener.ISingleCallback;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.listener.ISingleCallback;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 public class EditNameDialog extends BaseDialog<DialogEditNameBinding> {
     public EditNameDialog(@NonNull Context context) {
@@ -81,8 +81,8 @@ public class EditNameDialog extends BaseDialog<DialogEditNameBinding> {
     @Override
     protected void setGravity() {
         getWindow().setLayout(
-                ScreenUtils.dp2px(300),
-                ScreenUtils.dp2px(230)
+                KTVUtil.dp2px(300),
+                KTVUtil.dp2px(230)
         );
         getWindow().getAttributes().gravity = Gravity.CENTER;
     }

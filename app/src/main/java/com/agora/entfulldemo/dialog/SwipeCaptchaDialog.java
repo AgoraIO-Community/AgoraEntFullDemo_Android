@@ -10,12 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.agora.entfulldemo.R;
+import com.agora.entfulldemo.base.BaseDialog;
 import com.agora.entfulldemo.common.GlideApp;
 import com.agora.entfulldemo.databinding.DialogSwipeCaptchaBinding;
-import com.agora.entfulldemo.utils.ToastUtil;
+import com.agora.entfulldemo.utils.KTVUtil;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.agora.entfulldemo.widget.SwipeCaptchaView;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.ScreenUtils;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 
@@ -50,7 +50,7 @@ public class SwipeCaptchaDialog extends BaseDialog<DialogSwipeCaptchaBinding> {
 
             @Override
             public void matchFailed(SwipeCaptchaView swipeCaptchaView) {
-                ToastUtil.toastShort(getContext(), "请重试");
+                ToastUtils.showToast("请重试");
                 createCaptcha();
             }
         });
@@ -108,8 +108,8 @@ public class SwipeCaptchaDialog extends BaseDialog<DialogSwipeCaptchaBinding> {
     @Override
     protected void setGravity() {
         getWindow().setLayout(
-                ScreenUtils.dp2px(295),
-                ScreenUtils.dp2px(365)
+                KTVUtil.dp2px(295),
+                KTVUtil.dp2px(365)
         );
         getWindow().getAttributes().gravity = Gravity.CENTER;
     }

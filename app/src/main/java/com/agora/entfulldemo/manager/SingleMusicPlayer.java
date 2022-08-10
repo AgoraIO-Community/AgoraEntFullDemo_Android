@@ -8,9 +8,8 @@ import androidx.core.util.ObjectsCompat;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.bean.MemberMusicModel;
-import com.agora.entfulldemo.utils.ToastUtil;
+import com.agora.entfulldemo.utils.ToastUtils;
 
-import io.agora.musiccontentcenter.IAgoraMusicContentCenter;
 import io.agora.musiccontentcenter.IAgoraMusicPlayer;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
@@ -54,7 +53,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
         if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
             switchRole(Constants.CLIENT_ROLE_BROADCASTER);
             ResourceManager.Instance(mContext)
-                    .download(music, false)
+                    .download(music, true)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleObserver<MemberMusicModel>() {
@@ -66,7 +65,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
                         @Override
                         public void onSuccess(@NonNull MemberMusicModel musicModel) {
                             onResourceReady(musicModel);
-                            if (RTCManager.getInstance().preLoad(musicModel.songNo,true)) {
+                            if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }
 //
@@ -74,7 +73,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                            ToastUtils.showToast(R.string.ktv_lrc_load_fail);
                         }
                     });
         } else {
@@ -98,7 +97,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            ToastUtil.toastShort(mContext, R.string.ktv_lrc_load_fail);
+                            ToastUtils.showToast(R.string.ktv_lrc_load_fail);
                         }
                     });
         }

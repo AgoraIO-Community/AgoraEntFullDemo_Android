@@ -34,7 +34,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
     protected KtvLayoutLrcPrepareBinding mPrepareBinding;
 
     public LrcView getLrcView() {
-        if (mBinding.ilActive != null) {
+        if (mBinding != null && mBinding.ilActive != null) {
             return mBinding.ilActive.lrcView;
         } else {
             return null;

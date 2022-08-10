@@ -9,8 +9,8 @@ import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.bean.room.RTCMessageBean;
 import com.agora.entfulldemo.bean.room.RTMMessageBean;
 import com.agora.entfulldemo.event.PreLoadEvent;
+import com.agora.entfulldemo.listener.ISingleCallback;
 import com.agora.entfulldemo.models.room.live.RoomLivingViewModel;
-import com.agora.baselibrary.listener.ISingleCallback;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 
@@ -121,11 +121,15 @@ public final class RTCManager {
         });
     }
 
+    public String getAgoraRTCSdkVersion() {
+        return RtcEngine.getSdkVersion();
+    }
+
     public IAgoraMusicPlayer createMediaPlayer() {
         return iAgoraMusicContentCenter.createMusicPlayer();
     }
 
-    public boolean preLoad(String songNo, boolean isSinglePlay) {
+    public boolean preLoad(String songNo) {
         if (iAgoraMusicContentCenter.isPreloaded(Long.parseLong(songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null) != 0) {
             iAgoraMusicContentCenter.preload(Long.parseLong(songNo),
                     IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null);

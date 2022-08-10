@@ -5,7 +5,7 @@ import android.util.Log;
 import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.event.ReceivedMessageEvent;
 import com.agora.entfulldemo.listener.EventListener;
-import com.agora.baselibrary.utils.ToastUtils;
+import com.agora.entfulldemo.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -98,7 +98,7 @@ public final class RTMManager implements RtmChannelListener {
 
             @Override
             public void onFailure(ErrorInfo errorInfo) {
-                ToastUtils.INSTANCE.showToast(errorInfo.getErrorDescription());
+                ToastUtils.showToast(errorInfo.getErrorDescription());
             }
         });
     }
@@ -118,7 +118,7 @@ public final class RTMManager implements RtmChannelListener {
 
             @Override
             public void onFailure(ErrorInfo errorInfo) {
-                ToastUtils.INSTANCE.showToast(errorInfo.getErrorDescription());
+                ToastUtils.showToast(errorInfo.getErrorDescription());
             }
         });
 
@@ -138,7 +138,7 @@ public final class RTMManager implements RtmChannelListener {
 
                     @Override
                     public void onFailure(ErrorInfo errorInfo) {
-                        ToastUtils.INSTANCE.showToast(errorInfo.getErrorDescription());
+                        ToastUtils.showToast(errorInfo.getErrorDescription());
                         //登录失败
                     }
                 });

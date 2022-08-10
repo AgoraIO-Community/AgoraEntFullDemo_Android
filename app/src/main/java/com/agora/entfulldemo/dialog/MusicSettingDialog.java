@@ -16,7 +16,7 @@ import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.base.BaseBottomSheetDialogFragment;
 import com.agora.entfulldemo.bean.MusicSettingBean;
 import com.agora.entfulldemo.databinding.KtvDialogMusicSettingBinding;
-import com.agora.baselibrary.utils.ScreenUtils;
+import com.agora.entfulldemo.utils.KTVUtil;
 
 /**
  * 控制台
@@ -118,7 +118,7 @@ public class MusicSettingDialog extends BaseBottomSheetDialogFragment<KtvDialogM
     }
 
     private void setSoundMode() {
-        int margin = ScreenUtils.dp2px(10);
+        int margin = KTVUtil.dp2px(10);
         String[] stringArray = getResources().getStringArray(R.array.ktv_audioPreset);
         for (int i = 0; i < stringArray.length; i++) {
             RadioButton radioButton = (RadioButton) getLayoutInflater().inflate(R.layout.btn_sound_mode, null);

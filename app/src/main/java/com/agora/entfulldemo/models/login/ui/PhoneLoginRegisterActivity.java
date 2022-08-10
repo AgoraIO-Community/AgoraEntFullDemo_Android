@@ -16,16 +16,15 @@ import com.agora.entfulldemo.base.BaseViewBindingActivity;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.databinding.ActivityPhoneLoginBinding;
 import com.agora.entfulldemo.dialog.SwipeCaptchaDialog;
+import com.agora.entfulldemo.listener.OnButtonClickListener;
 import com.agora.entfulldemo.manager.PagePathConstant;
 import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.models.login.LoginViewModel;
-import com.agora.entfulldemo.utils.ToastUtil;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.CountDownTimerUtils;
-import com.agora.baselibrary.utils.SPUtil;
-import com.agora.baselibrary.utils.StringUtils;
-import com.agora.baselibrary.utils.ToastUtils;
+import com.agora.entfulldemo.utils.CountDownTimerUtils;
+import com.agora.entfulldemo.utils.SPUtil;
+import com.agora.entfulldemo.utils.StringUtils;
+import com.agora.entfulldemo.utils.ToastUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
 /**
@@ -58,15 +57,15 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
             if (var1 == KtvConstant.CALLBACK_TYPE_LOGIN_REQUEST_LOGIN_SUCCESS) {
                 RoomManager.getInstance().loginOut();
                 PagePilotManager.pageMainHome();
-                mHealthActivityManager.popActivity();
+                finish();
             }
             hideLoadingView();
         });
         setAccountStatus();
-        String account = SPUtil.Companion.getInstance(this).getString(KtvConstant.ACCOUNT, null);
+        String account = SPUtil.getString(KtvConstant.ACCOUNT, null);
         if (!TextUtils.isEmpty(account)) {
             getBinding().etAccounts.setText(account);
-            String password = SPUtil.Companion.getInstance(this).getString(KtvConstant.V_CODE, null);
+            String password = SPUtil.getString(KtvConstant.V_CODE, null);
             if (!TextUtils.isEmpty(password)) {
                 getBinding().etVCode.setText(password);
             }
@@ -90,10 +89,10 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
     @Override
     public void initListener() {
         getBinding().tvUserAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://iot-console-web.sh.agoralab.co/terms/termsofuse");
+            PagePilotManager.pageWebView("https://www.agora.io/cn/about-us/");
         });
         getBinding().tvPrivacyAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://iot-console-web.sh.agoralab.co/terms/privacypolicy");
+            PagePilotManager.pageWebView("https://www.agora.io/cn/about-us/");
         });
         getBinding().btnLogin.setOnClickListener(view -> {
             if (getBinding().cvIAgree.isChecked()) {
@@ -101,13 +100,13 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
                     showSwipeCaptchaDialog();
                 }
             } else {
-                ToastUtils.INSTANCE.showToast("请同意我们的隐私政策与用户协议");
+                ToastUtils.showToast("请同意我们的隐私政策与用户协议");
             }
         });
         getBinding().tvSendVCode.setOnClickListener(view -> {
             String account = getBinding().etAccounts.getText().toString();
-            if (!StringUtils.INSTANCE.checkPhoneNum(account)) {
-                ToastUtil.toastShort(this, "请输入正确手机号");
+            if (!StringUtils.checkPhoneNum(account)) {
+                ToastUtils.showToast("请输入正确手机号");
             } else {
                 phoneLoginViewModel.requestSendVCode(account);
                 countDownTimerUtils.start();
@@ -141,7 +140,7 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
     private void showSwipeCaptchaDialog() {
         if (swipeCaptchaDialog == null) {
             swipeCaptchaDialog = new SwipeCaptchaDialog(this);
-            swipeCaptchaDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            swipeCaptchaDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
 
@@ -154,8 +153,7 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
                     String account = getBinding().etAccounts.getText().toString();
                     String vCode = getBinding().etVCode.getText().toString();
                     phoneLoginViewModel.requestLogin(account, vCode);
-                    SPUtil.Companion.getInstance(PhoneLoginRegisterActivity.this)
-                            .putString(KtvConstant.ACCOUNT, account);
+                    SPUtil.putString(KtvConstant.ACCOUNT, account);
                 }
             });
         }
@@ -165,11 +163,11 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
 
     private boolean checkAccount() {
         String account = getBinding().etAccounts.getText().toString();
-        if (!StringUtils.INSTANCE.checkPhoneNum(account)) {
-            ToastUtil.toastShort(this, "请输入正确手机号");
+        if (!StringUtils.checkPhoneNum(account)) {
+            ToastUtils.showToast("请输入正确手机号");
             return false;
         } else if (TextUtils.isEmpty(getBinding().etVCode.getText().toString())) {
-            ToastUtil.toastShort(this, "请输入验证码");
+            ToastUtils.showToast("请输入验证码");
         }
         return true;
     }

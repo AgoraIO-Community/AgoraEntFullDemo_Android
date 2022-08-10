@@ -12,10 +12,10 @@ import com.agora.entfulldemo.base.BaseViewBindingActivity;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.databinding.ActivityWelcomeBinding;
 import com.agora.entfulldemo.dialog.UserAgreementDialog;
+import com.agora.entfulldemo.listener.OnButtonClickListener;
 import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.UserManager;
-import com.agora.baselibrary.base.BaseDialog;
-import com.agora.baselibrary.utils.SPUtil;
+import com.agora.entfulldemo.utils.SPUtil;
 
 public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBinding> {
     private UserAgreementDialog userAgreementDialog;
@@ -44,18 +44,18 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
     private void showUserAgreementDialog() {
         if (userAgreementDialog == null) {
             userAgreementDialog = new UserAgreementDialog(this);
-            userAgreementDialog.setOnButtonClickListener(new BaseDialog.OnButtonClickListener() {
+            userAgreementDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
                     userAgreementDialog.dismiss();
-                    mHealthActivityManager.popActivity();
+                    finish();
                 }
 
                 @Override
                 public void onRightButtonClick() {
                     startMainActivity();
                     userAgreementDialog.dismiss();
-                    SPUtil.Companion.getInstance(WelcomeActivity.this).putBoolean(KtvConstant.IS_AGREE, true);
+                    SPUtil.putBoolean(KtvConstant.IS_AGREE, true);
                 }
             });
         }
@@ -65,7 +65,15 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void getPermissions() {
-        startMainActivity();
+        checkStatusToStart();
+    }
+
+    private void checkStatusToStart() {
+        if (!SPUtil.getBoolean(KtvConstant.IS_AGREE, false)) {
+            showUserAgreementDialog();
+        } else {
+            startMainActivity();
+        }
     }
 
     private void startMainActivity() {
@@ -79,7 +87,7 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
     @Override
     protected void onStop() {
         super.onStop();
-        mHealthActivityManager.finishActivityByClass("WelcomeActivity");
+        finish();
     }
 
 }
