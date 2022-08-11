@@ -65,6 +65,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
                         @Override
                         public void onSuccess(@NonNull MemberMusicModel musicModel) {
                             onResourceReady(musicModel);
+                            RoomManager.getInstance().mMusicModel.fileLrc = musicModel.fileLrc;
                             if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }

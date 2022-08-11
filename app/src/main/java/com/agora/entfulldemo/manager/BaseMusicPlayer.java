@@ -12,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.agora.entfulldemo.bean.MemberMusicModel;
-import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.PlayerStatusEvent;
 import com.agora.entfulldemo.event.PreLoadEvent;
-import com.agora.entfulldemo.event.UserInfoChangeEvent;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 
@@ -208,6 +206,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     protected int open(@NonNull MemberMusicModel mMusicModel) {
+        Log.d("cwtsw", "MusicPlayer open start " + mMusicModel.songNo);
         if (mRole != Constants.CLIENT_ROLE_BROADCASTER) {
             mLogger.e("open error: current role is not broadcaster, abort playing");
             return -1;
@@ -230,7 +229,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 //        }
 
         File fileLrc = mMusicModel.fileLrc;
-        if (fileLrc.exists() == false) {
+        if (fileLrc == null || !fileLrc.exists()) {
             mLogger.e("open error: fileLrc is not exists");
             return -5;
         }
@@ -244,15 +243,16 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         mAudioTrackIndex = 1;
         BaseMusicPlayer.mMusicModel = mMusicModel;
         mLogger.i("open() called with: mMusicModel = [%s]", mMusicModel);
+        Log.d("cwtsw", "MusicPlayer open end called " + mMusicModel.songNo);
         mPlayer.open(Long.parseLong(mMusicModel.songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null, 0);
         return 0;
     }
 
     protected void play() {
         mLogger.i("play() called");
-//        if (!mStatus.isAtLeast(Status.Opened)) {
-//            return;
-//        }
+        if (!mStatus.isAtLeast(Status.Opened)) {
+            return;
+        }
 
         if (mStatus == Status.Started)
             return;
@@ -264,11 +264,13 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     public void stop() {
+        Log.d("cwtsw", "mPlayer stop called");
         mLogger.i("stop() called");
         if (!mStatus.isAtLeast(Status.Started)) {
             return;
         }
-
+        mStatus = Status.Stopped;
+        Log.d("cwtsw", "mPlayer stop");
         mPlayer.stop();
     }
 
@@ -655,7 +657,6 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     protected void onMusicOpenCompleted() {
         mLogger.i("onMusicOpenCompleted() called");
         mStatus = Status.Opened;
-
         play();
         startDisplayLrc();
         mHandler.obtainMessage(ACTION_ON_MUSIC_OPENCOMPLETED, mPlayer.getDuration()).sendToTarget();

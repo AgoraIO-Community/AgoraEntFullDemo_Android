@@ -181,6 +181,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
         getBinding().cbVideo.setOnCheckedChangeListener((compoundButton, b) -> toggleSelfVideo(b));
         roomLivingViewModel.setISingleCallback((type, o) -> {
             ThreadManager.getMainHandler().post(() -> {
+                if (isFinishing() || getBinding() == null) {
+                    return;
+                }
                 hideLoadingView();
                 if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_LOCAL_PITCH) {
                     getBinding().lrcControlView.getPitchView().updateLocalPitch((float) o);

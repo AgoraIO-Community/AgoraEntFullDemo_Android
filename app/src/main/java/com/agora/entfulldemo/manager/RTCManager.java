@@ -101,7 +101,9 @@ public final class RTCManager {
         iAgoraMusicContentCenter.registerEventHandler(new IMusicContentCenterEventHandler() {
             @Override
             public void onPreLoadEvent(long songCode, int percent, int status, String msg, String lyricUrl) {
-                EventBus.getDefault().post(new PreLoadEvent());
+                if (percent == 100) {
+                    EventBus.getDefault().post(new PreLoadEvent());
+                }
             }
 
             @Override
