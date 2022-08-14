@@ -7,6 +7,7 @@ import com.agora.entfulldemo.common.CenterCropRoundCornerTransform;
 import com.agora.entfulldemo.common.GlideApp;
 import com.agora.entfulldemo.databinding.ItemRoomListBinding;
 import com.agora.data.model.AgoraRoom;
+import com.agora.entfulldemo.R;
 
 public class RoomHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomListBinding, AgoraRoom> {
 
@@ -18,9 +19,9 @@ public class RoomHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomL
     public void binding(AgoraRoom data, int selectedIndex) {
         if (data != null) {
             GlideApp.with(mBinding.ivRoomCover.getContext()).load(data.getCoverRes())
-                    .transform(new CenterCropRoundCornerTransform(20)).into(mBinding.ivRoomCover);
+                    .transform(new CenterCropRoundCornerTransform(40)).into(mBinding.ivRoomCover);
             mBinding.tvRoomName.setText(data.name);
-            mBinding.tvPersonNum.setText(String.valueOf(data.roomPeopleNum));
+            mBinding.tvPersonNum.setText(String.format("%d%s", data.roomPeopleNum, itemView.getContext().getString(R.string.people)));
         }
     }
 }

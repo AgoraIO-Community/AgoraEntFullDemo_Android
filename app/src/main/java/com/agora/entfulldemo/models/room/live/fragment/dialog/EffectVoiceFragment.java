@@ -44,7 +44,7 @@ public class EffectVoiceFragment extends BaseViewBindingFragment<FragmentEffectV
         });
         getBinding().cbGentleWind.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                params1 = 1;
+                params1 = 3;
                 getBinding().ivRoundBG.setRotation(0);
                 getBinding().cbMinor.setChecked(false);
                 getBinding().cbMajor.setChecked(false);
@@ -53,7 +53,7 @@ public class EffectVoiceFragment extends BaseViewBindingFragment<FragmentEffectV
         });
         getBinding().cbMinor.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                params1 = 3;
+                params1 = 2;
                 getBinding().ivRoundBG.setRotation(90);
                 getBinding().cbGentleWind.setChecked(false);
                 getBinding().cbMajor.setChecked(false);
@@ -62,7 +62,7 @@ public class EffectVoiceFragment extends BaseViewBindingFragment<FragmentEffectV
         });
         getBinding().cbMajor.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                params1 = 2;
+                params1 = 1;
                 getBinding().ivRoundBG.setRotation(180);
                 getBinding().cbGentleWind.setChecked(false);
                 getBinding().cbMinor.setChecked(false);
@@ -71,11 +71,11 @@ public class EffectVoiceFragment extends BaseViewBindingFragment<FragmentEffectV
         });
         params1 = mSetting.getAudioEffectParams1();
         getBinding().cbStartElectricSound.setChecked(mSetting.getAudioEffectParams1() != 0);
-        if (mSetting.getAudioEffectParams1() == 1) {
+        if (mSetting.getAudioEffectParams1() == 3) {
             getBinding().cbGentleWind.setChecked(true);
-        } else if (mSetting.getAudioEffectParams1() == 3) {
-            getBinding().cbMinor.setChecked(true);
         } else if (mSetting.getAudioEffectParams1() == 2) {
+            getBinding().cbMinor.setChecked(true);
+        } else if (mSetting.getAudioEffectParams1() == 1) {
             getBinding().cbMajor.setChecked(true);
         }
     }

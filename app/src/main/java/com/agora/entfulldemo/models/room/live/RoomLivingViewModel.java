@@ -833,9 +833,9 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                     @Override
                     public void onSuccess(BaseResponse<String> data) {
                         musicModel.user1Id = mUser.userNo;
-                        int uid = (int) (Math.random() * (Integer.MAX_VALUE / 2));
-                        musicModel.user1bgId = (long) uid;
-                        //同知主唱 有人加入了合唱
+//                        int uid = (int) (Math.random() * (Integer.MAX_VALUE / 2));
+                        musicModel.user1bgId = (long) mUser.id;
+                        //通知主唱 有人加入了合唱
                         RTMMessageBean bean = new RTMMessageBean();
                         bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_APPLY_JOIN_CHORUS;
                         bean.userNo = UserManager.getInstance().getUser().userNo;

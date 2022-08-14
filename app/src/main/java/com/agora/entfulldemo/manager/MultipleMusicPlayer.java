@@ -259,7 +259,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
         if (ObjectsCompat.equals(mUser.userNo, music.userNo)
                 || ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
-            switchRole(Constants.CLIENT_ROLE_AUDIENCE);
+            switchRole(Constants.CLIENT_ROLE_BROADCASTER);
             onPrepareResource();
             ResourceManager.Instance(mContext)
                     .download(music, true)
@@ -384,8 +384,6 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     @Override
     protected void onReceivedStatusPlay(int uid) {
         super.onReceivedStatusPlay(uid);
-        Log.d("cwtsw", "onReceivedStatusPlay " + uid);
-
         MemberMusicModel mMemberMusicModel = RoomManager.getInstance().getMusicModel();
         if (mMemberMusicModel == null) {
             return;

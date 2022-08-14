@@ -50,6 +50,7 @@
         android:gravity="center"
         android:paddingHorizontal="50dp"
         android:text="@string/create_room"
+        android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,14 +83,15 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateRoom2"
-        style="@style/def_btn_full"
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:background="@drawable/bg_def_button_solid"
         android:drawableStart="@mipmap/icon_create_room"
         android:gravity="center"
         android:paddingHorizontal="50dp"
         android:text="@string/create_room"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivBgMobile" />

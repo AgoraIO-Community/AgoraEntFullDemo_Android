@@ -62,7 +62,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         }
         bgOption = String.valueOf(positionCover++);
         GlideApp.with(getBinding().ivRoomCover.getContext()).load(getCoverRes(bgOption))
-                .transform(new CenterCropRoundCornerTransform(20)).into(getBinding().ivRoomCover);
+                .transform(new CenterCropRoundCornerTransform(40)).into(getBinding().ivRoomCover);
 
     }
 

@@ -189,4 +189,5 @@
     <string name="input_edit_name">请输入昵称</string>
     <string name="input_password">请输入房间密码</string>
     <string name="edit_name">修改昵称</string>
+    <string name="people">人</string>
 </resources>
