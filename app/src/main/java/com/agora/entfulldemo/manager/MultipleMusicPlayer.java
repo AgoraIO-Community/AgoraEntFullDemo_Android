@@ -31,7 +31,8 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * 1.起始函数{@link MultipleMusicPlayer#prepare}。
- * 2.陪唱点击按钮"加入合唱"后，触发申请 ，然后触发{@link MultipleMusicPlayer#onMemberApplyJoinChorus}，主唱把第一个人设置成陪唱。
+ * 2.陪唱点击按钮"加入合唱"后，触发申请
+ * ，然后触发{@link MultipleMusicPlayer#onMemberApplyJoinChorus}，主唱把第一个人设置成陪唱。
  * 3.有陪唱加入后，会收到回调{@link MultipleMusicPlayer#onMemberJoinedChorus}，开始下载资源。
  * 4.{@link MultipleMusicPlayer#joinChannelEX}之后，修改状态成Ready，当所有唱歌的人都Ready后，会触发{@link MultipleMusicPlayer#onMemberChorusReady}
  */
@@ -152,20 +153,22 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         mRtcConnection = new RtcConnection();
         mRtcConnection.channelId = channelName;
         mRtcConnection.localUid = uid;
-        RTCManager.getInstance().getRtcEngine().joinChannelEx("", mRtcConnection, options, new IRtcEngineEventHandler() {
-            @Override
-            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                super.onJoinChannelSuccess(channel, uid, elapsed);
-                mLogger.d("onJoinChannelSuccessEX() called with: channel = [%s], uid = [%s], elapsed = [%s]", channel, uid, elapsed);
-                MultipleMusicPlayer.this.onJoinChannelExSuccess(uid);
-            }
+        RTCManager.getInstance().getRtcEngine().joinChannelEx("", mRtcConnection, options,
+                new IRtcEngineEventHandler() {
+                    @Override
+                    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                        super.onJoinChannelSuccess(channel, uid, elapsed);
+                        mLogger.d("onJoinChannelSuccessEX() called with: channel = [%s], uid = [%s], elapsed = [%s]",
+                                channel, uid, elapsed);
+                        MultipleMusicPlayer.this.onJoinChannelExSuccess(uid);
+                    }
 
-            @Override
-            public void onLeaveChannel(RtcStats stats) {
-                super.onLeaveChannel(stats);
-                mLogger.d("onLeaveChannelEX() called with: stats = [%s]", stats);
-            }
-        });
+                    @Override
+                    public void onLeaveChannel(RtcStats stats) {
+                        super.onLeaveChannel(stats);
+                        mLogger.d("onLeaveChannelEX() called with: stats = [%s]", stats);
+                    }
+                });
     }
 
     private void leaveChannelEX() {
@@ -197,13 +200,14 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         this.mUid = uid;
         Long streamId = uid & 0xffffffffL;
         if (ObjectsCompat.equals(musicModelReady.userNo, mUser.userNo)) {
-            //修改准备好的 userbgId 为steaid
-            //修改准备好的 userstatus 为Ready 无回调
+            // 修改准备好的 userbgId 为steaid
+            // 修改准备好的 userstatus 为Ready 无回调
             RoomManager.getInstance().mMusicModel.userbgId = streamId;
             RoomManager.getInstance().mMusicModel.userStatus = MemberMusicModel.UserStatus.Ready;
 
-//            maps.put(MemberMusicModel.COLUMN_USERSTATUS, MemberMusicModel.UserStatus.Ready.value);
-//            maps.put(MemberMusicModel.COLUMN_USERBGID, streamId);
+            // maps.put(MemberMusicModel.COLUMN_USERSTATUS,
+            // MemberMusicModel.UserStatus.Ready.value);
+            // maps.put(MemberMusicModel.COLUMN_USERBGID, streamId);
         }
         onMemberChorusReady(RoomManager.getInstance().mMusicModel);
     }
@@ -240,16 +244,16 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
 
         isApplyJoinChorus = true;
 
-        //修改音乐的 user1id 为 music applyUser1Id 通过id查找
-        //修改音乐的 applyUser1Id 为""
-        //无回调
+        // 修改音乐的 user1id 为 music applyUser1Id 通过id查找
+        // 修改音乐的 applyUser1Id 为""
+        // 无回调
 
         RoomManager.getInstance().mMusicModel.user1Id = music.applyUser1Id;
         RoomManager.getInstance().mMusicModel.applyUser1Id = "";
         RoomManager.getInstance().mMusicModel.user1bgId = music.user1bgId;
         onMemberJoinedChorus(music);
-//        maps.put(MemberMusicModel.COLUMN_USER1ID, music.applyUser1Id);
-//        maps.put(MemberMusicModel.COLUMN_APPLYUSERID, "");
+        // maps.put(MemberMusicModel.COLUMN_USER1ID, music.applyUser1Id);
+        // maps.put(MemberMusicModel.COLUMN_APPLYUSERID, "");
     }
 
     private void onMemberJoinedChorus(@NonNull MemberMusicModel music) {
@@ -259,7 +263,6 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
         if (ObjectsCompat.equals(mUser.userNo, music.userNo)
                 || ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
-            switchRole(Constants.CLIENT_ROLE_BROADCASTER);
             onPrepareResource();
             ResourceManager.Instance(mContext)
                     .download(music, true)
@@ -275,28 +278,21 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                         public void onSuccess(@NonNull MemberMusicModel musicModel) {
                             onResourceReady(musicModel);
                             musicModelReady = musicModel;
+                            switchRole(Constants.CLIENT_ROLE_BROADCASTER);
                             if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }
-                            if (ObjectsCompat.equals(mUser.userNo, music.userNo)) {
-                                joinChannelEX();
-                            } else if (ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
-                                AgoraRoom room = RoomManager.getInstance().getRoom();
-                                if (room == null) {
-                                    return;
-                                }
-                                musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
-                                musicModelReady.user1bgId = music.user1bgId;
-                                joinChannelEX();
-
-                                //修改 musicModelReady 的user1status = ready
-                                //修改 musicModelReady 的user1Bg = mUid;
-//                                HashMap<String, Object> maps = new HashMap<>();
-//                                maps.put(MemberMusicModel.COLUMN_USER1STATUS, MemberMusicModel.UserStatus.Ready.value);
-//                                maps.put(MemberMusicModel.COLUMN_USER1BGID, mUid);
-                                //无回调
-
-                            }
+                            // if (ObjectsCompat.equals(mUser.userNo, music.userNo)) {
+                            // joinChannelEX();
+                            // } else if (ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
+                            // AgoraRoom room = RoomManager.getInstance().getRoom();
+                            // if (room == null) {
+                            // return;
+                            // }
+                            // musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
+                            // musicModelReady.user1bgId = music.user1bgId;
+                            // joinChannelEX();
+                            // }
                         }
 
                         @Override
@@ -305,6 +301,19 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                         }
                     });
         }
+    }
+
+    @Override
+    protected int open(@NonNull MemberMusicModel music) {
+        int result = super.open(music);
+        if (ObjectsCompat.equals(music.userNo, music.userNo)) {
+            joinChannelEX();
+        } else if (ObjectsCompat.equals(UserManager.getInstance().getUser().userNo, music.user1Id)) {
+            musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
+            musicModelReady.user1bgId = music.user1bgId;
+            joinChannelEX();
+        }
+        return result;
     }
 
     /**
@@ -329,10 +338,10 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
 
         if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
-            //唱歌人，主唱，joinChannel 需要屏蔽的uid
+            // 唱歌人，主唱，joinChannel 需要屏蔽的uid
             RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
         } else if (ObjectsCompat.equals(music.user1Id, mUser.userNo)) {
-            //唱歌人，陪唱人，joinChannel 需要屏蔽的uid
+            // 唱歌人，陪唱人，joinChannel 需要屏蔽的uid
             RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.user1bgId.intValue(), true);
         }
 
@@ -395,7 +404,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
 
         if (ObjectsCompat.equals(mMemberMusicModel.user1Id, mUser.userNo)) {
-            //已经开始了 直接retrun;
+            // 已经开始了 直接retrun;
             if (mMemberMusicModel.status == 2) {
                 return;
             }
@@ -451,7 +460,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         if (ObjectsCompat.equals(mMemberMusicModel.userNo, mUser.userNo)) {
 
         } else if (ObjectsCompat.equals(mMemberMusicModel.user1Id, mUser.userNo)) {
-            //如果是暂停 则恢复
+            // 如果是暂停 则恢复
             if (mStatus == Status.Paused) {
                 resume();
             }
@@ -542,7 +551,6 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         } else {
             options.publishAudioTrack = false;
         }
-
         RTCManager.getInstance().getRtcEngine().updateChannelMediaOptions(options);
     }
 
@@ -568,9 +576,9 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         if (mStatus == Status.Started) {
             sendPause();
         }
-//        else if (mStatus == Status.Paused) {
-//
-//        }
+        // else if (mStatus == Status.Paused) {
+        //
+        // }
 
         super.togglePlay();
     }
