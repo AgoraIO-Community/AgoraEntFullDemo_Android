@@ -23,6 +23,7 @@ import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.create.holder.RoomHolder;
+import com.agora.entfulldemo.utils.SPUtil;
 import com.agora.entfulldemo.utils.ToastUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
@@ -49,6 +50,7 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
     }
 
     private void loadRoomList() {
+        SPUtil.putBoolean(KtvConstant.IS_AGREE, true);
         roomCreateViewModel.loadRooms();
     }
 
@@ -71,7 +73,8 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
         mAdapter = new BaseRecyclerViewAdapter<>(null, new OnItemClickListener<AgoraRoom>() {
             @Override
             public void onItemClick(@NonNull AgoraRoom data, View view, int position, long viewType) {
-                if (!TextUtils.isEmpty(data.password) && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
+                if (!TextUtils.isEmpty(data.password)
+                        && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
                     showInputPwdDialog(data);
                 } else {
                     RoomManager.getInstance().setAgoraRoom(data);

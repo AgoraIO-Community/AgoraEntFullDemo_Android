@@ -3,8 +3,10 @@ package com.agora.entfulldemo.api;
 import androidx.annotation.NonNull;
 
 import com.agora.entfulldemo.api.base.BaseResponse;
+import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.UserLogoutEvent;
 import com.agora.entfulldemo.utils.LogUtils;
+import com.agora.entfulldemo.utils.SPUtil;
 import com.google.gson.JsonParseException;
 
 import org.greenrobot.eventbus.EventBus;
@@ -97,6 +99,7 @@ public abstract class ApiSubscriber<T> implements Observer<T> {
                 errorMsg = "登录超时，请重新登录";
                 errorCode = ErrorCode.TOKEN_ERROR;
                 EventBus.getDefault().post(new UserLogoutEvent());
+                SPUtil.putBoolean(KtvConstant.IS_AGREE, false);
             } else {
                 errorMsg = "错误 : errorCode = " + ((HttpException) e).code() + " ; errorMsg = " + e.getMessage();
             }

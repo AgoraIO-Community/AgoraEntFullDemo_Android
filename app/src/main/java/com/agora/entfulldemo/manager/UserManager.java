@@ -42,6 +42,7 @@ public final class UserManager {
 
     private void writeUserInfoToPrefs(boolean isLogOut) {
         if (isLogOut) {
+            mUser = null;
             SPUtil.putString(KtvConstant.CURRENT_USER, "");
         } else {
             SPUtil.putString(KtvConstant.CURRENT_USER, getUserInfoJson());

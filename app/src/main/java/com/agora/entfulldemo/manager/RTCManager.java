@@ -56,7 +56,6 @@ public final class RTCManager {
         this.mRTCEvent = null;
     }
 
-
     private RtcEngineEx mRtcEngine;
 
     public RtcEngineEx getRtcEngine() {
@@ -72,7 +71,7 @@ public final class RTCManager {
         if (mRtcEngine != null) {
             return;
         }
-        //初始化RTC
+        // 初始化RTC
         RtcEngineConfig config = new RtcEngineConfig();
         config.mContext = AgoraApplication.the();
         config.mAppId = BuildConfig.APP_ID;
@@ -91,8 +90,7 @@ public final class RTCManager {
     }
 
     public void initMcc(String token) {
-        MusicContentCenterConfiguration contentCenterConfiguration
-                = new MusicContentCenterConfiguration();
+        MusicContentCenterConfiguration contentCenterConfiguration = new MusicContentCenterConfiguration();
         contentCenterConfiguration.appId = BuildConfig.APP_ID;
         contentCenterConfiguration.mccUid = UserManager.getInstance().getUser().id;
         contentCenterConfiguration.rtmToken = token;
@@ -107,7 +105,8 @@ public final class RTCManager {
             }
 
             @Override
-            public void onMusicCollectionResult(String requestId, int status, int page, int pageSize, int total, Music[] list) {
+            public void onMusicCollectionResult(String requestId, int status, int page, int pageSize, int total,
+                    Music[] list) {
 
             }
 
@@ -132,7 +131,8 @@ public final class RTCManager {
     }
 
     public boolean preLoad(String songNo) {
-        if (iAgoraMusicContentCenter.isPreloaded(Long.parseLong(songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null) != 0) {
+        if (iAgoraMusicContentCenter.isPreloaded(Long.parseLong(songNo),
+                IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null) != 0) {
             iAgoraMusicContentCenter.preload(Long.parseLong(songNo),
                     IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null);
             return false;
@@ -141,7 +141,6 @@ public final class RTCManager {
         }
 
     }
-
 
     public void joinRTC(String roomId, Long steamId, int role) {
         getRtcEngine().setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
@@ -199,7 +198,6 @@ public final class RTCManager {
         mStreamId = null;
     }
 
-
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
 
         @Override
@@ -214,7 +212,8 @@ public final class RTCManager {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
             super.onJoinChannelSuccess(channel, uid, elapsed);
-            mLoggerRTC.i("onJoinChannelSuccess() called with: channel = [%s], uid = [%s], elapsed = [%s]", channel, uid, elapsed);
+            mLoggerRTC.i("onJoinChannelSuccess() called with: channel = [%s], uid = [%s], elapsed = [%s]", channel, uid,
+                    elapsed);
         }
 
         @Override
@@ -223,8 +222,14 @@ public final class RTCManager {
             mLoggerRTC.i("onLeaveChannel() called with: stats = [%s]", stats);
         }
 
+        private long receiveMessageTime = 0L;
+
         @Override
         public void onStreamMessage(int uid, int streamId, byte[] data) {
+            if (System.currentTimeMillis() - receiveMessageTime < 800) {
+                return;
+            }
+            receiveMessageTime = System.currentTimeMillis();
             JSONObject jsonMsg;
             try {
                 String strMsg = new String(data);
@@ -262,8 +267,8 @@ public final class RTCManager {
                 if (info.uid == 0 && info.voicePitch > 0) {
                     RoomManager.getInstance().mMainThreadDispatch.onLocalPitch(info.voicePitch);
 
-
-                    if (RoomManager.getInstance().mMusicModel != null && !RoomManager.getInstance().mMusicModel.isChorus) {
+                    if (RoomManager.getInstance().mMusicModel != null
+                            && !RoomManager.getInstance().mMusicModel.isChorus) {
                         RTMMessageBean bean = new RTMMessageBean();
                         bean.headUrl = UserManager.getInstance().getUser().headUrl;
                         bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_SYNCHRO_PITCH;

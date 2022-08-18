@@ -150,17 +150,11 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         getBinding().btnCreate.setOnClickListener(view -> {
             if (getBinding().cbUnOpen.isChecked() && !isAllInput()) {
                 ToastUtils.showToast(getString(R.string.please_input_4_pwd));
-                if (TextUtils.isEmpty(getBinding().etRoomName.getText())) {
-                    ToastUtils.showToast(getString(R.string.please_input_room_name));
-                } else {
-                    createRoom(null);
-                }
             } else {
-                String code =
-                        getBinding().etCode1.getText().toString()
-                                + getBinding().etCode2.getText()
-                                + getBinding().etCode3.getText()
-                                + getBinding().etCode4.getText();
+                String code = getBinding().etCode1.getText().toString()
+                        + getBinding().etCode2.getText()
+                        + getBinding().etCode3.getText()
+                        + getBinding().etCode4.getText();
                 if (TextUtils.isEmpty(getBinding().etRoomName.getText())) {
                     ToastUtils.showToast(getString(R.string.please_input_room_name));
                 } else if (code.length() > 4) {
@@ -176,7 +170,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
     }
 
     private void setRandomRoomTitleAndCover() {
-        getBinding().etRoomName.setText(getResources().getStringArray(R.array.ktv_roomName)[new Random().nextInt(6)]);
+        getBinding().etRoomName.setText(getResources().getStringArray(R.array.ktv_roomName)[new Random().nextInt(21)]);
         setCover();
     }
 
@@ -246,7 +240,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
     /**
      * 寻找下一个需要获取焦点的控件
      *
-     * @param isNext true 下一个  false 上一个
+     * @param isNext true 下一个 false 上一个
      */
     private void findNextFocus(boolean isNext) {
         if (isNext) {
@@ -264,24 +258,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                     getBinding().etCode4.requestFocus();
                     break;
                 case 3: {
-                    //全部填完
-                    hideInput();
-                    break;
-                }
-            }
-        } else {
-            switch (currentPosition) {
-                case 1:
-                    getBinding().etCode1.requestFocus();
-                    break;
-                case 2:
-                    getBinding().etCode2.requestFocus();
-                    break;
-                case 3:
-                    getBinding().etCode3.requestFocus();
-                    break;
-            }
-        }
+    // 全部填完hideIn     }se {ch (cur 1:getBin    bre 2:getBin    bre 3:getBin      }
     }
 
     /**
@@ -307,7 +284,7 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         public void afterTextChanged(Editable editable) {
             if (editable.length() > 0) {
                 if (editable.length() > 1) {
-                    //检查是否要替换当前输入内容
+                    // 检查是否要替换当前输入内容
                     String newInput;
                     if (String.valueOf(editable.charAt(0)).equals(oldInput)) {
                         newInput = String.valueOf(editable.charAt(1));
@@ -329,11 +306,10 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                             break;
                     }
                 } else {
-                    //寻焦
+                    // 寻焦
                     findNextFocus(true);
-                }
-            }
-        }
+             
+         }
     };
 
     /**

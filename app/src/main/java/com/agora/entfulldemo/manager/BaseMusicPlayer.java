@@ -480,8 +480,14 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         mLogger.e("onStreamMessageError() called with: uid = [%s], streamId = [%s], error = [%s], missed = [%s], cached = [%s]", uid, streamId, error, missed, cached);
     }
 
+    private long receiveMessageTime = 0L;
+
     @Override
     public void onStreamMessage(int uid, int streamId, byte[] data) {
+        if (System.currentTimeMillis() - receiveMessageTime < 800) {
+            return;
+        }
+        receiveMessageTime = System.currentTimeMillis();
         JSONObject jsonMsg;
         try {
             String strMsg = new String(data);

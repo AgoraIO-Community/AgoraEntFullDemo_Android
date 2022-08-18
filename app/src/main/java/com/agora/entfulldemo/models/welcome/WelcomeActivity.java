@@ -13,10 +13,13 @@ import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.databinding.ActivityWelcomeBinding;
 import com.agora.entfulldemo.dialog.UserAgreementDialog;
 import com.agora.entfulldemo.listener.OnButtonClickListener;
+import com.agora.entfulldemo.manager.PagePathConstant;
 import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.utils.SPUtil;
+import com.alibaba.android.arouter.facade.annotation.Route;
 
+@Route(path = PagePathConstant.pageWelcome)
 public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBinding> {
     private UserAgreementDialog userAgreementDialog;
 
@@ -53,9 +56,8 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
 
                 @Override
                 public void onRightButtonClick() {
-                    startMainActivity();
+                    PagePilotManager.pagePhoneLoginRegister();
                     userAgreementDialog.dismiss();
-                    SPUtil.putBoolean(KtvConstant.IS_AGREE, true);
                 }
             });
         }
@@ -69,18 +71,18 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
     }
 
     private void checkStatusToStart() {
-        if (!SPUtil.getBoolean(KtvConstant.IS_AGREE, false)) {
-            showUserAgreementDialog();
-        } else {
-            startMainActivity();
-        }
+        startMainActivity();
     }
 
     private void startMainActivity() {
         if (UserManager.getInstance().isLogin()) {
             PagePilotManager.pageMainHome();
         } else {
-            PagePilotManager.pagePhoneLoginRegister();
+            if (!SPUtil.getBoolean(KtvConstant.IS_AGREE, false)) {
+                showUserAgreementDialog();
+            } else {
+                PagePilotManager.pagePhoneLoginRegister();
+            }
         }
     }
 

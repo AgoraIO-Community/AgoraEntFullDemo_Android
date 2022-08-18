@@ -1,6 +1,7 @@
 package com.agora.entfulldemo.manager;
 
 public class PagePathConstant {
+    public static final String pageWelcome = "/page/welcome";
     public static final String pageMainHome = "/page/mainHome";
     public static final String pageWebView = "/page/pageWebView";
     public static final String pageAbout = "/page/pageAbout";

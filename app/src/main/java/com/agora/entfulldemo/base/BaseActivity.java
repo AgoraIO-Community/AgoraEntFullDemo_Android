@@ -64,7 +64,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 View decorView = getWindow().getDecorView();
                 //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
                 int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION//| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 //在6.0增加了View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR，
                 // 这个字段就是把状态栏标记为浅色，然后状态栏的字体颜色自动转换为深色

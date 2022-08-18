@@ -4,6 +4,12 @@ import com.agora.entfulldemo.common.KtvConstant;
 import com.alibaba.android.arouter.launcher.ARouter;
 
 public class PagePilotManager {
+    public static void pageWelcome() {
+        ARouter.getInstance()
+                .build(PagePathConstant.pageWelcome)
+                .navigation();
+    }
+
     public static void pageMainHome() {
         ARouter.getInstance()
                 .build(PagePathConstant.pageMainHome)

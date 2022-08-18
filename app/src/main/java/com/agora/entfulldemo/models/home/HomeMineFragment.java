@@ -31,6 +31,7 @@ import com.agora.entfulldemo.manager.RTCManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.utils.FileUtils;
 import com.agora.entfulldemo.utils.ImageCompressUtil;
+import com.agora.entfulldemo.utils.SPUtil;
 import com.agora.entfulldemo.utils.UriUtils;
 
 import java.io.File;
@@ -47,7 +48,6 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     protected FragmentHomeMineBinding getViewBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         return FragmentHomeMineBinding.inflate(inflater);
     }
-
 
     @Override
     public void initView() {
@@ -73,7 +73,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             } else if (type == KtvConstant.CALLBACK_TYPE_USER_CANCEL_ACCOUNTS) {
                 UserManager.getInstance().logout();
                 requireActivity().finish();
-                PagePilotManager.pagePhoneLoginRegister();
+                PagePilotManager.pageWelcome();
             }
         });
         getBinding().tvUserAgreement.setOnClickListener(view -> {
@@ -140,8 +140,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     private void takePhoto() {
         Intent intentToTakePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intentToTakePhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        File fileDir = new File(FileUtils.getTempSDPath()
-        );
+        File fileDir = new File(FileUtils.getTempSDPath());
         if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
@@ -150,8 +149,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         Uri imageUri = FileProvider.getUriForFile(
                 getContext(),
                 BuildConfig.APPLICATION_ID + ".fileProvider",
-                photoFile
-        );
+                photoFile);
         intentToTakePhoto.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intentToTakePhoto, TAKE_PHOTO);
     }
@@ -175,13 +173,14 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     }
 
     private void setImage(String filePath) {
-        if (filePath == null) return;
+        if (filePath == null)
+            return;
         String path = ImageCompressUtil.displayPath(requireActivity(), filePath);
         if (TextUtils.isEmpty(path) || new File(filePath).length() <= 150000) {
             path = filePath;
         }
         mTempPhotoPath = path;
-//        UserManager.getInstance().getUser().headUrl = mTempPhotoPath;
+        // UserManager.getInstance().getUser().headUrl = mTempPhotoPath;
         mainViewModel.updatePhoto(new File(mTempPhotoPath));
     }
 
@@ -199,6 +198,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             logoffAccountDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
+                    SPUtil.putBoolean(KtvConstant.IS_AGREE, false);
                     mainViewModel.requestCancellation(UserManager.getInstance().getUser().userNo);
                 }
 
@@ -220,9 +220,10 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             logoutDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
+                    SPUtil.putBoolean(KtvConstant.IS_AGREE, false);
                     UserManager.getInstance().logout();
                     requireActivity().finish();
-                    PagePilotManager.pagePhoneLoginRegister();
+                    PagePilotManager.pageWelcome();
                 }
 
                 @Override
