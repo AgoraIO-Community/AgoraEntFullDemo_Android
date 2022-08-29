@@ -298,7 +298,6 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
     }
 
     public void updateScore(double score) {
-        Log.d("cwtsw", "updateScore " + score);
         mBinding.scoreControlView.setText(getContext().getString(R.string.score_formatter, score));
     }
 

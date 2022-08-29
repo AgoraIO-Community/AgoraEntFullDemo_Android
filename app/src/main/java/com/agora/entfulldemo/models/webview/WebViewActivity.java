@@ -26,7 +26,6 @@ public class WebViewActivity extends BaseViewBindingActivity<ActivityWebviewBind
     @Autowired(name = KtvConstant.URL)
     String url = "https://www.agora.io/cn/about-us/";
 
-
     @Override
     protected ActivityWebviewBinding getViewBinding(@NonNull LayoutInflater layoutInflater) {
         return ActivityWebviewBinding.inflate(layoutInflater);
@@ -35,11 +34,11 @@ public class WebViewActivity extends BaseViewBindingActivity<ActivityWebviewBind
     @Override
     public void initView(@Nullable Bundle savedInstanceState) {
         ARouter.getInstance().inject(this);
-        if (url.contains("termsofuse")) {
+        if (url.contains("user_agreement")) {
             getBinding().titleView.setTitle(getString(R.string.user_agreement));
         } else if (url.contains("about-us")) {
             getBinding().titleView.setTitle(getString(R.string.about_us));
-        } else if (url.contains("privacypolicy")){
+        } else if (url.contains("privacy_policy")) {
             getBinding().titleView.setTitle(getString(R.string.privacy_agreement));
         }
         getBinding().webView.loadUrl(url);

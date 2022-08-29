@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.core.util.ObjectsCompat;
 
+import com.agora.data.model.AgoraMember;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.bean.MemberMusicModel;
@@ -28,18 +29,27 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
     @Override
     public void switchRole(int role) {
         mLogger.d("switchRole() called with: role = [%s]", role);
-        mRole = role;
 
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.publishMediaPlayerId = mPlayer.getMediaPlayerId();
-        options.clientRoleType = role;
         if (role == Constants.CLIENT_ROLE_BROADCASTER) {
-            options.publishAudioTrack = true;
+            options.clientRoleType = role;
+            if (RoomManager.mMine.isSelfMuted == 0) {
+                options.publishAudioTrack = true;
+            }
+            options.publishMediaPlayerAudioTrack = true;
+        } else if (RoomManager.mMine.role != AgoraMember.Role.Listener) {
+            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+            if (RoomManager.mMine.isSelfMuted == 0) {
+                options.publishAudioTrack = true;
+            }
             options.publishMediaPlayerAudioTrack = true;
         } else {
+            options.clientRoleType = role;
             options.publishAudioTrack = false;
             options.publishMediaPlayerAudioTrack = false;
         }
+        mRole = options.clientRoleType;
         RTCManager.getInstance().getRtcEngine().updateChannelMediaOptions(options);
     }
 
@@ -69,7 +79,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
                             if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }
-//
+                            //
                         }
 
                         @Override

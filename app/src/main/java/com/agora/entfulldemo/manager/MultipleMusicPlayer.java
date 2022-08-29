@@ -84,6 +84,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
 
     @Override
     public void prepare(@NonNull MemberMusicModel music) {
+        Log.d("cwtsw", "多人 prepare");
         User mUser = UserManager.getInstance().getUser();
         if (mUser == null) {
             return;
@@ -117,7 +118,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     private String channelName = null;
 
     private void joinChannelEX() {
-        mLogger.d("joinChannelEX() called");
+        Log.d("cwtsw", "多人 joinChannelEX");
         User mUser = UserManager.getInstance().getUser();
         if (mUser == null) {
             return;
@@ -215,6 +216,8 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     @Override
     protected void onMusicOpenCompleted() {
         mLogger.i("onMusicOpenCompleted() called");
+        if (mStatus == Status.Opened)
+            return;
         mStatus = Status.Opened;
 
         startDisplayLrc();
@@ -224,6 +227,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     private volatile boolean isApplyJoinChorus = false;
 
     private void onMemberApplyJoinChorus(@NonNull MemberMusicModel music) {
+        Log.d("cwtsw", "多人 onMemberApplyJoinChorus");
         User mUser = UserManager.getInstance().getUser();
         if (mUser == null) {
             return;
@@ -257,6 +261,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     }
 
     private void onMemberJoinedChorus(@NonNull MemberMusicModel music) {
+        Log.d("cwtsw", "多人 onMemberJoinedChorus");
         User mUser = UserManager.getInstance().getUser();
         if (mUser == null) {
             return;
@@ -280,19 +285,9 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                             musicModelReady = musicModel;
                             switchRole(Constants.CLIENT_ROLE_BROADCASTER);
                             if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
+                                Log.d("cwtsw", "多人 open");
                                 open(musicModel);
                             }
-                            // if (ObjectsCompat.equals(mUser.userNo, music.userNo)) {
-                            // joinChannelEX();
-                            // } else if (ObjectsCompat.equals(mUser.userNo, music.user1Id)) {
-                            // AgoraRoom room = RoomManager.getInstance().getRoom();
-                            // if (room == null) {
-                            // return;
-                            // }
-                            // musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
-                            // musicModelReady.user1bgId = music.user1bgId;
-                            // joinChannelEX();
-                            // }
                         }
 
                         @Override
@@ -306,14 +301,39 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     @Override
     protected int open(@NonNull MemberMusicModel music) {
         int result = super.open(music);
-        if (ObjectsCompat.equals(music.userNo, music.userNo)) {
+        if (ObjectsCompat.equals(UserManager.getInstance().getUser().userNo, music.userNo)) {
+            Log.d("cwtsw", "多人 open 我是主唱");
             joinChannelEX();
-        } else if (ObjectsCompat.equals(UserManager.getInstance().getUser().userNo, music.user1Id)) {
+        } else if (UserManager.getInstance().getUser().userNo.equals(music.user1Id)) {
+            startNetTestTask();
             musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
             musicModelReady.user1bgId = music.user1bgId;
+            Log.d("cwtsw", "多人 open 我是合唱");
             joinChannelEX();
         }
         return result;
+    }
+
+    private boolean mRunNetTask = false;
+    private Thread mNetTestThread;
+
+    private void startNetTestTask() {
+        mRunNetTask = true;
+        mNetTestThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (mRunNetTask) {
+                    sendTestDelay();
+                    try {
+                        Thread.sleep(10 * 1000L);
+                    } catch (InterruptedException exp) {
+                        break;
+                    }
+                }
+            }
+        });
+        mNetTestThread.setName("Thread-NetTest");
+        mNetTestThread.start();
     }
 
     /**
@@ -327,6 +347,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
      * @param music
      */
     private void onMemberChorusReady(@NonNull MemberMusicModel music) {
+        Log.d("cwtsw", "多人 onMemberChorusReady");
         User mUser = UserManager.getInstance().getUser();
         if (mUser == null) {
             return;
@@ -337,12 +358,12 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             return;
         }
 
-        if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
+        if (music.userNo.equals(mUser.userNo)) {
             // 唱歌人，主唱，joinChannel 需要屏蔽的uid
-            RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
-        } else if (ObjectsCompat.equals(music.user1Id, mUser.userNo)) {
-            // 唱歌人，陪唱人，joinChannel 需要屏蔽的uid
             RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.user1bgId.intValue(), true);
+        } else if (music.user1Id.equals(mUser.userNo)) {
+            // 唱歌人，陪唱人，joinChannel 需要屏蔽的uid
+            RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
         }
 
         if (ObjectsCompat.equals(music.userNo, mUser.userNo)
@@ -350,18 +371,20 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             music.fileMusic = (musicModelReady.fileMusic);
             music.fileLrc = (musicModelReady.fileLrc);
 
-            if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
-                sendStartPlay();
-                try {
-                    synchronized (this) {
-                        wait(PLAY_WAIT);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            // if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
+            Log.d("cwtsw", "多人 onMemberChorusReady 我是主唱 调play");
+            sendStartPlay();
+            try {
+                synchronized (this) {
+                    wait(PLAY_WAIT);
                 }
-
-                play();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            play();
+            // } else {
+            // Log.d("cwtsw", "多人 onMemberChorusReady 我不是主唱");
+            // }
         } else {
             onPrepareResource();
 
@@ -403,11 +426,10 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             return;
         }
 
-        if (ObjectsCompat.equals(mMemberMusicModel.user1Id, mUser.userNo)) {
+        if (mMemberMusicModel.user1Id.equals(mUser.userNo)) {
             // 已经开始了 直接retrun;
-            if (mMemberMusicModel.status == 2) {
+            if (mStatus == Status.Started)
                 return;
-            }
 
             try {
                 synchronized (this) {
@@ -421,7 +443,10 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                 e.printStackTrace();
             }
             play();
+        } else {
+            Log.d("cwtsw", "多人 不相等");
         }
+
     }
 
     @Override
@@ -463,6 +488,8 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             // 如果是暂停 则恢复
             if (mStatus == Status.Paused) {
                 resume();
+            } else {
+                super.onReceivedSetLrcTime(uid, position);
             }
         } else {
             super.onReceivedSetLrcTime(uid, position);
@@ -547,7 +574,9 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         options.clientRoleType = role;
         options.publishMediaPlayerAudioTrack = false;
         if (role == Constants.CLIENT_ROLE_BROADCASTER) {
-            options.publishAudioTrack = true;
+            if (RoomManager.mMine.isSelfMuted == 0) {
+                options.publishAudioTrack = true;
+            }
         } else {
             options.publishAudioTrack = false;
         }
@@ -575,10 +604,8 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
     public void togglePlay() {
         if (mStatus == Status.Started) {
             sendPause();
+        } else if (mStatus == Status.Paused) {
         }
-        // else if (mStatus == Status.Paused) {
-        //
-        // }
 
         super.togglePlay();
     }
@@ -615,7 +642,6 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         msg.put("time", 0);
         JSONObject jsonMsg = new JSONObject(msg);
         int streamId = RTCManager.getInstance().getStreamId();
-        Log.d("cwtsw", "主唱 sendStartPlay = " + msg);
         int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
         if (ret < 0) {
             mLogger.e("sendStartPlay() sendStreamMessage called returned: ret = [%s]", ret);
@@ -628,6 +654,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         msg.put("time", -1);
         JSONObject jsonMsg = new JSONObject(msg);
         int streamId = RTCManager.getInstance().getStreamId();
+        Log.d("cwtsw", "发送多人暂停消息");
         int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
         if (ret < 0) {
             mLogger.e("sendPause() sendStreamMessage called returned: ret = [%s]", ret);

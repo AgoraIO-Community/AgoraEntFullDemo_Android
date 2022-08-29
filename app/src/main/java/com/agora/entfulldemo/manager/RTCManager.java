@@ -8,6 +8,7 @@ import com.agora.entfulldemo.api.apiutils.GsonUtils;
 import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.bean.room.RTCMessageBean;
 import com.agora.entfulldemo.bean.room.RTMMessageBean;
+import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.PreLoadEvent;
 import com.agora.entfulldemo.listener.ISingleCallback;
 import com.agora.entfulldemo.models.room.live.RoomLivingViewModel;
@@ -89,11 +90,11 @@ public final class RTCManager {
 
     }
 
-    public void initMcc(String token) {
+    public void initMcc() {
         MusicContentCenterConfiguration contentCenterConfiguration = new MusicContentCenterConfiguration();
         contentCenterConfiguration.appId = BuildConfig.APP_ID;
         contentCenterConfiguration.mccUid = UserManager.getInstance().getUser().id;
-        contentCenterConfiguration.rtmToken = token;
+        contentCenterConfiguration.rtmToken = KtvConstant.RTM_TOKEN;
         iAgoraMusicContentCenter = IAgoraMusicContentCenter.create(mRtcEngine);
         iAgoraMusicContentCenter.initialize(contentCenterConfiguration);
         iAgoraMusicContentCenter.registerEventHandler(new IMusicContentCenterEventHandler() {
@@ -152,7 +153,7 @@ public final class RTCManager {
         getRtcEngine().setParameters("{\"rtc.audio_fec\":[3,2]}");
         getRtcEngine().setParameters("{\"rtc.audio_resend\":false}");
         getRtcEngine().setClientRole(role);
-        int ret = getRtcEngine().joinChannel("", roomId, null, steamId.intValue());
+        int ret = getRtcEngine().joinChannel(KtvConstant.RTC_TOKEN, roomId, null, steamId.intValue());
         if (ret != Constants.ERR_OK) {
             mLoggerRTC.e("joinRTC() called error " + ret);
         } else {
@@ -222,18 +223,17 @@ public final class RTCManager {
             mLoggerRTC.i("onLeaveChannel() called with: stats = [%s]", stats);
         }
 
-        private long receiveMessageTime = 0L;
+        // private long receiveMessageTime = 0L;
 
         @Override
         public void onStreamMessage(int uid, int streamId, byte[] data) {
-            if (System.currentTimeMillis() - receiveMessageTime < 800) {
-                return;
-            }
-            receiveMessageTime = System.currentTimeMillis();
+            // if (System.currentTimeMillis() - receiveMessageTime < 800) {
+            // return;
+            // }
+            // receiveMessageTime = System.currentTimeMillis();
             JSONObject jsonMsg;
             try {
                 String strMsg = new String(data);
-                Log.d("cwtsw", "streamId = " + streamId + " strMsg = " + strMsg);
                 if (!strMsg.startsWith("{")) {
                     return;
                 }

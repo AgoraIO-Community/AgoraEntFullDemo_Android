@@ -1,5 +1,8 @@
 package com.agora.entfulldemo.models.room.create.holder;
 
+import android.text.TextUtils;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 
 import com.agora.entfulldemo.base.BaseRecyclerViewAdapter;
@@ -22,6 +25,11 @@ public class RoomHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomL
                     .transform(new CenterCropRoundCornerTransform(40)).into(mBinding.ivRoomCover);
             mBinding.tvRoomName.setText(data.name);
             mBinding.tvPersonNum.setText(String.format("%d%s", data.roomPeopleNum, itemView.getContext().getString(R.string.people)));
+            if (!TextUtils.isEmpty(data.password)) {
+                mBinding.ivLock.setVisibility(View.VISIBLE);
+            } else {
+                mBinding.ivLock.setVisibility(View.GONE);
+            }
         }
     }
 }

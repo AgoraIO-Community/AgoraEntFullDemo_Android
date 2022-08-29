@@ -1,5 +1,7 @@
 package com.agora.entfulldemo.manager;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.ObjectsCompat;
@@ -106,6 +108,9 @@ public final class RoomManager {
         }
     }
 
+    public boolean isMyMusic() {
+        return mMine.userNo.equals(mMusicModel.userNo);
+    }
 
     private void joinRTM() {
         RTMManager.getInstance().joinRTMRoom(mRoom.roomNo);
@@ -153,7 +158,7 @@ public final class RoomManager {
         return mMine;
     }
 
-    //是否是主唱
+    // 是否是主唱
     public boolean isSinger(String userId) {
         return singers.contains(userId);
     }
@@ -207,7 +212,7 @@ public final class RoomManager {
             }
         }
         liveDataMusics.postValue(musics);
-        //交换 推送
+        // 交换 推送
         RTMMessageBean bean = new RTMMessageBean();
         bean.headUrl = UserManager.getInstance().getUser().headUrl;
         bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_ON_SEAT;
@@ -222,7 +227,7 @@ public final class RoomManager {
             musics.remove(position);
         }
         liveDataMusics.postValue(musics);
-//        mMainThreadDispatch.onMusicDelete(musicNo);
+        // mMainThreadDispatch.onMusicDelete(musicNo);
         if (musics.size() > 0) {
             onMusicChanged(musics.get(0));
         } else {
@@ -230,14 +235,14 @@ public final class RoomManager {
         }
         EventBus.getDefault().post(new MusicListChangeEvent());
 
-//        //删歌 推送
-//        RTMMessageBean bean = new RTMMessageBean();
-//        bean.headUrl = UserManager.getInstance().getUser().headUrl;
-//        bean.messageType = "1";
-//        bean.userNo = UserManager.getInstance().getUser().userNo;
-//        bean.name = UserManager.getInstance().getUser().name;
-//
-//        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+        // //删歌 推送
+        // RTMMessageBean bean = new RTMMessageBean();
+        // bean.headUrl = UserManager.getInstance().getUser().headUrl;
+        // bean.messageType = "1";
+        // bean.userNo = UserManager.getInstance().getUser().userNo;
+        // bean.name = UserManager.getInstance().getUser().name;
+        //
+        // RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
     }
 
     public void onMusicEmpty(boolean isUpdateUI) {
@@ -264,11 +269,11 @@ public final class RoomManager {
         }
         iSingleCallback.onSingleCallback(ROOM_TYPE_ON_MUSIC_CHANGED, null);
 
-        //唱 下一首歌
-//        RTMMessageBean bean = new RTMMessageBean();
-//        bean.messageType = "100";
-//        String json = GsonUtils.Companion.getGson().toJson(bean);
-//        RTMManager.getInstance().sendMessage(json);
+        // 唱 下一首歌
+        // RTMMessageBean bean = new RTMMessageBean();
+        // bean.messageType = "100";
+        // String json = GsonUtils.Companion.getGson().toJson(bean);
+        // RTMManager.getInstance().sendMessage(json);
     }
 
     /**
@@ -283,16 +288,15 @@ public final class RoomManager {
         mMusicModel = model;
         mMainThreadDispatch.onMemberApplyJoinChorus(model);
 
-
-//        //同意加入合唱
-//        RTMMessageBean bean = new RTMMessageBean();
-//        bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_APPLY_JOIN_CHORUS;
-//        bean.userNo = UserManager.getInstance().getUser().userNo;
-//        bean.name = UserManager.getInstance().getUser().name;
-//        bean.songNo = model.songNo;
-//        bean.bgUid = mMusicModel.userbgId;
-//
-//        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+        // //同意加入合唱
+        // RTMMessageBean bean = new RTMMessageBean();
+        // bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_APPLY_JOIN_CHORUS;
+        // bean.userNo = UserManager.getInstance().getUser().userNo;
+        // bean.name = UserManager.getInstance().getUser().name;
+        // bean.songNo = model.songNo;
+        // bean.bgUid = mMusicModel.userbgId;
+        //
+        // RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
 
     }
 
@@ -307,6 +311,7 @@ public final class RoomManager {
     }
 
     public void onMemberJoinedChorus(MemberMusicModel model) {
+        Log.d("cwtsw", "多人 room manager onMemberJoinedChorus");
         mLogger.i("onMemberJoinedChorus() called with: model = [%s]", model);
         int index = musics.indexOf(model);
         if (index >= 0) {
@@ -435,7 +440,7 @@ public final class RoomManager {
         singers.clear();
     }
 
-    //同步用户状态
+    // 同步用户状态
     public void memberEventUpData(AgoraMember memberRemote) {
         AgoraMember memberLocal = memberHashMap.get(memberRemote.userNo);
         if (memberLocal != null && memberLocal.role != memberRemote.role) {

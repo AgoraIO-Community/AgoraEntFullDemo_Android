@@ -52,8 +52,9 @@ import io.agora.lrcview.bean.LrcData;
  */
 @Route(path = PagePathConstant.pageRoomLiving)
 public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivingBinding>
-
-            private MoreDialog moreDialog;
+        implements OnItemClickListener<AgoraMember> {
+    private RoomLivingViewModel roomLivingViewModel;
+    private MoreDialog moreDialog;
     private MusicSettingDialog musicSettingDialog;
     private BaseRecyclerViewAdapter<KtvItemRoomSpeakerBinding, AgoraMember, RoomPeopleHolder> mRoomSpeakerAdapter;
     private boolean isInitList = false;
@@ -141,8 +142,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
     @Override
     public void onItemClick(View view, int position, long viewType) {
-        if (position == -1) return;
-        // 击坐位 上麦克
+        if (position == -1)
+            return;
+        // 点击坐位 上麦克
         AgoraMember agoraMember = mRoomSpeakerAdapter.dataList.get(position);
         if (agoraMember == null) {
             if (RoomManager.getInstance().getMine().role == AgoraMember.Role.Listener) {
@@ -175,8 +177,6 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
             @Override
             public void onScore(double score, double cumulativeScore, double totalScore) {
-                Log.d("cwtsw", "得分 score = " + score + " cumulativeScore = " + cumulativeScore + " totalScore = "
-                        + totalScore);
                 getBinding().lrcControlView.updateScore(score);
             }
         });
@@ -206,54 +206,56 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                     finish();
                 } else if (type == KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_CREATOR_EXIT) {
                     showCreatorExitDialog();
-                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_
-
-    // 修改背景   getBiding(.lcControlView.setLrcViewBackground(R.mipmap.portrait02;se if (type == KtvConsta   finis();
-    se if (
-    onMemberLeave((AgoraMember) o);}else if(type==KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_COTgetBindin}else if(type==KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_JOIN) onMemberJoin((AgoraMember) );}else if(type==KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_PLAY_COMPLETED) {if (RoomManager.getInstance().mMusicModel.userNo          .eqal(UserManager.getInstance().getUser().userNo)        || UserManager.getnst                  .eqal(RoomManager.getInstance().mMusicModel.user1Id)) {
-    
-            int score = (int) getBinding().lrcControlVie
-                inding().tvResultScore.setText(String.valueOf(score
-                score >= 90) {
-                        ng().ivResultLevel.setImageResource(R.mipmap.ic_s);
-            } else if (score >= 80) {
-                getBinding().ivResultLevel.setImageResource(R.mipmap.i
-            } else if (score >
-                getBinding().ivResultLevel.setImageResource(R.mipmap.ic_b);
-            } else {
-                getBinding().ivResultLevel.setImageResource(R.mipmap.ic_c);
-            }
-                inding().groupResult.setVisibility(View.VISIBLE);
-            
-                ype == KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE) {
-            m
-            f (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_S
-        g
-    }else if(type==KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_VID
-    O
-        RTMMessageBean bean = (RTMMessageBean) o;
-       // 像打摄像头
-    
-        for (int i = 0; i < mRoomSpeakerAdapter.dataList.size();
-           i (mRomS
-    eakerAdapter.dataList.get(i) != null
-                                && mRoomS
-    e
-                mRoomSpeakerAdapter.dataList.get(
-
-                mRoomSpeakerAdapter.notifyItemChanged(i);
-            }
-                    
-                ype == KtvConstant.TYPE_C
-
-                geBean bean = (RTMMessageBean) o;
-                  = 0;  < mRompeakerAdapter.dataList.
-
-    
-            i
-         
-              mRomSeakerAdapter.dataList.get(i).isSelfMuted = bean.i
-    SelfMuted;
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_ROOM_INFO_CHANGED) {
+                    // 修改背景
+                    getBinding().lrcControlView.setLrcViewBackground(R.mipmap.portrait02);
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_EXIT) {
+                    finish();
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_LEAVE) {
+                    onMemberLeave((AgoraMember) o);
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED) {
+                    getBinding().lrcControlView.setEnabled(((boolean) o));
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_JOIN) {
+                    onMemberJoin((AgoraMember) o);
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_PLAY_COMPLETED) {
+                    if (RoomManager.getInstance().mMusicModel.userNo
+                            .equals(UserManager.getInstance().getUser().userNo)
+                            || UserManager.getInstance().getUser().userNo
+                                    .equals(RoomManager.getInstance().mMusicModel.user1Id)) {
+                        int score = (int) getBinding().lrcControlView.getPitchView().getAverageScore();
+                        getBinding().tvResultScore.setText(String.valueOf(score));
+                        if (score >= 90) {
+                            getBinding().ivResultLevel.setImageResource(R.mipmap.ic_s);
+                        } else if (score >= 80) {
+                            getBinding().ivResultLevel.setImageResource(R.mipmap.ic_a);
+                        } else if (score >= 60) {
+                            getBinding().ivResultLevel.setImageResource(R.mipmap.ic_b);
+                        } else {
+                            getBinding().ivResultLevel.setImageResource(R.mipmap.ic_c);
+                        }
+                        getBinding().groupResult.setVisibility(View.VISIBLE);
+                    }
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE) {
+                    mRoomSpeakerAdapter.notifyDataSetChanged();
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_SEAT_STATUS) {
+                    getBinding().groupBottomView.setVisibility((Integer) o);
+                } else if (type == KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_VIDEO) {
+                    RTMMessageBean bean = (RTMMessageBean) o;
+                    // 头像打开摄像头
+                    for (int i = 0; i < mRoomSpeakerAdapter.dataList.size(); i++) {
+                        if (mRoomSpeakerAdapter.dataList.get(i) != null
+                                && mRoomSpeakerAdapter.dataList.get(i).userNo.equals(bean.userNo)) {
+                            mRoomSpeakerAdapter.dataList.get(i).isVideoMuted = bean.isVideoMuted;
+                            // mRoomSpeakerAdapter.dataList.get(i).setStreamId(bean.streamId.intValue());
+                            mRoomSpeakerAdapter.notifyItemChanged(i);
+                        }
+                    }
+                } else if (type == KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_MIC_MUTE) {
+                    RTMMessageBean bean = (RTMMessageBean) o;
+                    for (int i = 0; i < mRoomSpeakerAdapter.dataList.size(); i++) {
+                        if (mRoomSpeakerAdapter.dataList.get(i) != null &&
+                                mRoomSpeakerAdapter.dataList.get(i).userNo.equals(bean.userNo)) {
+                            mRoomSpeakerAdapter.dataList.get(i).isSelfMuted = bean.isSelfMuted;
                             // mRoomSpeakerAdapter.dataList.get(i).setStreamId(bean.streamId.intValue());
                             mRoomSpeakerAdapter.notifyItemChanged(i);
                         }
@@ -314,9 +316,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                     mRoomSpeakerAdapter.notifyDataSetChanged();
                 } else if (type == KtvConstant.CALLBACK_TYPE_SHOW_MUSIC_MENU_DIALOG) {
                     showMusicSettingDialog();
-               
-
-    } else if (type == KtvConstant.CALLBACK_TYPE_SHOW_CHANGE_MUSIC_DIALOG) {
+                } else if (type == KtvConstant.CALLBACK_TYPE_SHOW_CHANGE_MUSIC_DIALOG) {
                     showChangeMusicDialog();
                 } else if (type == KtvConstant.CALLBACK_TYPE_TOGGLE_MIC) {
                     getBinding().cbMic.setEnabled((Boolean) o);
@@ -338,16 +338,14 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
     }
 
-    private voi
-    i   exitDialog = new CommonDialog(this);
-
-    
-        exitDialog.setDialogTitle("退出房间");
+    private void showExitDialog() {
+        if (exitDialog == null) {
+            exitDialog = new CommonDialog(this);
+            exitDialog.setDialogTitle("退出房间");
             if (RoomManager.mMine.isMaster) {
-         
-     
-        } else {
-            exitDialog.setDescText("确认要关闭房间么？");
+                exitDialog.setDescText("确认要关闭房间么？");
+            } else {
+                exitDialog.setDescText("确认要退出房间么？");
             }
             exitDialog.setDialogBtnText("取消", "确定");
             exitDialog.setOnButtonClickListener(new OnButtonClickListener() {
@@ -368,10 +366,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     @SuppressLint("NotifyDataSetChanged")
     private void onMusicChanged(@NonNull MemberMusicModel music) {
         getBinding().lrcControlView.setMusic(music);
-     
-
-            getBinding().lrcCo
-
+        if (music.userNo.equals(RoomManager.mMine.userNo)) {
+            // RoomManager.mMine.role = AgoraMember.Role.Speaker;
+            getBinding().lrcControlView.setRole(LrcControlView.Role.Singer);
         } else {
             // RoomManager.mMine.role = AgoraMember.Role.Listener;
             getBinding().lrcControlView.setRole(LrcControlView.Role.Listener);
@@ -464,11 +461,10 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
     @Override
     public boolean isBlackDarkStatus() {
+        return false;
+    }
 
-            
-    // 开启 关
-
-    摄像头
+    // 开启 关闭摄像头
     private void toggleSelfVideo(boolean isOpen) {
         if (isOpen) {
             RoomManager.mMine.isVideoMuted = 1;

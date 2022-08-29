@@ -3,6 +3,7 @@ package com.agora.entfulldemo.models.room.create;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.agora.data.model.AgoraMember;
 import com.agora.entfulldemo.api.ApiException;
 import com.agora.entfulldemo.api.ApiManager;
 import com.agora.entfulldemo.api.ApiSubscriber;
@@ -11,12 +12,14 @@ import com.agora.entfulldemo.api.base.BaseResponse;
 import com.agora.entfulldemo.api.model.RoomListModel;
 import com.agora.entfulldemo.base.BaseRequestViewModel;
 import com.agora.entfulldemo.common.KtvConstant;
+import com.agora.entfulldemo.manager.RTCManager;
 import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
 import com.agora.data.model.AgoraRoom;
 import com.agora.entfulldemo.utils.ToastUtils;
 
+import io.agora.rtc2.Constants;
 import io.reactivex.disposables.Disposable;
 
 public class RoomCreateViewModel extends BaseRequestViewModel {
@@ -37,27 +40,65 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
     public void loadRooms() {
         ApiManager.getInstance().requestRoomList(current, size)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<RoomListModel>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<RoomListModel>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<RoomListModel> data) {
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_GET_ROOM_LIST_SUCCESS
-                                , data.getData().records);
-                    }
+                            @Override
+                            public void onSuccess(BaseResponse<RoomListModel> data) {
+                                if (data != null && data.getData() != null) {
+                                    if (data.getData().records != null && !data.getData().records.isEmpty()) {
+                                        getRoomToken(data.getData().records.get(0).roomNo,
+                                                data.getData().records.get(0).password);
+                                    }
+                                }
+                                getISingleCallback().onSingleCallback(
+                                        KtvConstant.CALLBACK_TYPE_ROOM_GET_ROOM_LIST_SUCCESS, data.getData().records);
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        //创建失败
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_GET_ROOM_LIST_FAIL, null);
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                }
-        );
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                // 创建失败
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_GET_ROOM_LIST_FAIL,
+                                        null);
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
+
+    private void getRoomToken(String roomNo, String password) {
+        ApiManager.getInstance().requestGetRoomInfo(roomNo, password)
+                .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
+                        new ApiSubscriber<BaseResponse<AgoraRoom>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
+
+                            @Override
+                            public void onSuccess(BaseResponse<AgoraRoom> data) {
+                                KtvConstant.RTM_TOKEN = data.getData().agoraRTMToken;
+                                KtvConstant.RTC_TOKEN = data.getData().agoraRTCToken;
+                                loginRTM();
+                                if (isCreator) {
+                                    // 创建成功 直接加入房间
+                                    getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_SUCCESS,
+                                            null);
+                                    ToastUtils.showToast("创建房间成功");
+                                    isCreator = false;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                            }
+                        });
+    }
+
+    private boolean isCreator = false;
 
     /**
      * 创建房间
@@ -66,45 +107,43 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
      * @param name      房间名称
      * @param password  房间密码
      * @param userNo    用户id
-     * @param icon  icon图
+     * @param icon      icon图
      */
     public void requestCreateRoom(int isPrivate, String name,
-                                  String password, String userNo, String icon) {
+            String password, String userNo, String icon) {
         ApiManager.getInstance().requestCreateRoom(isPrivate, name, password, userNo, icon)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        AgoraRoom room = new AgoraRoom();
-                        room.roomNo = data.getData();
-                        room.creatorNo = UserManager.getInstance().getUser().userNo;
-                        room.isPrivate = isPrivate;
-                        room.name = name;
-                        room.belCanto = "0";
-                        room.icon = icon;
-                        if (isPrivate == 1) {
-                            room.password = password;
-                        }
-                        RoomManager.getInstance().setAgoraRoom(room);
-                        //创建成功 直接加入房间
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_SUCCESS, null);
-                        ToastUtils.showToast("创建房间成功");
-                    }
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                AgoraRoom room = new AgoraRoom();
+                                room.roomNo = data.getData();
+                                room.creatorNo = UserManager.getInstance().getUser().userNo;
+                                room.isPrivate = isPrivate;
+                                room.name = name;
+                                room.belCanto = "0";
+                                room.icon = icon;
+                                if (isPrivate == 1) {
+                                    room.password = password;
+                                }
+                                RoomManager.getInstance().setAgoraRoom(room);
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        //创建失败
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_FAIL, null);
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                }
-        );
+                                isCreator = true;
+                                getRoomToken(room.roomNo, password);
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                // 创建失败
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_FAIL, null);
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
-
 
 }

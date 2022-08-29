@@ -36,17 +36,17 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
     protected final Context mContext;
     protected int mRole = Constants.CLIENT_ROLE_BROADCASTER;
 
-    //主唱同步歌词给其他人
+    // 主唱同步歌词给其他人
     private boolean mStopSyncLrc = true;
     private Thread mSyncLrcThread;
 
-    //歌词实时刷新
+    // 歌词实时刷新
     protected boolean mStopDisplayLrc = true;
     private Thread mDisplayThread;
 
     protected IMediaPlayer mPlayer;
 
-    private static volatile long mRecvedPlayPosition = 0;//播放器播放position，ms
+    private static volatile long mRecvedPlayPosition = 0;// 放器播放position，ms
     private static volatile Long mLastRecvPlayPosTime = null;
 
     protected static volatile MemberMusicModel mMusicModel;
@@ -85,78 +85,7 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
         }
     }
 
-    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == ACTION_UPDATE_TIME) {
-                if (mCallback != null) {
-                    mCallback.onMusicPositionChanged((long) msg.obj);
-                }
-            } else if (msg.what == ACTION_ONMUSIC_OPENING) {
-                if (mCallback != null) {
-                    mCallback.onMusicOpening();
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_OPENCOMPLETED) {
-                if (mCallback != null) {
-                    mCallback.onMusicOpenCompleted((long) msg.obj);
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_OPENERROR) {
-                if (mCallback != null) {
-                    mCallback.onMusicOpenError((int) msg.obj);
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_PLAING) {
-                if (mCallback != null) {
-                    mCallback.onMusicPlaying();
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_PAUSE) {
-                if (mCallback != null) {
-                    mCallback.onMusicPause();
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_STOP) {
-                if (mCallback != null) {
-                    mCallback.onMusicStop();
-                }
-            } else if (msg.what == ACTION_ON_MUSIC_COMPLETED) {
-                if (mCallback != null) {
-                    mCallback.onMusicCompleted();
-                }
-            } else if (msg.what == ACTION_ON_RECEIVED_COUNT_DOWN) {
-                Bundle data = msg.getData();
-                int uid = data.getInt("uid");
-                int time = data.getInt("time");
-                if (mRole == Constants.CLIENT_ROLE_BROADCASTER) {
-                    onReceivedCountdown(uid, time);
-                }
-            } else if (msg.what == ACTION_ON_RECEIVED_PLAY) {
-                onReceivedStatusPlay((Integer) msg.obj);
-            } else if (msg.what == ACTION_ON_RECEIVED_PAUSE) {
-                onReceivedStatusPause((Integer) msg.obj);
-            } else if (msg.what == ACTION_ON_RECEIVED_SYNC_TIME) {
-                Bundle data = msg.getData();
-                int uid = data.getInt("uid");
-                long time = data.getLong("time");
-                onReceivedSetLrcTime(uid, time);
-            } else if (msg.what == ACTION_ON_RECEIVED_TEST_DELAY) {
-                Bundle data = msg.getData();
-                int uid = data.getInt("uid");
-                long time = data.getLong("time");
-                onReceivedTestDelay(uid, time);
-            } else if (msg.what == ACTION_ON_RECEIVED_REPLAY_TEST_DELAY) {
-                Bundle data = msg.getData();
-                int uid = data.getInt("uid");
-                long testDelayTime = data.getLong("testDelayTime");
-                long time = data.getLong("time");
-                long position = data.getLong("position");
-                onReceivedReplyTestDelay(uid, testDelayTime, time, position);
-            } else if (msg.what == ACTION_ON_RECEIVED_CHANGED_ORIGLE) {
-                Bundle data = msg.getData();
-                int uid = data.getInt("uid");
-                int mode = data.getInt("mode");
-                onReceivedOrigleChanged(uid, mode);
-            }
-        }
-    };
+    protected final Handler mHandler=new Handler(Looper.getMainLooper()){@Override public void handleMessage(@NonNull Message msg){super.handleMessage(msg);if(msg.what==ACTION_UPDATE_TIME){if(mCallback!=null){mCallback.onMusicPositionChanged((long)msg.obj);}}else if(msg.what==ACTION_ONMUSIC_OPENING){if(mCallback!=null){mCallback.onMusicOpening();}}else if(msg.what==ACTION_ON_MUSIC_OPENCOMPLETED){if(mCallback!=null){mCallback.onMusicOpenCompleted((long)msg.obj);}}else if(msg.what==ACTION_ON_MUSIC_OPENERROR){if(mCallback!=null){mCallback.onMusicOpenError((int)msg.obj);}}else if(msg.what==ACTION_ON_MUSIC_PLAING){if(mCallback!=null){mCallback.onMusicPlaying();}}else if(msg.what==ACTION_ON_MUSIC_PAUSE){if(mCallback!=null){mCallback.onMusicPause();}}else if(msg.what==ACTION_ON_MUSIC_STOP){if(mCallback!=null){mCallback.onMusicStop();}}else if(msg.what==ACTION_ON_MUSIC_COMPLETED){if(mCallback!=null){mCallback.onMusicCompleted();}}else if(msg.what==ACTION_ON_RECEIVED_COUNT_DOWN){Bundle data=msg.getData();int uid=data.getInt("uid");int time=data.getInt("time");if(mRole==Constants.CLIENT_ROLE_BROADCASTER){onReceivedCountdown(uid,time);}}else if(msg.what==ACTION_ON_RECEIVED_PLAY){onReceivedStatusPlay((Integer)msg.obj);}else if(msg.what==ACTION_ON_RECEIVED_PAUSE){onReceivedStatusPause((Integer)msg.obj);}else if(msg.what==ACTION_ON_RECEIVED_SYNC_TIME){Bundle data=msg.getData();int uid=data.getInt("uid");long time=data.getLong("time");onReceivedSetLrcTime(uid,time);}else if(msg.what==ACTION_ON_RECEIVED_TEST_DELAY){Bundle data=msg.getData();int uid=data.getInt("uid");long time=data.getLong("time");onReceivedTestDelay(uid,time);}else if(msg.what==ACTION_ON_RECEIVED_REPLAY_TEST_DELAY){Bundle data=msg.getData();int uid=data.getInt("uid");long testDelayTime=data.getLong("testDelayTime");long time=data.getLong("time");long position=data.getLong("position");onReceivedReplyTestDelay(uid,testDelayTime,time,position);}else if(msg.what==ACTION_ON_RECEIVED_CHANGED_ORIGLE){Bundle data=msg.getData();int uid=data.getInt("uid");int mode=data.getInt("mode");onReceivedOrigleChanged(uid,mode);}}};
 
     public BaseMusicPlayerOld(Context mContext, int role, IMediaPlayer mPlayer) {
         this.mContext = mContext;
@@ -237,9 +166,9 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
 
     protected void play() {
         mLogger.i("play() called");
-//        if (!mStatus.isAtLeast(Status.Opened)) {
-//            return;
-//        }
+        // if (!mStatus.isAtLeast(Status.Opened)) {
+        // return;
+        // }
 
         if (mStatus == Status.Started)
             return;
@@ -298,7 +227,7 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
     protected int mAudioTrackIndex = 1;
 
     public void selectAudioTrack(int i) {
-        //因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
+        // 为咪咕音乐没有音轨，只有左右声道，所以暂定如此
         mAudioTrackIndex = i;
 
         if (mAudioTrackIndex == 0) {
@@ -309,7 +238,7 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
     }
 
     public boolean hasAccompaniment() {
-        //因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
+        // 为咪咕音乐没有音轨，只有左右声道，所以暂定如此
         return true;
     }
 
@@ -341,9 +270,12 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
 
     /**
      * Sets the pitch of the current media file.
-     * PITCH Sets the pitch of the local music file by chromatic scale. The default value is 0,
-     * which means keeping the original pitch. The value ranges from -12 to 12, and the pitch value
-     * between consecutive values is a chromatic value. The greater the absolute value of this
+     * PITCH Sets the pitch of the local music file by chromatic scale. The default
+     * value is 0,
+     * which means keeping the original pitch. The value ranges from -12 to 12, and
+     * the pitch value
+     *  between consec
+     *  value of this
      * parameter, the higher or lower the pitch of the local music file.
      *
      * @return - 0: Success.
@@ -460,18 +392,15 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
     }
 
     @Override
-    public void onStreamMessageError(int uid, int streamId, int error, int missed, int cached) {
-        super.onStreamMessageError(uid, streamId, error, missed, cached);
-        mLogger.e("onStreamMessageError() called with: uid = [%s], streamId = [%s], error = [%s], missed = [%s], cached = [%s]", uid, streamId, error, missed, cached);
-    }
+    p
 
-    @Override
+    mLogger.e("onStreamMessageError() called with: uid = [%s], streamId = [%s], error = [%s], missed = [%s], cached = [%s]",uid,streamId,error,missed,cached);
+
     public void onStreamMessage(int uid, int streamId, byte[] data) {
         JSONObject jsonMsg;
         try {
             String strMsg = new String(data);
             jsonMsg = new JSONObject(strMsg);
-            Log.d("cwtsw", "basePlayer strMsg = " + strMsg);
             if (jsonMsg.getString("cmd").equals("setLrcTime")) {
                 long position = jsonMsg.getLong("time");
                 if (position == 0) {
@@ -539,9 +468,9 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
         mLastRecvPlayPosTime = System.currentTimeMillis();
     }
 
-    protected void onReceivedCountdown(int uid, int time) {
-        if (mCallback != null) {
-            RoomManager.getInstance().mMusicModel.userbgId = (long) uid;
+    nReceivedCountdown(int uid, 
+
+    i        RoomManager.getInstance().mMusicModel.userbgId = (long) uid;
             mCallback.onReceivedCountdown(time);
         }
     }
@@ -557,6 +486,7 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
     }
 
     @Override
+
     public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState state, io.agora.mediaplayer.Constants.MediaPlayerError error) {
         mLogger.i("onPlayerStateChanged: " + state + ", error: " + error);
         switch (state) {
@@ -594,13 +524,10 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
 
     }
 
-    @Override
-    public void onPreloadEvent(String src, io.agora.mediaplayer.Constants.MediaPlayerPreloadEvent event) {
-
+    
     }
 
 
-    @Override
     public void onPlayerSrcInfoChanged(SrcInfo from, SrcInfo to) {
 
     }
@@ -673,9 +600,9 @@ public abstract class BaseMusicPlayerOld extends IRtcEngineEventHandler implemen
         mHandler.obtainMessage(ACTION_ON_MUSIC_PLAING).sendToTarget();
     }
 
-    private void onMusicPause() {
-        mLogger.i("onMusicPause() called");
-        mStatus = Status.Paused;
+
+
+         mStatus = Status.Paused;
 
         mHandler.obtainMessage(ACTION_ON_MUSIC_PAUSE).sendToTarget();
     }

@@ -55,12 +55,6 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        roomCreateViewModel.loginRTM();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         roomCreateViewModel.logOutRTM();
@@ -73,8 +67,7 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
         mAdapter = new BaseRecyclerViewAdapter<>(null, new OnItemClickListener<AgoraRoom>() {
             @Override
             public void onItemClick(@NonNull AgoraRoom data, View view, int position, long viewType) {
-                if (!TextUtils.isEmpty(data.password)
-                        && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
+                if (!TextUtils.isEmpty(data.password) && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
                     showInputPwdDialog(data);
                 } else {
                     RoomManager.getInstance().setAgoraRoom(data);

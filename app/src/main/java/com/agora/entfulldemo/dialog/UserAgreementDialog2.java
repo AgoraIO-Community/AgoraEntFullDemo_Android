@@ -19,8 +19,8 @@ import com.agora.entfulldemo.databinding.DialogUserAgreementBinding;
 import com.agora.entfulldemo.manager.PagePilotManager;
 import com.agora.entfulldemo.utils.KTVUtil;
 
-public class UserAgreementDialog extends BaseDialog<DialogUserAgreementBinding> {
-    public UserAgreementDialog(@NonNull Context context) {
+public class UserAgreementDialog2 extends BaseDialog<DialogUserAgreementBinding> {
+    public UserAgreementDialog2(@NonNull Context context) {
         super(context);
     }
 
@@ -36,7 +36,8 @@ public class UserAgreementDialog extends BaseDialog<DialogUserAgreementBinding> 
         getBinding().btnDisagree.setOnClickListener(view -> {
             getOnButtonClickListener().onLeftButtonClick();
         });
-
+        getBinding().btnAgree.setText("同意并继续");
+        getBinding().btnDisagree.setText("不同意并退出");
         ClickableSpan protocolClickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
@@ -49,33 +50,15 @@ public class UserAgreementDialog extends BaseDialog<DialogUserAgreementBinding> 
                 PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
             }
         };
-        ClickableSpan protocolClickableSpan3 = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/user_agreement.html");
-            }
-        };
-        ClickableSpan protocolClickableSpan4 = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
-            }
-        };
 
 
         ForegroundColorSpan spanColor = new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.blue_9F));
-        SpannableStringBuilder spannable = new SpannableStringBuilder(getContext().getString(R.string.privacy_protection_tip1));
-        spannable.setSpan(protocolClickableSpan1, 72, 76, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(spanColor, 72, 76, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableStringBuilder spannable = new SpannableStringBuilder(getContext().getString(R.string.privacy_protection_tip2));
+        spannable.setSpan(protocolClickableSpan1, 3, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(spanColor, 3, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannable.setSpan(protocolClickableSpan2, 79, 83, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(spanColor, 79, 83, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        spannable.setSpan(protocolClickableSpan3, 202, 207, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(spanColor, 202, 207, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        spannable.setSpan(protocolClickableSpan4, 210, 214, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        spannable.setSpan(spanColor, 210, 214, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannable.setSpan(protocolClickableSpan2, 10, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(spanColor, 10, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         getBinding().tvProtection.setText(spannable);
         getBinding().btnAgree.setOnClickListener(view -> {
@@ -88,7 +71,7 @@ public class UserAgreementDialog extends BaseDialog<DialogUserAgreementBinding> 
     protected void setGravity() {
         getWindow().setLayout(
                 KTVUtil.dp2px(280),
-                KTVUtil.dp2px(365)
+                KTVUtil.dp2px(200)
         );
         getWindow().getAttributes().gravity = Gravity.CENTER;
     }

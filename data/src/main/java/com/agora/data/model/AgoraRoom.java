@@ -30,7 +30,7 @@ public class AgoraRoom {
      */
     public String roomNo;
     /**
-     * 是否合唱  无用
+     * 是否合唱 无用
      */
     public int isChorus;
     /**
@@ -46,6 +46,9 @@ public class AgoraRoom {
      */
     public String belCanto;
     public String icon;
+
+    public String agoraRTMToken;
+    public String agoraRTCToken;
 
     public String createdAt;
     public String updatedAt;
