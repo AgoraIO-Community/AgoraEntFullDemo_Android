@@ -79,7 +79,7 @@ public class SingleMusicPlayer extends BaseMusicPlayer {
                             if (RTCManager.getInstance().preLoad(musicModel.songNo)) {
                                 open(musicModel);
                             }
-                            //
+//
                         }
 
                         @Override

@@ -49,6 +49,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         return FragmentHomeMineBinding.inflate(inflater);
     }
 
+
     @Override
     public void initView() {
         String versionString = BuildConfig.VERSION_NAME + "(" + BuildConfig.VERSION_CODE + ")";
@@ -140,7 +141,8 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     private void takePhoto() {
         Intent intentToTakePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intentToTakePhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        File fileDir = new File(FileUtils.getTempSDPath());
+        File fileDir = new File(FileUtils.getTempSDPath()
+        );
         if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
@@ -149,7 +151,8 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         Uri imageUri = FileProvider.getUriForFile(
                 getContext(),
                 BuildConfig.APPLICATION_ID + ".fileProvider",
-                photoFile);
+                photoFile
+        );
         intentToTakePhoto.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intentToTakePhoto, TAKE_PHOTO);
     }
@@ -173,14 +176,13 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
     }
 
     private void setImage(String filePath) {
-        if (filePath == null)
-            return;
+        if (filePath == null) return;
         String path = ImageCompressUtil.displayPath(requireActivity(), filePath);
         if (TextUtils.isEmpty(path) || new File(filePath).length() <= 150000) {
             path = filePath;
         }
         mTempPhotoPath = path;
-        // UserManager.getInstance().getUser().headUrl = mTempPhotoPath;
+//        UserManager.getInstance().getUser().headUrl = mTempPhotoPath;
         mainViewModel.updatePhoto(new File(mTempPhotoPath));
     }
 

@@ -15,8 +15,7 @@ import com.agora.entfulldemo.manager.RoomManager;
 /**
  * The holder of Item ChooseSong
  */
-public class ChosenSongViewHolder
-        extends BaseRecyclerViewAdapter.BaseViewHolder<KtvItemChoosedSongListBinding, MemberMusicModel> {
+public class ChosenSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<KtvItemChoosedSongListBinding, MemberMusicModel> {
     public ChosenSongViewHolder(@NonNull KtvItemChoosedSongListBinding mBinding) {
         super(mBinding);
     }

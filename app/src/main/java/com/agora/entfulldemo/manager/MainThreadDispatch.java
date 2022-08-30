@@ -102,7 +102,7 @@ public class MainThreadDispatch implements RoomEventCallback {
             } else if (msg.what == ON_MUSIC_CHANGED) {
                 MemberMusicModel data = (MemberMusicModel) msg.obj;
                 for (RoomEventCallback callback : enevtCallbacks) {
-                    // callback.onMusicChanged(data);
+//                    callback.onMusicChanged(data);
                 }
             } else if (msg.what == ON_MUSIC_PROGRESS) {
                 Bundle bundle = msg.getData();
@@ -151,7 +151,7 @@ public class MainThreadDispatch implements RoomEventCallback {
     public void onRoomClosed(@NonNull AgoraRoom room, boolean fromUser) {
         mLogger.d("onRoomClosed() called with: room = [%s], fromUser = [%s]", room, fromUser);
         Bundle bundle = new Bundle();
-        // bundle.putParcelable("room", room);
+//        bundle.putParcelable("room", room);
         bundle.putBoolean("fromUser", fromUser);
 
         Message message = mHandler.obtainMessage(ON_ROOM_CLOSED);
@@ -168,7 +168,7 @@ public class MainThreadDispatch implements RoomEventCallback {
     @Override
     public void onMemberLeave(@NonNull AgoraMember member) {
         mLogger.d("onMemberLeave() called with: member = [%s]", member);
-        // mHandler.obtainMessage(ON_MEMBER_LEAVE, member).sendToTarget();
+//        mHandler.obtainMessage(ON_MEMBER_LEAVE, member).sendToTarget();
     }
 
     @Override

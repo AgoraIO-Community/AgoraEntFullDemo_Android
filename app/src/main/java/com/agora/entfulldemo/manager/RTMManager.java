@@ -41,13 +41,13 @@ public final class RTMManager implements RtmChannelListener {
 
     public void setRTMEvent(EventListener roomEvent) {
         this.mRTMEvent = roomEvent;
-//        AgoraApplication.the().ge
-           
+//        AgoraApplication.the().getChatManager().registerListener(this);
+    }
 
     public void removeAllEvent() {
         this.mRTMEvent = null;
-//        AgoraApplication.the
-           
+//        AgoraApplication.the().getChatManager().unregisterListener(this);
+    }
 
     /**
      * rtm 房间信息
@@ -78,7 +78,7 @@ public final class RTMManager implements RtmChannelListener {
             public void onFailure(ErrorInfo errorInfo) {
                 if (errorInfo.getErrorCode() == 6) {
                     //已经加入了
-                    mR TMEvent.onSuccess();
+                    mRTMEvent.onSuccess();
                 } else {
                     mRTMEvent.onError(errorInfo.getErrorDescription() + " errorCode = " + errorInfo.getErrorCode());
                 }
@@ -133,20 +133,19 @@ public final class RTMManager implements RtmChannelListener {
                 KtvConstant.RTM_TOKEN,
                 UserManager.getInstance().getUser().id.toString(), new ResultCallback<Void>() {
                     @Override
+                    public void onSuccess(Void responseInfo) {
+                        //登录成功
+                        Log.d(TAG, "doLoginRTM success");
+                    }
 
-    public vo
-        //登录成功
-        Lo g.d(
-        
-    
+                    @Override
+                    public void onFailure(ErrorInfo errorInfo) {
+                        ToastUtils.showToast(errorInfo.getErrorDescription());
+                        //登录失败
+                    }
+                });
+    }
 
-    public vo
-        ToastUtils.showToast(errorInfo.getErrorD
-        //登录失败
-         
-    
-
-    
     /**
      * 退出RTM
      */
@@ -234,100 +233,91 @@ public final class RTMManager implements RtmChannelListener {
         Log.d(TAG, "onMemberLeft rtmChannelMember = " + rtmChannelMember.getUserId());
     }
 
-    // /**
-    // * SDK 与 Agora RTM 系统的连接状态发生改变回调
-    // *
-    // * @param state int CONNECTION_STATE_DISCONNECTED = 1 初始状态。SDK 未连接到 Agora RTM
-    // 系统
-    // * int CONNECTION_STATE_CONNECTING = 2 SDK 正在登录 Agora RTM 系统。
-    // * int CONNECTION_STATE_CONNECTED = 3 SDK 已登录 Agora RTM 系统。
-    // * int CONNECTION_STATE_RECONNECTING = 4 SDK 与 Agora RTM 系统连接由于网络原因出现中断，SDK
-    // 正在尝试自动重连 Agora RTM 系统。
-    // * int CONNECTION_STATE_ABORTED = 5 SDK 停止登录 Agora RTM 系统。
-    // * <p>
-    // * @param reason int CONNECTION_CHANGE_REASON_LOGIN = 1 SDK 正在登录 Agora RTM 系统
-    // * int CONNECTION_CHANGE_REASON_LOGIN_SUCCESS = 2 SDK 登录 Agora RTM 系统成功
-    // * int CONNECTION_CHANGE_REASON_LOGIN_FAILURE = 3 SDK 登录 Agora RTM 系统失败
-    // * <p>
-    // * int CONNECTION_CHANGE_REASON_LOGIN_TIMEOUT = 4 SDK 无法登录 Agora RTM 系统超过 12
-    // 秒，停止登录。
-    // * <t> 可能原因：用户正处于 CONNECTION_STATE_ABORTED 状态或 CONNECTION_STATE_RECONNECTING
-    // 状态。
-    // * <p>
-    // * int CONNECTION_CHANGE_REASON_INTERRUPTED = 5 SDK 与 Agora RTM 系统的连接被中断
-    // * int CONNECTION_CHANGE_REASON_LOGOUT = 6 用户已调用 logout() 方法登出 Agora RTM 系统
-    // * int CONNECTION_CHANGE_REASON_BANNED_BY_SERVER = 7 SDK 被服务器禁止登录 Agora RTM 系统
-    // * int CONNECTION_CHANGE_REASON_REMOTE_LOGIN = 8 另一个用户正以相同的用户 ID 登录 Agora RTM
-    // 系统
-    // */
-    // @Override
-    // public void onConnectionStateChanged(int state, int reason) {
-    // Log.d(TAG, "onConnectionStateChanged state = " + state);
-    // Log.d(TAG, "onConnectionStateChanged reason = " + reason);
-    // }
-    //
-    // /**
-    // * 收到点对点消息回调。
-    // *
-    // * @param rtmMessage 消息
-    // * @param s 消息发送者的用户 ID
-    // */
-    // @Override
-    // public void onMessageReceived(RtmMessage rtmMessage, String s) {
-    // Log.d(TAG, "onMessageReceived state = " + rtmMessage);
-    // }
-    //
-    // @Deprecated
-    // @Override
-    // public void onImageMessageReceivedFromPeer(RtmImageMessage rtmImageMessage,
-    // String s) {
-    // //弃用
-    // }
-    //
-    // @Deprecated
-    // @Override
-    // public void onFileMessageReceivedFromPeer(RtmFileMessage rtmFileMessage,
-    // String s) {
-    // //弃用
-    // }
-    //
-    // @Deprecated
-    // @Override
-    // public void onMediaUploadingProgress(RtmMediaOperationProgress
-    // rtmMediaOperationProgress, long l) {
-    // //弃用
-    // }
-    //
-    // @Deprecated
-    // @Override
-    // public void onMediaDownloadingProgress(RtmMediaOperationProgress
-    // rtmMediaOperationProgress, long l) {
-    // //弃用
-    // }
-    //
-    // /**
-    // * （SDK 断线重连时触发）当前使用的 RTM Token 已超过 24 小时的签发有效期。
-    // */
-    // @Override
-    // public void onTokenExpired() {
-    // Log.d(TAG, "onTokenExpired ");
-    // //登录过期后重新登录
-    //// mIsInChat = false;
-    //// doLogout();
-    //// doLogin();
-    // }
-    //
-    // /**
-    // * 被订阅用户在线状态改变回调。
-    // * <p>
-    // * 首次订阅在线状态成功时，SDK 也会返回本回调，显示所有被订阅用户的在线状态。
-    // * 每当被订阅用户的在线状态发生改变，SDK 都会通过该回调通知订阅方。
-    // * 如果 SDK 在断线重连过程中有被订阅用户的在线状态发生改变，SDK 会在重连成功时通过该回调通知订阅方。
-    // *
-    // * @param map
-    // */
-    // @Override
-    // public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
-    // Log.d(TAG, "onPeersOnlineStatusChanged map " + map);
-    // }
+//    /**
+//     * SDK 与 Agora RTM 系统的连接状态发生改变回调
+//     *
+//     * @param state  int 	CONNECTION_STATE_DISCONNECTED = 1 初始状态。SDK 未连接到 Agora RTM 系统
+//     *               int 	CONNECTION_STATE_CONNECTING = 2 SDK 正在登录 Agora RTM 系统。
+//     *               int 	CONNECTION_STATE_CONNECTED = 3 SDK 已登录 Agora RTM 系统。
+//     *               int 	CONNECTION_STATE_RECONNECTING = 4 SDK 与 Agora RTM 系统连接由于网络原因出现中断，SDK 正在尝试自动重连 Agora RTM 系统。
+//     *               int 	CONNECTION_STATE_ABORTED = 5 SDK 停止登录 Agora RTM 系统。
+//     *               <p>
+//     * @param reason int 	CONNECTION_CHANGE_REASON_LOGIN = 1 SDK 正在登录 Agora RTM 系统
+//     *               int 	CONNECTION_CHANGE_REASON_LOGIN_SUCCESS = 2 SDK 登录 Agora RTM 系统成功
+//     *               int 	CONNECTION_CHANGE_REASON_LOGIN_FAILURE = 3 SDK 登录 Agora RTM 系统失败
+//     *               <p>
+//     *               int 	CONNECTION_CHANGE_REASON_LOGIN_TIMEOUT = 4 SDK 无法登录 Agora RTM 系统超过 12 秒，停止登录。
+//     *               <t>    可能原因：用户正处于 CONNECTION_STATE_ABORTED 状态或 CONNECTION_STATE_RECONNECTING 状态。
+//     *               <p>
+//     *               int 	CONNECTION_CHANGE_REASON_INTERRUPTED = 5 SDK 与 Agora RTM 系统的连接被中断
+//     *               int 	CONNECTION_CHANGE_REASON_LOGOUT = 6 用户已调用 logout() 方法登出 Agora RTM 系统
+//     *               int 	CONNECTION_CHANGE_REASON_BANNED_BY_SERVER = 7 SDK 被服务器禁止登录 Agora RTM 系统
+//     *               int 	CONNECTION_CHANGE_REASON_REMOTE_LOGIN = 8 另一个用户正以相同的用户 ID 登录 Agora RTM 系统
+//     */
+//    @Override
+//    public void onConnectionStateChanged(int state, int reason) {
+//        Log.d(TAG, "onConnectionStateChanged state = " + state);
+//        Log.d(TAG, "onConnectionStateChanged reason = " + reason);
+//    }
+//
+//    /**
+//     * 收到点对点消息回调。
+//     *
+//     * @param rtmMessage 消息
+//     * @param s          消息发送者的用户 ID
+//     */
+//    @Override
+//    public void onMessageReceived(RtmMessage rtmMessage, String s) {
+//        Log.d(TAG, "onMessageReceived state = " + rtmMessage);
+//    }
+//
+//    @Deprecated
+//    @Override
+//    public void onImageMessageReceivedFromPeer(RtmImageMessage rtmImageMessage, String s) {
+//        //弃用
+//    }
+//
+//    @Deprecated
+//    @Override
+//    public void onFileMessageReceivedFromPeer(RtmFileMessage rtmFileMessage, String s) {
+//        //弃用
+//    }
+//
+//    @Deprecated
+//    @Override
+//    public void onMediaUploadingProgress(RtmMediaOperationProgress rtmMediaOperationProgress, long l) {
+//        //弃用
+//    }
+//
+//    @Deprecated
+//    @Override
+//    public void onMediaDownloadingProgress(RtmMediaOperationProgress rtmMediaOperationProgress, long l) {
+//        //弃用
+//    }
+//
+//    /**
+//     * （SDK 断线重连时触发）当前使用的 RTM Token 已超过 24 小时的签发有效期。
+//     */
+//    @Override
+//    public void onTokenExpired() {
+//        Log.d(TAG, "onTokenExpired ");
+//        //登录过期后重新登录
+////        mIsInChat = false;
+////        doLogout();
+////        doLogin();
+//    }
+//
+//    /**
+//     * 被订阅用户在线状态改变回调。
+//     * <p>
+//     * 首次订阅在线状态成功时，SDK 也会返回本回调，显示所有被订阅用户的在线状态。
+//     * 每当被订阅用户的在线状态发生改变，SDK 都会通过该回调通知订阅方。
+//     * 如果 SDK 在断线重连过程中有被订阅用户的在线状态发生改变，SDK 会在重连成功时通过该回调通知订阅方。
+//     *
+//     * @param map
+//     */
+//    @Override
+//    public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
+//        Log.d(TAG, "onPeersOnlineStatusChanged map " + map);
+//    }
 }

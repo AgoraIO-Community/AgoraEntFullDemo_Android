@@ -277,7 +277,22 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                     break;
             }
         }
-    }录ldInput = "";l TextWbeforeo}
+    }
+
+    /**
+     * 输入历史记录
+     */
+    private String oldInput = "";
+
+    /**
+     * 监听每一个输入框输状态
+     */
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            oldInput = charSequence.toString();
+        }
+
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -286,23 +301,23 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         @Override
         public void afterTextChanged(Editable editable) {
             if (editable.length() > 0) {
-       
-    // 检查是否要替换当前输入内容
-             
-                if (String.valueOf(editable.charAt(0)).equals(oldInput)) {
-                    newInput = String.value
-     
-
-             
-                switch (currentPosition) {
-
-     
-
-                    case 1:
+                if (editable.length() > 1) {
+                    //检查是否要替换当前输入内容
+                    String newInput;
+                    if (String.valueOf(editable.charAt(0)).equals(oldInput)) {
+                        newInput = String.valueOf(editable.charAt(1));
+                    } else {
+                        newInput = String.valueOf(editable.charAt(0));
+                    }
+                    switch (currentPosition) {
+                        case 0:
+                            getBinding().etCode1.setText(newInput);
+                            break;
+                        case 1:
                             getBinding().etCode2.setText(newInput);
-          break;
-
-    inding().etCode3.setText(newInput);
+                            break;
+                        case 2:
+                            getBinding().etCode3.setText(newInput);
                             break;
                         case 3:
                             getBinding().etCode4.setText(newInput);
@@ -310,13 +325,12 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
                     }
                 } else {
                     //寻焦
-                    f
-
+                    findNextFocus(true);
                 }
             }
         }
+    };
 
-    
     /**
      * 检查是否已输入完毕
      */
@@ -324,9 +338,12 @@ public class RoomCreateActivity extends BaseViewBindingActivity<ActivityRoomCrea
         if (TextUtils.isEmpty(getBinding().etCode1.getText())) {
             return false;
         }
-        if (TextUtils
-
-    r fale
-     
-    s.isEmpty(getBindingrr}
+        if (TextUtils.isEmpty(getBinding().etCode2.getText())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(getBinding().etCode3.getText())) {
+            return false;
+        }
+        return !TextUtils.isEmpty(getBinding().etCode4.getText());
+    }
 }

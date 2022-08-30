@@ -29,16 +29,16 @@ import java.util.List;
 /**
  * 歌单列表
  */
-public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBinding>
-        implements OnItemClickListener<MusicModelNew> {
-    private BaseRecyclerViewAdapter<KtvItemChooseSongListBinding, MusicModelNew, ChooseSongViewHolder> mAdapter;
-    private BaseRecyclerViewAdapter<KtvItemChooseSongListBinding, MusicModelNew, ChooseSongViewHolder> mSearchAdapter;
+public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBinding> implements OnItemClickListener<MusicModelNew> {
+    private BaseRecyclerViewAdapter<KtvItemChooseSongListBinding,
+            MusicModelNew, ChooseSongViewHolder> mAdapter;
+    private BaseRecyclerViewAdapter<KtvItemChooseSongListBinding,
+            MusicModelNew, ChooseSongViewHolder> mSearchAdapter;
     private SongsViewModel songsViewModel;
 
     @NonNull
     @Override
-    protected KtvFragmentSongListBinding getViewBinding(@NonNull LayoutInflater layoutInflater,
-            @Nullable ViewGroup viewGroup) {
+    protected KtvFragmentSongListBinding getViewBinding(@NonNull LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup) {
         return KtvFragmentSongListBinding.inflate(layoutInflater);
     }
 
@@ -167,8 +167,7 @@ public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBi
     }
 
     private void loadMusics(String searchKey) {
-        if (TextUtils.isEmpty(searchKey))
-            return;
+        if (TextUtils.isEmpty(searchKey)) return;
         songsViewModel.searchSong(searchKey);
     }
 
@@ -206,7 +205,7 @@ public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBi
     }
 
     private void doLoadMusics(View v) {
-        // getBinding().refreshLayoutFgSong.setRefreshing(false);
+//        getBinding().refreshLayoutFgSong.setRefreshing(false);
         loadMusics(getBinding().etSearch.getText().toString());
     }
 

@@ -77,7 +77,7 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
      * 设置帐号输入框输入状态
      */
     private void setAccountStatus() {
-        // 手机号登录
+        //手机号登录
         getBinding().etAccounts.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
     }
 
@@ -89,12 +89,10 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
     @Override
     public void initListener() {
         getBinding().tvUserAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView(
-                    "https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/user_agreement.html");
+            PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/user_agreement.html");
         });
         getBinding().tvPrivacyAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView(
-                    "https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
+            PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
         });
         getBinding().btnLogin.setOnClickListener(view -> {
             if (getBinding().cvIAgree.isChecked()) {
@@ -150,7 +148,7 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
 
                 @Override
                 public void onRightButtonClick() {
-                    // 验证成功
+                    //验证成功
                     showLoadingView();
                     String account = getBinding().etAccounts.getText().toString();
                     String vCode = getBinding().etVCode.getText().toString();

@@ -42,17 +42,17 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     protected final Context mContext;
     protected int mRole = Constants.CLIENT_ROLE_BROADCASTER;
 
-    // 主唱同步歌词给其他人
+    //主唱同步歌词给其他人
     private boolean mStopSyncLrc = true;
     private Thread mSyncLrcThread;
 
-    // 歌词实时刷新
+    //歌词实时刷新
     protected boolean mStopDisplayLrc = true;
     private Thread mDisplayThread;
 
     protected IAgoraMusicPlayer mPlayer;
 
-    private static volatile long mRecvedPlayPosition = 0;// 播放器播放position，ms
+    private static volatile long mRecvedPlayPosition = 0;//播放器播放position，ms
     private static volatile Long mLastRecvPlayPosTime = null;
 
     protected static volatile MemberMusicModel mMusicModel;
@@ -222,11 +222,11 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
             return -3;
         }
 
-        // File fileMusic = mMusicModel.fileMusic;
-        // if (fileMusic.exists() == false) {
-        // mLogger.e("open error: fileMusic is not exists");
-        // return -4;
-        // }
+//        File fileMusic = mMusicModel.fileMusic;
+//        if (fileMusic.exists() == false) {
+//            mLogger.e("open error: fileMusic is not exists");
+//            return -4;
+//        }
 
         File fileLrc = mMusicModel.fileLrc;
         if (fileLrc == null || !fileLrc.exists()) {
@@ -244,18 +244,17 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         BaseMusicPlayer.mMusicModel = mMusicModel;
         mLogger.i("open() called with: mMusicModel = [%s]", mMusicModel);
         mPlayer.stop();
-        mPlayer.open(Long.parseLong(mMusicModel.songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO,
-                null, 0);
+        mPlayer.open(Long.parseLong(mMusicModel.songNo), IAgoraMusicContentCenter.MusicMediaType.AGORA_MEDIA_TYPE_AUDIO, null, 0);
         Log.d("cwtsw", "open了 歌曲");
         return 0;
     }
 
     protected void play() {
         mLogger.i("play() called");
-        // if (!mStatus.isAtLeast(Status.Opened)) {
-        // Log.d("cwtsw", "多人 isAtLeast(Status.Opened");
-        // return;
-        // }
+//        if (!mStatus.isAtLeast(Status.Opened)) {
+//            Log.d("cwtsw", "多人 isAtLeast(Status.Opened");
+//            return;
+//        }
 
         if (mStatus == Status.Started) {
             Log.d("cwtsw", "多人 Status.Started");
@@ -319,7 +318,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     protected int mAudioTrackIndex = 1;
 
     public void selectAudioTrack(int i) {
-        // 因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
+        //因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
         mAudioTrackIndex = i;
 
         if (mAudioTrackIndex == 0) {
@@ -330,7 +329,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     public boolean hasAccompaniment() {
-        // 因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
+        //因为咪咕音乐没有音轨，只有左右声道，所以暂定如此
         return true;
     }
 
@@ -362,16 +361,13 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 
     /**
      * Sets the pitch of the current media file.
-     * PITCH Sets the pitch of the local music file by chromatic scale. The default
-     * value is 0,
-     * which means keeping the original pitch. The value ranges from -12 to 12, and
-     * the pitch value
-     * between consecutive values is a chromatic value. The greater the absolute
-     * value of this
+     * PITCH Sets the pitch of the local music file by chromatic scale. The default value is 0,
+     * which means keeping the original pitch. The value ranges from -12 to 12, and the pitch value
+     * between consecutive values is a chromatic value. The greater the absolute value of this
      * parameter, the higher or lower the pitch of the local music file.
      *
      * @return - 0: Success.
-     *         - < 0: Failure.
+     * - < 0: Failure.
      */
     public void setAudioMixingPitch(int newToneValue) {
         mPlayer.setAudioPitch(newToneValue);
@@ -382,8 +378,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     protected void startDisplayLrc() {
-        if (mDisplayThread != null)
-            return;
+        if (mDisplayThread != null) return;
         Log.d("cwtsw", "startDisplayLrc");
         mStopDisplayLrc = false;
         mDisplayThread = new Thread(new Runnable() {
@@ -453,11 +448,10 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
                 msg.put("cmd", "setLrcTime");
                 msg.put("lrcId", lrcId);
                 msg.put("duration", duration);
-                msg.put("time", time);// ms
+                msg.put("time", time);//ms
                 JSONObject jsonMsg = new JSONObject(msg);
                 int streamId = RTCManager.getInstance().getStreamId();
-                int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId,
-                        jsonMsg.toString().getBytes());
+                int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
                 if (ret < 0) {
                     mLogger.e("sendSyncLrc() sendStreamMessage called returned: ret = [%s]", ret);
                 }
@@ -489,19 +483,17 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     @Override
     public void onStreamMessageError(int uid, int streamId, int error, int missed, int cached) {
         super.onStreamMessageError(uid, streamId, error, missed, cached);
-        mLogger.e(
-                "onStreamMessageError() called with: uid = [%s], streamId = [%s], error = [%s], missed = [%s], cached = [%s]",
-                uid, streamId, error, missed, cached);
+        mLogger.e("onStreamMessageError() called with: uid = [%s], streamId = [%s], error = [%s], missed = [%s], cached = [%s]", uid, streamId, error, missed, cached);
     }
 
-    // private long receiveMessageTime = 0L;
+//    private long receiveMessageTime = 0L;
 
     @Override
     public void onStreamMessage(int uid, int streamId, byte[] data) {
-        // if (System.currentTimeMillis() - receiveMessageTime < 800) {
-        // return;
-        // }
-        // receiveMessageTime = System.currentTimeMillis();
+//        if (System.currentTimeMillis() - receiveMessageTime < 800) {
+//            return;
+//        }
+//        receiveMessageTime = System.currentTimeMillis();
         JSONObject jsonMsg;
         try {
             String strMsg = new String(data);
@@ -593,8 +585,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     @Override
-    public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState state,
-            io.agora.mediaplayer.Constants.MediaPlayerError error) {
+    public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState state, io.agora.mediaplayer.Constants.MediaPlayerError error) {
         mLogger.i("onPlayerStateChanged: " + state + ", error: " + error);
         switch (state) {
             case PLAYER_STATE_OPENING:
@@ -629,14 +620,14 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     @Override
-    public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent eventCode, long elapsedTime,
-            String message) {
+    public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent eventCode, long elapsedTime, String message) {
 
     }
 
     @Override
     public void onPreloadEvent(String src, io.agora.mediaplayer.Constants.MediaPlayerPreloadEvent event) {
     }
+
 
     @Override
     public void onPlayerSrcInfoChanged(SrcInfo from, SrcInfo to) {

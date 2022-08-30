@@ -45,6 +45,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         return mBinding.ilActive.pitchView;
     }
 
+
     public enum Role {
         Singer, Listener
     }
@@ -110,8 +111,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
     private CountDownTimer mCountDownLatch;
 
     private void startTimer() {
-        if (mCountDownLatch != null)
-            mCountDownLatch.cancel();
+        if (mCountDownLatch != null) mCountDownLatch.cancel();
 
         mCountDownLatch = new CountDownTimer(20 * 1000, 999) {
             @Override
@@ -272,8 +272,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
     }
 
     public void setCountDown(int time) {
-        if (mBinding == null || mBinding.ilChorus == null)
-            return;
+        if (mBinding == null || mBinding.ilChorus == null) return;
         if (mRole == Role.Singer) {
             mBinding.ilChorus.tvWaitingTime.setText(getContext().getString(R.string.ktv_room_time_wait_join_chorus));
         } else if (mRole == Role.Listener) {
