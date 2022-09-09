@@ -208,7 +208,9 @@ public final class RoomManager {
     public void onTopMusic(String musicNo) {
         for (int i = 0; i < musics.size(); i++) {
             if (musics.get(i).songNo.equals(musicNo)) {
-                Collections.swap(musics, i, 1);
+                MemberMusicModel music = musics.remove(i);
+                musics.add(1, music);
+//                Collections.swap(musics, i, 1);
                 break;
             }
         }

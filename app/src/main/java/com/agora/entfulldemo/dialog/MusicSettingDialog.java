@@ -74,6 +74,7 @@ public class MusicSettingDialog extends BaseBottomSheetDialogFragment<KtvDialogM
         // 升降调
         tuningTone(null);
         mBinding.switchEar.setChecked(this.mSetting.isEar());
+
         mBinding.sbVol1.setProgress(this.mSetting.getVolMic());
         mBinding.sbVol2.setProgress(this.mSetting.getVolMusic());
 

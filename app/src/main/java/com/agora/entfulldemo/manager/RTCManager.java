@@ -103,6 +103,7 @@ public final class RTCManager {
             @Override
             public void onPreLoadEvent(long songCode, int percent, int status, String msg, String lyricUrl) {
                 if (percent == 100) {
+                    Log.d("cwtsw", "多人 percent = " + percent + " status = " + status);
                     EventBus.getDefault().post(new PreLoadEvent());
                 }
             }

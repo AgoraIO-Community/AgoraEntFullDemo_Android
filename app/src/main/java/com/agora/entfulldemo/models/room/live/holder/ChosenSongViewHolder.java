@@ -25,33 +25,39 @@ public class ChosenSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder
         if (item != null) {
             mBinding.tvNo.setText(String.valueOf(getAdapterPosition() + 1));
             mBinding.tvMusicName.setText(item.songName);
+            mBinding.tvChooser.setText(item.singer);
             GlideApp.with(itemView).load(item.imageUrl)
                     .transform(new CenterCropRoundCornerTransform(10))
                     .into(mBinding.ivCover);
             if (getAdapterPosition() == 0) {
                 mBinding.tvSing.setVisibility(View.VISIBLE);
+                mBinding.ivSinging.setVisibility(View.VISIBLE);
                 mBinding.ivToDel.setVisibility(View.GONE);
                 mBinding.ivToTop.setVisibility(View.GONE);
             } else if (getAdapterPosition() == 1 && RoomManager.getInstance().getMine().isMaster) {
+                mBinding.ivToDel.setOnClickListener(this::onItemClick);
                 mBinding.tvSing.setVisibility(View.GONE);
+                mBinding.ivSinging.setVisibility(View.GONE);
                 mBinding.ivToDel.setVisibility(View.VISIBLE);
                 mBinding.ivToTop.setVisibility(View.GONE);
-            } else if (RoomManager.getInstance().getMine().isMaster) {
+            } else if (RoomManager.mMine.isMaster) {
+                mBinding.ivToDel.setOnClickListener(this::onItemClick);
+                mBinding.ivToTop.setOnClickListener(this::onItemClick);
                 mBinding.tvSing.setVisibility(View.GONE);
+                mBinding.ivSinging.setVisibility(View.GONE);
                 mBinding.ivToDel.setVisibility(View.VISIBLE);
                 mBinding.ivToTop.setVisibility(View.VISIBLE);
             } else {
                 mBinding.tvSing.setVisibility(View.GONE);
+                mBinding.ivSinging.setVisibility(View.GONE);
                 mBinding.ivToDel.setVisibility(View.GONE);
                 mBinding.ivToTop.setVisibility(View.GONE);
             }
-            if (item.isChorus) {
-                mBinding.tvChorus.setVisibility(View.VISIBLE);
-            } else {
-                mBinding.tvChorus.setVisibility(View.GONE);
-            }
-            mBinding.ivToDel.setOnClickListener(view -> onItemClick(view));
-            mBinding.tvChooser.setText(itemView.getContext().getString(R.string.song_ordering_person, item.name));
+//            if (item.isChorus) {
+//                mBinding.tvChorus.setVisibility(View.VISIBLE);
+//            } else {
+//                mBinding.tvChorus.setVisibility(View.GONE);
+//            }
         }
     }
 }

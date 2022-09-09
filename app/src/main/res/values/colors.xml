@@ -84,6 +84,7 @@
     <color name="white_8_percent">#14FFFFFF</color>
     <color name="white_90_percent">#E5FFFFFF</color>
     <color name="yellow">#f4ea2a</color>
+    <color name="search_hint_color">#010419</color>
     <style name="dialog_complete" parent="@android:style/Theme.Dialog">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>

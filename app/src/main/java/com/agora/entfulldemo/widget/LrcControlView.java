@@ -143,6 +143,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilIDLE.getRoot().setVisibility(View.GONE);
         mBinding.clActive.setVisibility(View.VISIBLE);
         mBinding.ilChorus.getRoot().setVisibility(View.VISIBLE);
+        mBinding.clActive.setBackgroundResource(R.mipmap.bg_player_default);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.GONE);
         mBinding.ilActive.getRoot().setVisibility(View.GONE);
 
@@ -164,6 +165,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilIDLE.getRoot().setVisibility(View.GONE);
         mBinding.clActive.setVisibility(View.VISIBLE);
         mBinding.ilChorus.getRoot().setVisibility(View.GONE);
+        mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.VISIBLE);
         mBinding.ilActive.getRoot().setVisibility(View.GONE);
         stopTimer();
@@ -173,6 +175,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilIDLE.getRoot().setVisibility(View.GONE);
         mBinding.clActive.setVisibility(View.VISIBLE);
         mBinding.ilChorus.getRoot().setVisibility(View.GONE);
+        mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.VISIBLE);
         mBinding.ilActive.getRoot().setVisibility(View.GONE);
         if (RoomManager.getInstance().mMusicModel.userNo.equals(RoomManager.mMine.userNo)) {
@@ -211,6 +214,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.clActive.setVisibility(View.VISIBLE);
         setScoreControlView();
         mBinding.ilChorus.getRoot().setVisibility(View.GONE);
+        mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.GONE);
         mBinding.ilActive.getRoot().setVisibility(View.VISIBLE);
         mBinding.ilActive.ivMusicStart.setImageResource(R.mipmap.ktv_ic_pause);
@@ -235,6 +239,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilIDLE.getRoot().setVisibility(View.GONE);
         mBinding.clActive.setVisibility(View.VISIBLE);
         mBinding.ilChorus.getRoot().setVisibility(View.GONE);
+        mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.GONE);
         mBinding.ilActive.getRoot().setVisibility(View.VISIBLE);
 
@@ -245,6 +250,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilIDLE.getRoot().setVisibility(View.VISIBLE);
         mBinding.clActive.setVisibility(View.GONE);
         mBinding.ilChorus.getRoot().setVisibility(View.GONE);
+        mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.GONE);
         mBinding.ilActive.getRoot().setVisibility(View.GONE);
 
@@ -281,7 +287,10 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.ilChorus.tvWaitingTimeCount.setText(getContext().getString(R.string.ktv_room_time_wait, 0, time));
     }
 
+    private int backgroundResId = R.mipmap.bg_player_default;
+
     public void setLrcViewBackground(@DrawableRes int resId) {
+        backgroundResId = resId;
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), resId);
         Palette.from(mBitmap).generate(palette -> {
             if (palette == null) {

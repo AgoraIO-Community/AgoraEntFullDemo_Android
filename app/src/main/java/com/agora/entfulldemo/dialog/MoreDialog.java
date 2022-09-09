@@ -1,5 +1,6 @@
 package com.agora.entfulldemo.dialog;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.agora.entfulldemo.base.BaseViewBindingFragment;
 import com.agora.entfulldemo.bean.MusicSettingBean;
 import com.agora.entfulldemo.databinding.KtvDialogMoreBinding;
 import com.agora.entfulldemo.manager.RoomManager;
+import com.agora.entfulldemo.models.room.live.RoomLivingActivity;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.BeautyVoiceFragment;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.EffectVoiceFragment;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.MVFragment;
@@ -47,7 +49,7 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<KtvDialogMoreBindi
     private void initView() {
         AgoraMember mMine = RoomManager.getInstance().getMine();
         if (mMine == null) {
-            ToastUtils.showToast( "Self AgoraMember is null");
+            ToastUtils.showToast("Self AgoraMember is null");
             dismiss();
         } else {
             mBinding.iBtnMV.setImageResource(mMine.isVideoMuted == 0 ? R.mipmap.ic_camera_on : R.mipmap.ic_camera_off);
@@ -86,38 +88,9 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<KtvDialogMoreBindi
         ft.commit();
     }
 
-//    private void toggleCamera(View v) {
-//        AgoraMember mMine = RoomManager.getInstance().getMine();
-//        if (mMine == null) {
-//            return;
-//        }
-//
-//        boolean muteThisTime = mMine.getIsVideoMuted() == 0;
-//
-//        RoomManager.getInstance()
-//                .toggleSelfVideo(muteThisTime)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new CompletableObserver() {
-//                    @Override
-//                    public void onSubscribe(@NonNull Disposable d) {
-//                        mBinding.iBtnMV.setEnabled(false);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-////                        mMine.setIsVideoMuted(muteThisTime ? 1 : 0);
-//                        mBinding.iBtnMV.setEnabled(true);
-//
-//                        RtcEngineEx engine = RoomManager.getInstance().getRtcEngine();
-//                        engine.enableLocalVideo(!muteThisTime);
-////                        engine.muteLocalVideoStream(muteThisTime);
-//                        mBinding.iBtnMV.setImageResource(muteThisTime ? R.mipmap.ic_camera_off : R.mipmap.ic_camera_on);
-//                    }
-//
-//                    @Override
-//                    public void onError(@NonNull Throwable e) {
-//                        mBinding.iBtnMV.setEnabled(true);
-//                    }
-//                });
-//    }
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        ((RoomLivingActivity) requireActivity()).setDarkStatusIcon(false);
+    }
 }

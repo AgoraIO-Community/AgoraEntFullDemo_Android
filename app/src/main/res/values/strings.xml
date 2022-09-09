@@ -68,7 +68,7 @@
 
     <string name="ktv_dialog_join_msg">准备中，请等待…</string>
 
-    <string name="ktv_room_before_speaker">上麦后可点歌与发言</string>
+    <string name="ktv_room_before_speaker">点击空麦位，上麦后可点歌与发言</string>
     <string name="ktv_room_owner">房主</string>
     <string name="ktv_room_sing1">演唱中</string>
     <string name="ktv_room_sing1_1">合唱中</string>
@@ -79,11 +79,11 @@
     <string name="ktv_room_cut_off_song">切歌</string>
     <string name="ktv_room_choose_song">点歌</string>
     <string name="ktv_room_choosed_song">已点</string>
-    <string name="ktv_room_sing2">正在演唱</string>
+    <string name="ktv_room_sing2">演唱中</string>
     <string name="ktv_room_no_sing">当前无人演唱\n点击“点歌”一展歌喉</string>
     <string name="ktv_dialog_migu_tip" />
     <string name="ktv_dialog_music_list_empty">未找到相关搜索结果</string>
-    <string name="ktv_dialog_music_list_search_hint">搜索歌曲或歌手</string>
+    <string name="ktv_dialog_music_list_search_hint">搜索歌曲, 歌手</string>
     <string name="ktv_lrc_loading">歌曲准备中</string>
     <string name="ktv_lrc_load_fail">加载失败</string>
     <string name="ktv_room_change_music_title">切歌</string>
@@ -148,6 +148,7 @@
     <string name="song_rank_4">古风热歌</string>
     <string name="song_rank_5">KTV必唱</string>
     <string name="song_rank_6">新歌榜</string>
+    <string name="song_search_place_holder">搜索歌曲、歌手</string>
 
     <string name="song_effect_1">空间塑造</string>
     <string name="song_effect_2">曲风音效</string>
@@ -186,9 +187,10 @@
     <string name="id_is_">ID:%s</string>
     <string name="room_count">当前在线人数：%s</string>
     <string name="zc">主唱</string>
-    <string name="song_ordering_person">点唱：%s</string>
+    <string name="song_ordering_person">点唱：</string>
     <string name="input_edit_name">请输入昵称</string>
     <string name="input_password">请输入房间密码</string>
     <string name="edit_name">修改昵称</string>
     <string name="people">人</string>
+    <string name="ktv_music_menu_dialog_mv">MV</string>
 </resources>

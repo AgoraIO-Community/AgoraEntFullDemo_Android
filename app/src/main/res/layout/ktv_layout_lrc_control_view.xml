@@ -19,6 +19,7 @@
             android:visibility="visible"
             tools:visibility="visible" />
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clActive"
             android:layout_width="match_parent"

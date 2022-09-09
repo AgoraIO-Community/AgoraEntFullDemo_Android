@@ -1,5 +1,6 @@
 package com.agora.entfulldemo.dialog;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import com.agora.entfulldemo.base.BaseBottomSheetDialogFragment;
 import com.agora.entfulldemo.databinding.KtvDialogChooseSongBinding;
 import com.agora.entfulldemo.event.MusicListChangeEvent;
 import com.agora.entfulldemo.manager.RoomManager;
+import com.agora.entfulldemo.models.room.live.RoomLivingActivity;
 import com.agora.entfulldemo.models.room.live.fragment.SongOrdersFragment;
 import com.agora.entfulldemo.models.room.live.fragment.SongsFragment;
 
@@ -105,5 +107,10 @@ public class RoomChooseSongDialog extends BaseBottomSheetDialogFragment<KtvDialo
         } else {
             mBinding.tvChoosedSongCount.setVisibility(View.GONE);
         }
+    }
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        ((RoomLivingActivity) requireActivity()).setDarkStatusIcon(false);
     }
 }

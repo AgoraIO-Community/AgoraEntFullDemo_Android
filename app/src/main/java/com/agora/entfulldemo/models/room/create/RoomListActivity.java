@@ -46,6 +46,7 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
     @Override
     protected void onResume() {
         super.onResume();
+        setDarkStatusIcon(isBlackDarkStatus());
         loadRoomList();
     }
 
@@ -120,12 +121,14 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
         if (inputPasswordDialog == null) {
             inputPasswordDialog = new InputPasswordDialog(this);
         }
+        inputPasswordDialog.clearContent();
         inputPasswordDialog.iSingleCallback = (type, o) -> {
             if (data.password.equals(o)) {
                 RoomManager.getInstance().setAgoraRoom(data);
                 PagePilotManager.pageRoomLiving();
             } else {
                 ToastUtils.showToast("密码不正确");
+                setDarkStatusIcon(isBlackDarkStatus());
             }
         };
         inputPasswordDialog.show();

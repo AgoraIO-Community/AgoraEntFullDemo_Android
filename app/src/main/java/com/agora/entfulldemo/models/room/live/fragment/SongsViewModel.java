@@ -182,7 +182,7 @@ public class SongsViewModel extends BaseRequestViewModel {
                         //删歌推送 推送
                         RTMMessageBean bean = new RTMMessageBean();
                         bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                        bean.messageType = "4";
+                        bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_SWITCH_SONGS;
                         bean.userNo = UserManager.getInstance().getUser().userNo;
                         bean.name = UserManager.getInstance().getUser().name;
 

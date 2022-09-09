@@ -87,7 +87,27 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
                             getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_CREATE_SUCCESS, null);
                             ToastUtils.showToast("创建房间成功");
                             isCreator = false;
+                        } else {
+                            ApiManager.getInstance().requestExitRoom(roomNo)
+                                    .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
+                                    new ApiSubscriber<BaseResponse<String>>() {
+                                        @Override
+                                        public void onSubscribe(@NonNull Disposable d) {
+                                            addDispose(d);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(BaseResponse<String> data) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(@Nullable ApiException t) {
+                                        }
+                                    }
+                            );
                         }
+
                     }
 
                     @Override

@@ -35,6 +35,7 @@ import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.MVFragment;
 import com.agora.entfulldemo.models.room.live.holder.RoomPeopleHolder;
 import com.agora.entfulldemo.utils.ThreadManager;
+import com.agora.entfulldemo.utils.UiUtils;
 import com.agora.entfulldemo.utils.WifiUtils;
 import com.agora.entfulldemo.widget.DividerDecoration;
 import com.agora.entfulldemo.widget.LrcControlView;
@@ -117,6 +118,13 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("cwtsw", "onResume() " + isBlackDarkStatus());
+        setDarkStatusIcon(isBlackDarkStatus());
+    }
+
     /**
      * 下麦提示
      */
@@ -126,11 +134,12 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             mUserLeaveSeatMenuDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
-
+                    setDarkStatusIcon(isBlackDarkStatus());
                 }
 
                 @Override
                 public void onRightButtonClick() {
+                    setDarkStatusIcon(isBlackDarkStatus());
                     roomLivingViewModel.leaveSeat(mAgoraMember);
                 }
             });
@@ -155,6 +164,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     public void initListener() {
         getBinding().ivExit.setOnClickListener(view -> {
             showExitDialog();
+        });
+        getBinding().superLayout.setOnClickListener(view -> {
+            setDarkStatusIcon(isBlackDarkStatus());
         });
         getBinding().cbMic.setOnCheckedChangeListener((compoundButton, b) -> {
             roomLivingViewModel.toggleMic(b ? 0 : 1);
@@ -235,7 +247,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE) {
                     mRoomSpeakerAdapter.notifyDataSetChanged();
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_SEAT_STATUS) {
-                    getBinding().groupBottomView.setVisibility((Integer) o);
+                    Integer visible = (Integer) o;
+                    getBinding().groupBottomView.setVisibility(visible);
+                    getBinding().groupEmptyPrompt.setVisibility((visible == View.VISIBLE ? View.GONE : View.VISIBLE));
                 } else if (type == KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_VIDEO) {
                     RTMMessageBean bean = (RTMMessageBean) o;
                     //头像打开摄像头
@@ -347,11 +361,12 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             exitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
-
+                    setDarkStatusIcon(isBlackDarkStatus());
                 }
 
                 @Override
                 public void onRightButtonClick() {
+                    setDarkStatusIcon(isBlackDarkStatus());
                     roomLivingViewModel.exitRoom();
                 }
             });
@@ -386,6 +401,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     }
 
     public void closeMenuDialog() {
+        setDarkStatusIcon(isBlackDarkStatus());
         moreDialog.dismiss();
     }
 
@@ -415,6 +431,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private CommonDialog changeMusicDialog;
 
     private void showChangeMusicDialog() {
+        if (UiUtils.isFastClick(2000)) return;
         if (changeMusicDialog == null) {
             changeMusicDialog = new CommonDialog(this);
             changeMusicDialog.setDialogTitle(getString(R.string.ktv_room_change_music_title));
@@ -423,11 +440,12 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             changeMusicDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
-
+                    setDarkStatusIcon(isBlackDarkStatus());
                 }
 
                 @Override
                 public void onRightButtonClick() {
+                    setDarkStatusIcon(isBlackDarkStatus());
                     roomLivingViewModel.changeMusic();
                 }
             });
@@ -476,6 +494,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private void onMemberLeave(@NonNull AgoraMember member) {
         if (member.userNo.equals(RoomManager.mMine.userNo)) {
             getBinding().groupBottomView.setVisibility(View.GONE);
+            getBinding().groupEmptyPrompt.setVisibility(View.VISIBLE);
             RoomManager.mMine.role = AgoraMember.Role.Listener;
         }
         AgoraMember temp = mRoomSpeakerAdapter.getItemData(member.onSeat);
@@ -498,6 +517,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                     RoomManager.getInstance().getMine().role = AgoraMember.Role.Speaker;
                 }
                 getBinding().groupBottomView.setVisibility(View.VISIBLE);
+                getBinding().groupEmptyPrompt.setVisibility(View.GONE);
             }
             mRoomSpeakerAdapter.notifyItemChanged(member.onSeat);
             RoomManager.getInstance().onMemberJoin(member);
@@ -514,11 +534,13 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             creatorExitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
+                    setDarkStatusIcon(isBlackDarkStatus());
                     finish();
                 }
 
                 @Override
                 public void onRightButtonClick() {
+                    setDarkStatusIcon(isBlackDarkStatus());
 
                 }
             });

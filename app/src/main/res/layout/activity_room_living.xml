@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/superLayout"
     android:background="@drawable/bg_app_def_dark"
     android:paddingTop="20dp">
 
@@ -145,6 +146,32 @@
         app:layout_constraintStart_toEndOf="@id/cbVideo" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivNotOnMic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:src="@mipmap/ktv_request_online"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNotOnMic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ktv_room_before_speaker"
+        android:textColor="@color/def_text_grey_979"
+        android:textSize="15sp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivNotOnMic"
+        tools:ignore="SmallSp" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iBtnChooseSong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -262,4 +289,12 @@
         android:visibility="gone"
         app:constraint_referenced_ids="iBtnChorus,iBtnChooseSong,cbMic,cbVideo,btnMenu"
         tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupEmptyPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivNotOnMic, tvNotOnMic"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

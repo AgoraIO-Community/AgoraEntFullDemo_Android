@@ -3,6 +3,7 @@ package com.agora.entfulldemo.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -125,6 +126,8 @@ public final class CommonTitleView extends ConstraintLayout {
             Intrinsics.checkNotNullExpressionValue(var13, "binding.tvRightTitle");
             var13.setVisibility(View.GONE);
         }
+
+        this.binding.tvCenterTitle.setTypeface(Typeface.DEFAULT_BOLD);
 
         Drawable drawableRight = typedArray.getDrawable(R.styleable.titleView_ctv_rightImageSrc);
         if (drawableRight != null) {

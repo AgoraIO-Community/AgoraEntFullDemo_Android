@@ -304,7 +304,10 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
             musicModelReady.user1bgId = music.user1bgId;
             Log.d("cwtsw", "多人 open 我是合唱");
-            joinChannelEX();
+            if (isStartPlay || mStatus != Status.Started) {
+                onReceivedStatusPlay(uid);
+                isStartPlay = false;
+            }
         }
         return result;
     }
@@ -360,23 +363,23 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             //唱歌人，陪唱人，joinChannel 需要屏蔽的uid
             RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
         }
-
+        Log.d("cwtsw", "多人 onMemberChorusReady");
         if (ObjectsCompat.equals(music.userNo, mUser.userNo)
                 || ObjectsCompat.equals(music.user1Id, mUser.userNo)) {
             music.fileMusic = (musicModelReady.fileMusic);
             music.fileLrc = (musicModelReady.fileLrc);
 
 //            if (ObjectsCompat.equals(music.userNo, mUser.userNo)) {
-                Log.d("cwtsw", "多人 onMemberChorusReady 我是主唱 调play");
-                sendStartPlay();
-                try {
-                    synchronized (this) {
-                        wait(PLAY_WAIT);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            Log.d("cwtsw", "多人 onMemberChorusReady 调play");
+            sendStartPlay();
+            try {
+                synchronized (this) {
+                    wait(PLAY_WAIT);
                 }
-                play();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            play();
 //            } else {
 //                Log.d("cwtsw", "多人 onMemberChorusReady 我不是主唱");
 //            }
@@ -421,10 +424,9 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             return;
         }
 
-        if (mMemberMusicModel.user1Id.equals(mUser.userNo)) {
+        if (mUser.userNo.equals(mMemberMusicModel.user1Id)) {
             //已经开始了 直接retrun;
-            if (mStatus == Status.Started)
-                return;
+            Log.d("cwtsw", "多人 相等");
 
             try {
                 synchronized (this) {

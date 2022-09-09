@@ -16,6 +16,7 @@
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:hint="@string/ktv_dialog_music_list_search_hint"
+        android:textColorHint="@color/search_hint_color"
         android:imeOptions="actionSearch"
         android:maxLines="1"
         android:paddingHorizontal="15dp"

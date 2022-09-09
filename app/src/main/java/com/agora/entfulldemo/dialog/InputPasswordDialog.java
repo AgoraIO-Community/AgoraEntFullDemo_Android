@@ -57,7 +57,7 @@ public class InputPasswordDialog extends BaseDialog<DialogInputPasswordBinding> 
             }
         });
         getBinding().iBtnClear.setOnClickListener(view -> {
-            getBinding().etDeviceName.setText("");
+            clearContent();
         });
     }
 
@@ -66,6 +66,12 @@ public class InputPasswordDialog extends BaseDialog<DialogInputPasswordBinding> 
      */
     public void setDialogTitle(String title) {
         getBinding().tvTitle.setText(title);
+    }
+    /**
+     * 清空密码输入框
+     */
+    public void clearContent() {
+        getBinding().etDeviceName.setText("");
     }
 
     /**

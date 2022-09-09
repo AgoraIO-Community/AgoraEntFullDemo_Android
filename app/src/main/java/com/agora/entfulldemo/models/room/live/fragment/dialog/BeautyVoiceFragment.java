@@ -33,7 +33,6 @@ public class BeautyVoiceFragment extends BaseViewBindingFragment<KtvFragmentBeau
             ((RoomLivingActivity) requireActivity()).closeMenuDialog();
         });
         ((RadioButton) getBinding().radioGroup.getChildAt(mSetting.getBeautifier())).setChecked(true);
-
         getBinding().radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
             if (i == R.id.rBtnBeautyNoting) {
                 mSetting.setBeautifier(0);

@@ -45,13 +45,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="3dp"
-        android:background="@drawable/bg_frame_grey"
-        android:paddingHorizontal="3dp"
-        android:paddingVertical="0.5dp"
-        android:text="@string/ktv_chorus"
+        android:ellipsize="marquee"
+        android:gravity="start|center_vertical"
+        android:singleLine="true"
         android:textColor="@color/def_text_grey_979"
-        android:textSize="9sp"
+        android:textSize="12sp"
+        android:text="@string/song_ordering_person"
         app:layout_constraintBottom_toBottomOf="@id/ivCover"
         app:layout_constraintEnd_toStartOf="@id/tvChooser"
         app:layout_constraintStart_toEndOf="@id/ivCover" />
@@ -68,8 +67,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/tvChorus"
         app:layout_constraintStart_toEndOf="@id/tvChorus"
-        app:layout_constraintTop_toTopOf="@id/tvChorus"
-        tools:text="点唱：麦霸本霸" />
+        app:layout_constraintTop_toTopOf="@id/tvChorus" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvSing"
@@ -80,6 +78,16 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivSinging"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:src="@mipmap/ktv_singing_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvSing"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView

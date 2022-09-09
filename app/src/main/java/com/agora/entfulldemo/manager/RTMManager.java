@@ -114,7 +114,7 @@ public final class RTMManager implements RtmChannelListener {
         mRtmChannel.sendMessage(message, new ResultCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Log.d(TAG, "sendMessage success");
+                Log.d(TAG, "sendMessage success " + json);
             }
 
             @Override

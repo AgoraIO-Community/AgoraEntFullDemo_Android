@@ -15,6 +15,7 @@ import com.agora.entfulldemo.bean.MemberMusicModel;
 import com.agora.entfulldemo.event.PlayerStatusEvent;
 import com.agora.entfulldemo.event.PreLoadEvent;
 import com.agora.entfulldemo.utils.ThreadManager;
+import com.agora.entfulldemo.utils.UiUtils;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 
@@ -91,6 +92,8 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         }
     }
 
+    public boolean isStartPlay = false;
+    public int uid = 0;
     protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -135,7 +138,11 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
                     onReceivedCountdown(uid, time);
                 }
             } else if (msg.what == ACTION_ON_RECEIVED_PLAY) {
-                onReceivedStatusPlay((Integer) msg.obj);
+                isStartPlay = true;
+                uid = (Integer) msg.obj;
+                if (mStatus == Status.Opened) {
+                    onReceivedStatusPlay(uid);
+                }
             } else if (msg.what == ACTION_ON_RECEIVED_PAUSE) {
                 onReceivedStatusPause((Integer) msg.obj);
             } else if (msg.what == ACTION_ON_RECEIVED_SYNC_TIME) {
@@ -178,6 +185,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable PreLoadEvent event) {
+        if (UiUtils.isFastClick3(50)) return;
         open(RoomManager.getInstance().mMusicModel);
     }
 
@@ -256,10 +264,10 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 //            return;
 //        }
 
-        if (mStatus == Status.Started) {
-            Log.d("cwtsw", "多人 Status.Started");
-            return;
-        }
+//        if (mStatus == Status.Started) {
+//            Log.d("cwtsw", "多人 Status.Started");
+//            return;
+//        }
 
         mStatus = Status.Started;
         mPlayer.play();
@@ -275,7 +283,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
             return;
         }
         mStatus = Status.Stopped;
-        Log.d("cwtsw", "mPlayer stop");
+        Log.d("cwtsw", "mPlayer stop 多人");
         mPlayer.stop();
     }
 
@@ -473,6 +481,7 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
     }
 
     protected void startPublish() {
+        if (mMusicModel == null) return;
         startSyncLrc(String.valueOf(mMusicModel.songNo), mPlayer.getDuration());
     }
 

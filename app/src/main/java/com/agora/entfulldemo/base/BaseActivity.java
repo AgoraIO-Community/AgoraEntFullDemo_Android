@@ -57,7 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * bDark true status bar text为黑色
      */
-    private void setDarkStatusIcon(boolean bDark) {
+    public void setDarkStatusIcon(boolean bDark) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
