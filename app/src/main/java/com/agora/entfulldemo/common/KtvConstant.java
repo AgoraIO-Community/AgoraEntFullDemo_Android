@@ -4,6 +4,7 @@ public class KtvConstant {
     public static final String IS_CONNECT_SUCCESS = "isConnectSuccess";
     public static String RTM_TOKEN = "";
     public static String RTC_TOKEN = "";
+    public static String PLAYER_TOKEN = "";
 
     public static final String CURRENT_USER = "current_user";
     public static final String CURRENT_MEMBER_ID = "current_member_id";

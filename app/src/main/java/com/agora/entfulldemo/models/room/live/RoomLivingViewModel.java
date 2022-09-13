@@ -518,6 +518,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
             getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_LEAVE, member);
             if (RoomManager.getInstance().isOwner()) {
                 if (RoomManager.getInstance().isMainSinger(member)) {
+                    Log.d("cwtsw", "状态改变");
                     changeMusic();
                 }
             }
@@ -684,6 +685,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
             getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_STATUS,
                     KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_LRC_RESET);
             getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_PLAY_COMPLETED, null);
+            Log.d("cwtsw", "onMusicCompleted");
             changeMusic();
         }
 
@@ -840,7 +842,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                     @Override
                     public void onSuccess(BaseResponse<String> data) {
                         musicModel.user1Id = mUser.userNo;
-                        long uid = RTCManager.getInstance().getStreamId();
+                        long uid = mUser.id * 10 + 1;
                         musicModel.user1bgId = uid;
                         mMusicPlayer.switchRole(Constants.CLIENT_ROLE_BROADCASTER);
                         //合唱执行加入
@@ -998,6 +1000,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
      * 开始切歌
      */
     public void changeMusic() {
+        Log.d("cwtsw", "changeMusic 切歌");
         AgoraRoom mRoom = RoomManager.getInstance().getRoom();
         if (mRoom == null) {
             return;
@@ -1029,6 +1032,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                     @Override
                     public void onFailure(@Nullable ApiException t) {
                         if ("歌曲不存在".equals(t.getMessage())) {
+                            Log.d("cwtsw", "歌曲不存在 切歌");
                             startChangeMusic();
                         } else {
                             ToastUtils.showToast(t.getMessage());
@@ -1129,7 +1133,8 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                     RoomManager.getInstance().mMusicModel.applyUser1Id = bean.userNo;
                     RoomManager.getInstance().mMusicModel.user1Id = bean.userNo;
                     RoomManager.getInstance().mMusicModel.user1bgId = bean.bgUid;
-                    int uid = RTCManager.getInstance().getStreamId();
+//                    int uid = RTCManager.getInstance().getStreamId();
+                    long uid = RoomManager.mMine.id * 10 + 1;
                     RoomManager.getInstance().mMusicModel.userbgId = (long) uid;
                     RoomManager.getInstance().onMemberApplyJoinChorus(RoomManager.getInstance().mMusicModel);
 
@@ -1229,7 +1234,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                         public void onSuccess(BaseResponse<String> data) {
                             Log.d("cwtsw", "歌曲停止播放");
                             RoomManager.getInstance().mMusicModel.status = 1;
-                            changeMusic();
+//                            changeMusic();
                         }
 
                         @Override

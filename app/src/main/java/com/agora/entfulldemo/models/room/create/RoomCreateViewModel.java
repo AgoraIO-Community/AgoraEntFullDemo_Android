@@ -81,6 +81,7 @@ public class RoomCreateViewModel extends BaseRequestViewModel {
                     public void onSuccess(BaseResponse<AgoraRoom> data) {
                         KtvConstant.RTM_TOKEN = data.getData().agoraRTMToken;
                         KtvConstant.RTC_TOKEN = data.getData().agoraRTCToken;
+                        KtvConstant.PLAYER_TOKEN = data.getData().agoraPlayerRTCToken;
                         loginRTM();
                         if (isCreator) {
                             //创建成功 直接加入房间

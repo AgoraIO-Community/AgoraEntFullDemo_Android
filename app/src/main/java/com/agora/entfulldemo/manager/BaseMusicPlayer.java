@@ -185,8 +185,9 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable PreLoadEvent event) {
-        if (UiUtils.isFastClick3(50)) return;
-        open(RoomManager.getInstance().mMusicModel);
+        if (!RoomManager.getInstance().mMusicModel.isChorus) {
+            open(RoomManager.getInstance().mMusicModel);
+        }
     }
 
     private void reset() {

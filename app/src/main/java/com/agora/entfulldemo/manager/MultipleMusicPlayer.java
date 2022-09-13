@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.model.AgoraMember;
@@ -12,8 +13,13 @@ import com.agora.data.model.AgoraRoom;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.bean.MemberMusicModel;
+import com.agora.entfulldemo.common.KtvConstant;
+import com.agora.entfulldemo.event.PreLoadEvent;
 import com.agora.entfulldemo.utils.ToastUtils;
+import com.agora.entfulldemo.utils.UiUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -139,7 +145,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             options.enableAudioRecordingOrPlayout = false;
         }
 
-        int uid = (int) (Math.random() * (Integer.MAX_VALUE / 2));
+//        int uid = (int) (Math.random() * (Integer.MAX_VALUE / 2));
         if (ObjectsCompat.equals(mUser.userNo, musicModelReady.userNo)) {
             if (musicModelReady.userbgId != null && musicModelReady.userbgId != 0) {
                 uid = musicModelReady.userbgId.intValue();
@@ -153,7 +159,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         mRtcConnection = new RtcConnection();
         mRtcConnection.channelId = channelName;
         mRtcConnection.localUid = uid;
-        RTCManager.getInstance().getRtcEngine().joinChannelEx("", mRtcConnection, options, new IRtcEngineEventHandler() {
+        RTCManager.getInstance().getRtcEngine().joinChannelEx(KtvConstant.PLAYER_TOKEN, mRtcConnection, options, new IRtcEngineEventHandler() {
             @Override
             public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                 super.onJoinChannelSuccess(channel, uid, elapsed);
@@ -166,7 +172,13 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
                 super.onLeaveChannel(stats);
                 mLogger.d("onLeaveChannelEX() called with: stats = [%s]", stats);
             }
+
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(@Nullable PreLoadEvent event) {
+        open(RoomManager.getInstance().mMusicModel);
     }
 
     private void leaveChannelEX() {
@@ -301,6 +313,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             joinChannelEX();
         } else if (UserManager.getInstance().getUser().userNo.equals(music.user1Id)) {
             startNetTestTask();
+            joinChannelEX();
             musicModelReady.user1Status = MemberMusicModel.UserStatus.Ready;
             musicModelReady.user1bgId = music.user1bgId;
             Log.d("cwtsw", "多人 open 我是合唱");
@@ -358,7 +371,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
 
         if (music.userNo.equals(mUser.userNo)) {
             //唱歌人，主唱，joinChannel 需要屏蔽的uid
-            RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.user1bgId.intValue(), true);
+            RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
         } else if (music.user1Id.equals(mUser.userNo)) {
             //唱歌人，陪唱人，joinChannel 需要屏蔽的uid
             RTCManager.getInstance().getRtcEngine().muteRemoteAudioStream(music.userbgId.intValue(), true);
@@ -424,7 +437,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
             return;
         }
 
-        if (mUser.userNo.equals(mMemberMusicModel.user1Id)) {
+        if (mUser.userNo.equals(mMemberMusicModel.user1Id) || mUser.userNo.equals(mMemberMusicModel.userNo)) {
             //已经开始了 直接retrun;
             Log.d("cwtsw", "多人 相等");
 

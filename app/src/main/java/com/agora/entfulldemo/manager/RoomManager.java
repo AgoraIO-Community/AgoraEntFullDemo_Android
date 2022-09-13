@@ -109,6 +109,7 @@ public final class RoomManager {
     }
 
     public boolean isMyMusic() {
+        if (mMusicModel == null) return false;
         return mMine.userNo.equals(mMusicModel.userNo);
     }
 

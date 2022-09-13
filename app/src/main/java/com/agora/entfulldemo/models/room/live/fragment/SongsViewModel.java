@@ -1,5 +1,7 @@
 package com.agora.entfulldemo.models.room.live.fragment;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -178,7 +180,7 @@ public class SongsViewModel extends BaseRequestViewModel {
 
                     @Override
                     public void onSuccess(BaseResponse<String> data) {
-
+                        Log.d("cwtsw", "删除歌曲");
                         //删歌推送 推送
                         RTMMessageBean bean = new RTMMessageBean();
                         bean.headUrl = UserManager.getInstance().getUser().headUrl;
