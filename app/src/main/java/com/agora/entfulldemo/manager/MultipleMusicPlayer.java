@@ -570,7 +570,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
 
         if (ObjectsCompat.equals(mMemberMusicModel.user1Id, mUser.userNo)) {
-            selectAudioTrack(mode);
+//            selectAudioTrack(mode);
         }
     }
 
@@ -615,6 +615,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         if (mStatus == Status.Started) {
             sendPause();
         } else if (mStatus == Status.Paused) {
+            sendPlay();
         }
 
         super.togglePlay();
@@ -665,6 +666,19 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         JSONObject jsonMsg = new JSONObject(msg);
         int streamId = RTCManager.getInstance().getStreamId();
         Log.d("cwtsw", "发送多人暂停消息");
+        int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
+        if (ret < 0) {
+            mLogger.e("sendPause() sendStreamMessage called returned: ret = [%s]", ret);
+        }
+    }
+
+    public void sendPlay() {
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("cmd", "setLrcTime");
+        msg.put("time", 0);
+        JSONObject jsonMsg = new JSONObject(msg);
+        int streamId = RTCManager.getInstance().getStreamId();
+        Log.d("cwtsw", "发送多人恢复");
         int ret = RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
         if (ret < 0) {
             mLogger.e("sendPause() sendStreamMessage called returned: ret = [%s]", ret);

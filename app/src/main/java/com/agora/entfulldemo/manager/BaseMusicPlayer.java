@@ -40,7 +40,7 @@ import io.agora.rtc2.IRtcEngineEventHandler;
 public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements IMediaPlayerObserver {
     protected final Logger.Builder mLogger = XLog.tag("MusicPlayer");
 
-    protected final Context mContext;
+    public final Context mContext;
     protected int mRole = Constants.CLIENT_ROLE_BROADCASTER;
 
     //主唱同步歌词给其他人
@@ -359,12 +359,33 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
         RTCManager.getInstance().getRtcEngine().sendStreamMessage(streamId, jsonMsg.toString().getBytes());
     }
 
+    public void resetVolume() {
+        if (micVolume != musicVolume) {
+            micOldVolume = micVolume;
+            setMicVolume(musicVolume);
+        }
+    }
+
+    private int musicVolume = 40;
+    private int micVolume = 40;
+    private int micOldVolume = 40;
+
     public void setMusicVolume(int v) {
+        musicVolume = v;
         mPlayer.adjustPlayoutVolume(v);
         mPlayer.adjustPublishSignalVolume(v);
     }
 
+    public void setOldMicVolume() {
+        setMicVolume(micOldVolume);
+    }
+
     public void setMicVolume(int v) {
+        if (RoomManager.mMine.isSelfMuted == 1) {
+            micOldVolume = v;
+            return;
+        }
+        micVolume = v;
         RTCManager.getInstance().getRtcEngine().adjustRecordingSignalVolume(v);
     }
 

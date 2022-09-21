@@ -63,7 +63,7 @@
             android:id="@+id/switchMV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="42dp"
             android:button="@drawable/cb_def_selector" />
 
     </LinearLayout>

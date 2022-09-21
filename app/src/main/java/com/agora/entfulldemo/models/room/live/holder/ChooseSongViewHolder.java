@@ -23,7 +23,6 @@ public class ChooseSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder
     @Override
     public void binding(MusicModelNew data, int selectedIndex) {
         if (data != null) {
-            mBinding.btnItemSongList.setOnClickListener(this::onItemClick);
             mBinding.titleItemSongList.setText(data.songName);
             mBinding.titleItemSongList.setOnLongClickListener(v -> {
                 v.setSelected(!v.isSelected());
@@ -36,9 +35,11 @@ public class ChooseSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder
             if (RoomManager.getInstance().isInMusicOrderList(data)) {
                 mBinding.btnItemSongList.setEnabled(false);
                 mBinding.btnItemSongList.setText(R.string.ktv_room_choosed_song);
+                mBinding.btnItemSongList.setOnClickListener(null);
             } else {
                 mBinding.btnItemSongList.setEnabled(true);
                 mBinding.btnItemSongList.setText(R.string.ktv_room_choose_song);
+                mBinding.btnItemSongList.setOnClickListener(this::onItemClick);
             }
         }
     }

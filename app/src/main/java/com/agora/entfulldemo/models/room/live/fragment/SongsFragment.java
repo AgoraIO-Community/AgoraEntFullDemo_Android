@@ -3,6 +3,7 @@ package com.agora.entfulldemo.models.room.live.fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.agora.entfulldemo.base.BaseViewBindingFragment;
 import com.agora.entfulldemo.base.OnItemClickListener;
 import com.agora.entfulldemo.databinding.KtvFragmentSongListBinding;
 import com.agora.entfulldemo.databinding.KtvItemChooseSongListBinding;
+import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.models.room.live.holder.ChooseSongViewHolder;
 import com.agora.entfulldemo.utils.AnimUtils;
 import com.agora.data.model.BaseMusicModel;
@@ -201,7 +203,10 @@ public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBi
         }
         lastClickTime = System.currentTimeMillis();
         this.position = position;
-        songsViewModel.requestChooseSong(data);
+        if (!RoomManager.getInstance().isInMusicOrderList(data)) {
+            Log.d("cwtsw", "点歌 " + data.songName);
+            songsViewModel.requestChooseSong(data);
+        }
     }
 
     private void doLoadMusics(View v) {

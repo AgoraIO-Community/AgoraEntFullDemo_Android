@@ -25,7 +25,7 @@ public class ChosenSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder
         if (item != null) {
             mBinding.tvNo.setText(String.valueOf(getAdapterPosition() + 1));
             mBinding.tvMusicName.setText(item.songName);
-            mBinding.tvChooser.setText(item.singer);
+            mBinding.tvChooser.setText(item.name);
             GlideApp.with(itemView).load(item.imageUrl)
                     .transform(new CenterCropRoundCornerTransform(10))
                     .into(mBinding.ivCover);
@@ -53,11 +53,11 @@ public class ChosenSongViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder
                 mBinding.ivToDel.setVisibility(View.GONE);
                 mBinding.ivToTop.setVisibility(View.GONE);
             }
-//            if (item.isChorus) {
-//                mBinding.tvChorus.setVisibility(View.VISIBLE);
-//            } else {
-//                mBinding.tvChorus.setVisibility(View.GONE);
-//            }
+            if (item.isChorus) {
+                mBinding.tvChorus.setText(mBinding.tvChorus.getContext().getString(R.string.song_ordering_person_chorus));
+            } else {
+                mBinding.tvChorus.setText(mBinding.tvChorus.getContext().getString(R.string.song_ordering_person));
+            }
         }
     }
 }

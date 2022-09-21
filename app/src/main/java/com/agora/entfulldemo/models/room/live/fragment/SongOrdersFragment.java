@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.agora.data.model.BaseMusicModel;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.base.BaseRecyclerViewAdapter;
 import com.agora.entfulldemo.base.BaseViewBindingFragment;
@@ -45,8 +46,17 @@ public class SongOrdersFragment extends BaseViewBindingFragment<KtvFragmentSongO
         songsViewModel.setLifecycleOwner(this);
         mAdapter = new BaseRecyclerViewAdapter<>(RoomManager.getInstance().getMusics(), this, ChosenSongViewHolder.class);
         getBinding().list.setAdapter(mAdapter);
-        RoomManager.getInstance().getLiveDataMusics().observe(getViewLifecycleOwner()
-                , memberMusicModels -> mAdapter.setDataList(memberMusicModels));
+    }
+
+    @Override
+    public void requestData() {
+        songsViewModel.getSongOrdersList();
+        songsViewModel.setISingleCallback((type, o) -> {
+            if (type == 0) {
+                RoomManager.getInstance().getLiveDataMusics().observe(getViewLifecycleOwner()
+                        , memberMusicModels -> mAdapter.setDataList(memberMusicModels));
+            }
+        });
     }
 
     @Override

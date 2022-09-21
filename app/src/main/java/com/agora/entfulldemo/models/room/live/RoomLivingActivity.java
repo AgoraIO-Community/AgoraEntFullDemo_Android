@@ -22,6 +22,7 @@ import com.agora.entfulldemo.bean.room.RTMMessageBean;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.databinding.ActivityRoomLivingBinding;
 import com.agora.entfulldemo.databinding.KtvItemRoomSpeakerBinding;
+import com.agora.entfulldemo.dialog.CloseRoomDialog;
 import com.agora.entfulldemo.dialog.CommonDialog;
 import com.agora.entfulldemo.dialog.MoreDialog;
 import com.agora.entfulldemo.dialog.MusicSettingDialog;
@@ -58,7 +59,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private MusicSettingDialog musicSettingDialog;
     private BaseRecyclerViewAdapter<KtvItemRoomSpeakerBinding, AgoraMember, RoomPeopleHolder> mRoomSpeakerAdapter;
     private boolean isInitList = false;
-    private CommonDialog creatorExitDialog;
+    private CloseRoomDialog creatorExitDialog;
 
     private CommonDialog exitDialog;
     private UserLeaveSeatMenuDialog mUserLeaveSeatMenuDialog;
@@ -140,7 +141,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 @Override
                 public void onRightButtonClick() {
                     setDarkStatusIcon(isBlackDarkStatus());
-                    roomLivingViewModel.leaveSeat(mAgoraMember);
+                    roomLivingViewModel.leaveSeat(RoomLivingActivity.this, mAgoraMember);
                 }
             });
         }
@@ -169,6 +170,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             setDarkStatusIcon(isBlackDarkStatus());
         });
         getBinding().cbMic.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (mRoomSpeakerAdapter.getItemData(RoomManager.mMine.onSeat) == null) {
+                return;
+            }
             roomLivingViewModel.toggleMic(b ? 0 : 1);
             mRoomSpeakerAdapter.getItemData(RoomManager.mMine.onSeat).isSelfMuted = b ? 0 : 1;
             mRoomSpeakerAdapter.notifyItemChanged(RoomManager.mMine.onSeat);
@@ -526,11 +530,8 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
     private void showCreatorExitDialog() {
         if (creatorExitDialog == null) {
-            creatorExitDialog = new CommonDialog(this);
+            creatorExitDialog = new CloseRoomDialog(this);
             creatorExitDialog.setCanceledOnTouchOutside(false);
-            creatorExitDialog.setDialogTitle("房间关闭");
-            creatorExitDialog.setDescText("房主退出，并关闭了房间");
-            creatorExitDialog.setDialogBtnText(getString(R.string.exit), null);
             creatorExitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
@@ -541,6 +542,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 @Override
                 public void onRightButtonClick() {
                     setDarkStatusIcon(isBlackDarkStatus());
+                    finish();
 
                 }
             });

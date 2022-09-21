@@ -188,9 +188,11 @@
     <string name="room_count">当前在线人数：%s</string>
     <string name="zc">主唱</string>
     <string name="song_ordering_person">点唱：</string>
+    <string name="song_ordering_person_chorus">合唱：</string>
     <string name="input_edit_name">请输入昵称</string>
     <string name="input_password">请输入房间密码</string>
     <string name="edit_name">修改昵称</string>
     <string name="people">人</string>
     <string name="ktv_music_menu_dialog_mv">MV</string>
+    <string name="room_has_close">房主已解散房间，请确认离开房间</string>
 </resources>

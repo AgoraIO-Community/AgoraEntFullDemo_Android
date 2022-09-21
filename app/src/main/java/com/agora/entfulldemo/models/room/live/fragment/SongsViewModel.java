@@ -93,12 +93,14 @@ public class SongsViewModel extends BaseRequestViewModel {
                             RoomManager.getInstance().onMusicAdd(model);
                         }
                         getISingleCallback().onSingleCallback(0, null);
+                        isChooseSong = false;
 
                     }
 
                     @Override
                     public void onFailure(@Nullable ApiException t) {
                         ToastUtils.showToast(t.getMessage());
+                        isChooseSong = false;
                     }
                 }
         );
@@ -132,8 +134,14 @@ public class SongsViewModel extends BaseRequestViewModel {
         );
     }
 
+    private boolean isChooseSong = false;
+
     //点歌
     public void requestChooseSong(MusicModelNew musicModelNew) {
+        if (isChooseSong) {
+            return;
+        }
+        isChooseSong = true;
         String userNo = UserManager.getInstance().getUser().userNo;
         String roomNo = RoomManager.mRoom.roomNo;
         int isChorus = RoomChooseSongDialog.isChorus ? 1 : 0;
@@ -149,7 +157,6 @@ public class SongsViewModel extends BaseRequestViewModel {
                     @Override
                     public void onSuccess(BaseResponse<String> data) {
                         getSongOrdersList();
-
                         RTMMessageBean bean = new RTMMessageBean();
                         bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_CHOOSE_SONG;
                         bean.roomNo = RoomManager.mRoom.roomNo;
@@ -161,6 +168,7 @@ public class SongsViewModel extends BaseRequestViewModel {
                     @Override
                     public void onFailure(@Nullable ApiException t) {
                         ToastUtils.showToast(t.getMessage());
+                        isChooseSong = false;
                     }
                 }
         );
@@ -182,13 +190,13 @@ public class SongsViewModel extends BaseRequestViewModel {
                     public void onSuccess(BaseResponse<String> data) {
                         Log.d("cwtsw", "删除歌曲");
                         //删歌推送 推送
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                        bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_SWITCH_SONGS;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.name = UserManager.getInstance().getUser().name;
+//                        RTMMessageBean bean = new RTMMessageBean();
+//                        bean.headUrl = UserManager.getInstance().getUser().headUrl;
+//                        bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_SWITCH_SONGS;
+//                        bean.userNo = UserManager.getInstance().getUser().userNo;
+//                        bean.name = UserManager.getInstance().getUser().name;
 
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+//                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
                         RoomManager.getInstance().onMusicDelete(memberMusicModel.songNo, position);
                     }
 
