@@ -278,7 +278,8 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LEAVE_SEAT, bean);
                         RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
                         if (agoraMember.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
-                            changeMusic();
+//                            changeMusic();
+                            getSongOrdersList(true);
                         } else {
                             getSongOrdersList(false);
                         }
@@ -916,6 +917,8 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         );
     }
 
+    private boolean isOpnEar = false;
+
     /**
      * 静音
      *
@@ -940,6 +943,16 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
                     @Override
                     public void onSuccess(BaseResponse<String> data) {
+                        if (!newValue) {
+                            if (mSetting.isEar()) {
+                                isOpnEar = true;
+                                mSetting.setEar(false);
+                            } else {
+                                isOpnEar = false;
+                            }
+                        } else if (isOpnEar) {
+                            mSetting.setEar(true);
+                        }
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, true);
                         ChannelMediaOptions options = new ChannelMediaOptions();
                         options.publishAudioTrack = newValue;
@@ -1134,7 +1147,8 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MIC_STATUS, true);
                     }
                     if (RoomManager.getInstance().mMusicModel != null && RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
-                        changeMusic();
+//                        changeMusic();
+                        getSongOrdersList(true);
                     } else {
                         getSongOrdersList(false);
                     }

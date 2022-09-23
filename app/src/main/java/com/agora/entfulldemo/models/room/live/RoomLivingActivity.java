@@ -30,6 +30,7 @@ import com.agora.entfulldemo.dialog.RoomChooseSongDialog;
 import com.agora.entfulldemo.dialog.UserLeaveSeatMenuDialog;
 import com.agora.entfulldemo.listener.OnButtonClickListener;
 import com.agora.entfulldemo.manager.PagePathConstant;
+import com.agora.entfulldemo.manager.RTCManager;
 import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
 import com.agora.entfulldemo.manager.UserManager;
@@ -48,6 +49,7 @@ import java.util.List;
 
 import io.agora.lrcview.PitchView;
 import io.agora.lrcview.bean.LrcData;
+import io.agora.rtc2.Constants;
 
 /**
  * 房间主页
@@ -246,7 +248,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                         } else {
                             getBinding().ivResultLevel.setImageResource(R.mipmap.ic_c);
                         }
-                        getBinding().groupResult.setVisibility(View.VISIBLE);
+                        if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
+                            getBinding().groupResult.setVisibility(View.VISIBLE);
+                        }
                     }
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE) {
                     mRoomSpeakerAdapter.notifyDataSetChanged();
@@ -553,6 +557,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RTCManager.getInstance().getRtcEngine().enableInEarMonitoring(false, Constants.EAR_MONITORING_FILTER_NONE);
         roomLivingViewModel.release();
         RoomManager.getInstance().leaveRoom();
     }

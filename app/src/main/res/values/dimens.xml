@@ -1,16 +1,5 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
-    <dimen name="ktv_title_size">20sp</dimen>
     <dimen name="ktv_list_empty_size">16sp</dimen>
-    <dimen name="ktv_room_text">18sp</dimen>
-
-    <dimen name="ktv_item_channel_spacing">4dp</dimen>
-
     <dimen name="ktv_space_small">8dp</dimen>
     <dimen name="ktv_space_normal">12dp</dimen>
-    <dimen name="ktv_space_medium">16dp</dimen>
-    <dimen name="ktv_space_big">24dp</dimen>
 </resources>

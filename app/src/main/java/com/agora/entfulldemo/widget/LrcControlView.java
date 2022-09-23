@@ -178,7 +178,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
         mBinding.clActive.setBackgroundResource(backgroundResId);
         mPrepareBinding.statusPrepareViewLrc.setVisibility(View.VISIBLE);
         mBinding.ilActive.getRoot().setVisibility(View.GONE);
-        if (RoomManager.getInstance().mMusicModel.userNo.equals(RoomManager.mMine.userNo)) {
+        if (RoomManager.getInstance().mMusicModel != null && RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
             this.mRole = Role.Singer;
         }
         if (this.mRole == Role.Singer) {
@@ -202,7 +202,7 @@ public class LrcControlView extends FrameLayout implements View.OnClickListener 
                 mBinding.ilActive.switchOriginal.setVisibility(View.GONE);
                 mBinding.ilActive.ivMusicMenu.setVisibility(View.GONE);
             }
-        } else if (!RoomManager.getInstance().mMusicModel.userNo.equals(RoomManager.mMine.userNo)) {
+        } else if (RoomManager.getInstance().mMusicModel == null || !RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
             mBinding.ilActive.rlMusicControlMenu.setVisibility(View.GONE);
         }
         stopTimer();
