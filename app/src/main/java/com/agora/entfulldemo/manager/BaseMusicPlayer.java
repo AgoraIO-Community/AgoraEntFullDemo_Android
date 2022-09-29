@@ -752,11 +752,11 @@ public abstract class BaseMusicPlayer extends IRtcEngineEventHandler implements 
 
     private void onMusicCompleted() {
         mLogger.i("onMusicCompleted() called");
+        mHandler.obtainMessage(ACTION_ON_MUSIC_COMPLETED).sendToTarget();
         mPlayer.stop();
         stopDisplayLrc();
         stopPublish();
         reset();
-        mHandler.obtainMessage(ACTION_ON_MUSIC_COMPLETED).sendToTarget();
         EventBus.getDefault().post(new PlayerStatusEvent(false));
     }
 

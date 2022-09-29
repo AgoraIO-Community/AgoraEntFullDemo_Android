@@ -233,10 +233,9 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MEMBER_JOIN) {
                     onMemberJoin((AgoraMember) o);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_PLAY_COMPLETED) {
-                    if (RoomManager.getInstance().mMusicModel.userNo
-                            .equals(UserManager.getInstance().getUser().userNo)
-                            || UserManager.getInstance().getUser().userNo
-                            .equals(RoomManager.getInstance().mMusicModel.user1Id)) {
+                    Log.d("cwtsw", "得分回调 userNo = " + RoomManager.mMine.userNo + " o = " + o);
+                    if (RoomManager.mMine.userNo.equals(o)) {
+                        Log.d("cwtsw", "计算得分");
                         int score = (int) getBinding().lrcControlView.getPitchView().getAverageScore();
                         getBinding().tvResultScore.setText(String.valueOf(score));
                         if (score >= 90) {
@@ -250,6 +249,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                         }
                         if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
                             getBinding().groupResult.setVisibility(View.VISIBLE);
+                            Log.d("cwtsw", "显示得分");
                         }
                     }
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE) {
