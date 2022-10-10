@@ -377,10 +377,12 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private void showExitDialog() {
         if (exitDialog == null) {
             exitDialog = new CommonDialog(this);
-            exitDialog.setDialogTitle(getString(R.string.exit_room));
+
             if (RoomManager.mMine.isMaster) {
+                exitDialog.setDialogTitle(getString(R.string.dismiss_room));
                 exitDialog.setDescText(getString(R.string.confirm_to_dismiss_room));
             } else {
+                exitDialog.setDialogTitle(getString(R.string.exit_room));
                 exitDialog.setDescText(getString(R.string.confirm_to_exit_room));
             }
             exitDialog.setDialogBtnText(getString(R.string.ktv_cancel), getString(R.string.ktv_confirm));

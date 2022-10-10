@@ -200,4 +200,5 @@
     <string name="confirm_to_dismiss_room">确认解散该房间吗？</string>
     <string name="confirm_to_exit_room">确认退出该房间吗？</string>
     <string name="exit_room">退出房间</string>
+    <string name="dismiss_room">解散房间</string>
 </resources>
