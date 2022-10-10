@@ -62,14 +62,14 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
             hideLoadingView();
         });
         setAccountStatus();
-        String account = SPUtil.getString(KtvConstant.ACCOUNT, null);
-        if (!TextUtils.isEmpty(account)) {
-            getBinding().etAccounts.setText(account);
-            String password = SPUtil.getString(KtvConstant.V_CODE, null);
-            if (!TextUtils.isEmpty(password)) {
-                getBinding().etVCode.setText(password);
-            }
-        }
+//        String account = SPUtil.getString(KtvConstant.ACCOUNT, null);
+//        if (!TextUtils.isEmpty(account)) {
+//            getBinding().etAccounts.setText(account);
+//            String password = SPUtil.getString(KtvConstant.V_CODE, null);
+//            if (!TextUtils.isEmpty(password)) {
+//                getBinding().etVCode.setText(password);
+//            }
+//        }
         countDownTimerUtils = new CountDownTimerUtils(getBinding().tvSendVCode, 60000, 1000);
     }
 
@@ -89,10 +89,10 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
     @Override
     public void initListener() {
         getBinding().tvUserAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/user_agreement.html");
+            PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/service.html");
         });
         getBinding().tvPrivacyAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
+            PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/privacy.html");
         });
         getBinding().btnLogin.setOnClickListener(view -> {
             if (getBinding().cvIAgree.isChecked()) {
@@ -153,7 +153,7 @@ public class PhoneLoginRegisterActivity extends BaseViewBindingActivity<Activity
                     String account = getBinding().etAccounts.getText().toString();
                     String vCode = getBinding().etVCode.getText().toString();
                     phoneLoginViewModel.requestLogin(account, vCode);
-                    SPUtil.putString(KtvConstant.ACCOUNT, account);
+//                    SPUtil.putString(KtvConstant.ACCOUNT, account);
                 }
             });
         }

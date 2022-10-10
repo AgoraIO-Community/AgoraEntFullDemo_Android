@@ -1,5 +1,10 @@
 package com.agora.entfulldemo.models.room.live;
 
+import static io.agora.rtc2.Constants.QUALITY_BAD;
+import static io.agora.rtc2.Constants.QUALITY_DOWN;
+import static io.agora.rtc2.Constants.QUALITY_POOR;
+import static io.agora.rtc2.Constants.QUALITY_VBAD;
+
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,12 +38,10 @@ import com.agora.entfulldemo.manager.PagePathConstant;
 import com.agora.entfulldemo.manager.RTCManager;
 import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.manager.RoomManager;
-import com.agora.entfulldemo.manager.UserManager;
 import com.agora.entfulldemo.models.room.live.fragment.dialog.MVFragment;
 import com.agora.entfulldemo.models.room.live.holder.RoomPeopleHolder;
 import com.agora.entfulldemo.utils.ThreadManager;
 import com.agora.entfulldemo.utils.UiUtils;
-import com.agora.entfulldemo.utils.WifiUtils;
 import com.agora.entfulldemo.widget.DividerDecoration;
 import com.agora.entfulldemo.widget.LrcControlView;
 import com.agora.data.model.AgoraMember;
@@ -89,21 +92,33 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             roomLivingViewModel.joinRoom();
             roomLivingViewModel.requestRTMToken();
         });
+        if (RoomManager.mMine.userNo.equals(RoomManager.mRoom.creatorNo)) {
+            requestRecordPermission();
+        }
     }
 
-    @Override
-    public void requestData() {
-        getWifiStatus();
-    }
 
-    private void getWifiStatus() {
-        int wifiRssi = WifiUtils.getWifiStatus();
-        if (wifiRssi < 50) {
-            getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
-            getBinding().tvNetStatus.setText(R.string.net_status_good);
-        } else {
-            getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_yellow);
-            getBinding().tvNetStatus.setText(R.string.net_status_low);
+    private void setNetWorkStatus(int txQuality) {
+        switch (txQuality) {
+//            case QUALITY_GOOD:
+//            case QUALITY_EXCELLENT:
+//                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
+//                getBinding().tvNetStatus.setText(R.string.net_status_good);
+//                break;
+            case QUALITY_BAD:
+            case QUALITY_POOR:
+                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_yellow);
+                getBinding().tvNetStatus.setText(R.string.net_status_m);
+                break;
+            case QUALITY_VBAD:
+            case QUALITY_DOWN:
+                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_red);
+                getBinding().tvNetStatus.setText(R.string.net_status_low);
+                break;
+            default:
+                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
+                getBinding().tvNetStatus.setText(R.string.net_status_good);
+                break;
         }
     }
 
@@ -143,7 +158,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 @Override
                 public void onRightButtonClick() {
                     setDarkStatusIcon(isBlackDarkStatus());
-                    roomLivingViewModel.leaveSeat(RoomLivingActivity.this, mAgoraMember);
+                    roomLivingViewModel.leaveSeat(mAgoraMember);
                 }
             });
         }
@@ -159,6 +174,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
         if (agoraMember == null) {
             if (RoomManager.getInstance().getMine().role == AgoraMember.Role.Listener) {
                 roomLivingViewModel.haveSeat(position);
+                requestRecordPermission();
             }
         }
     }
@@ -297,6 +313,8 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                     getBinding().lrcControlView.getPitchView().updateTime((Long) o);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_COUNT_DOWN) {
                     getBinding().lrcControlView.setCountDown((Integer) o);
+                } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_NETWORK_STATUS) {
+                    setNetWorkStatus((Integer) o);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_JOINED_CHORUS) {
                     getBinding().lrcControlView.onMemberJoinedChorus();
                     mRoomSpeakerAdapter.notifyDataSetChanged();
@@ -359,13 +377,13 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
     private void showExitDialog() {
         if (exitDialog == null) {
             exitDialog = new CommonDialog(this);
-            exitDialog.setDialogTitle("退出房间");
+            exitDialog.setDialogTitle(getString(R.string.exit_room));
             if (RoomManager.mMine.isMaster) {
-                exitDialog.setDescText("确认要关闭房间么？");
+                exitDialog.setDescText(getString(R.string.confirm_to_dismiss_room));
             } else {
-                exitDialog.setDescText("确认要退出房间么？");
+                exitDialog.setDescText(getString(R.string.confirm_to_exit_room));
             }
-            exitDialog.setDialogBtnText("取消", "确定");
+            exitDialog.setDialogBtnText(getString(R.string.ktv_cancel), getString(R.string.ktv_confirm));
             exitDialog.setOnButtonClickListener(new OnButtonClickListener() {
                 @Override
                 public void onLeftButtonClick() {
@@ -487,16 +505,27 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
         return false;
     }
 
+    private boolean isOpenSelfVideo = false;
+
     //开启 关闭摄像头
     private void toggleSelfVideo(boolean isOpen) {
+        isOpenSelfVideo = true;
         if (isOpen) {
             RoomManager.mMine.isVideoMuted = 1;
         } else {
             RoomManager.mMine.isVideoMuted = 0;
         }
-        mRoomSpeakerAdapter.getItemData(RoomManager.mMine.onSeat).isVideoMuted = RoomManager.mMine.isVideoMuted;
-        mRoomSpeakerAdapter.notifyItemChanged(RoomManager.mMine.onSeat);
-        roomLivingViewModel.toggleSelfVideo(RoomManager.mMine.isVideoMuted);
+        requestCameraPermission();
+    }
+
+    @Override
+    public void getPermissions() {
+        if (isOpenSelfVideo) {
+            mRoomSpeakerAdapter.getItemData(RoomManager.mMine.onSeat).isVideoMuted = RoomManager.mMine.isVideoMuted;
+            mRoomSpeakerAdapter.notifyItemChanged(RoomManager.mMine.onSeat);
+            roomLivingViewModel.toggleSelfVideo(RoomManager.mMine.isVideoMuted);
+            isOpenSelfVideo = false;
+        }
     }
 
     private void onMemberLeave(@NonNull AgoraMember member) {

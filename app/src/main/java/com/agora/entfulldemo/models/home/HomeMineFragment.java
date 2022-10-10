@@ -78,10 +78,10 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             }
         });
         getBinding().tvUserAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://iot-console-web.sh.agoralab.co/terms/termsofuse");
+            PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/service.html");
         });
         getBinding().tvPrivacyAgreement.setOnClickListener(view -> {
-            PagePilotManager.pageWebView("https://iot-console-web.sh.agoralab.co/terms/privacypolicy");
+            PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/privacy.html");
         });
 
         getBinding().tvLogout.setOnClickListener(view -> {
@@ -105,7 +105,8 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
             editNameDialog.show();
         });
         getBinding().ivUserAvatar.setOnClickListener(view -> {
-            showSelectPhotoFromDialog();
+//            showSelectPhotoFromDialog();
+            ((MainActivity) requireActivity()).requestReadStoragePermission();
         });
     }
 
@@ -131,7 +132,7 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         selectPhotoFromDialog.show();
     }
 
-    private void openAlbum() {
+    public void openAlbum() {
         Intent intentToPickPic = new Intent(Intent.ACTION_PICK, null);
         intentToPickPic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intentToPickPic.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");

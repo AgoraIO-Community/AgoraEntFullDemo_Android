@@ -46,22 +46,22 @@ public class ApiManager {
                     .registerTypeAdapter(String.class, new GsonUtils.StringConverter()).create();
         }
         httpClient = new OkHttpClient.Builder().addInterceptor(chain -> {
-            Request.Builder builder = chain.request().newBuilder();
-            builder.addHeader(NetConstants.HEADER_APP_OS, "android");
-            builder.addHeader(NetConstants.HEADER_VERSION_NAME, BuildConfig.VERSION_NAME);
-            builder.addHeader(NetConstants.HEADER_VERSION_CODE, String.valueOf(BuildConfig.VERSION_CODE));
-            if (!TextUtils.isEmpty(token)) {
-                builder.addHeader(NetConstants.AUTHORIZATION, token);
-            } else {
-                if (UserManager.getInstance().getUser() != null) {
-                    token = UserManager.getInstance().getUser().token;
-                }
-                if (!TextUtils.isEmpty(token)) {
-                    builder.addHeader(NetConstants.AUTHORIZATION, token);
-                }
-            }
-            return chain.proceed(builder.build());
-        }).addInterceptor(new LoggerInterceptor(null, true))
+                    Request.Builder builder = chain.request().newBuilder();
+                    builder.addHeader(NetConstants.HEADER_APP_OS, "android");
+                    builder.addHeader(NetConstants.HEADER_VERSION_NAME, BuildConfig.VERSION_NAME);
+                    builder.addHeader(NetConstants.HEADER_VERSION_CODE, String.valueOf(BuildConfig.VERSION_CODE));
+                    if (!TextUtils.isEmpty(token)) {
+                        builder.addHeader(NetConstants.AUTHORIZATION, token);
+                    } else {
+                        if (UserManager.getInstance().getUser() != null) {
+                            token = UserManager.getInstance().getUser().token;
+                        }
+                        if (!TextUtils.isEmpty(token)) {
+                            builder.addHeader(NetConstants.AUTHORIZATION, token);
+                        }
+                    }
+                    return chain.proceed(builder.build());
+                }).addInterceptor(new LoggerInterceptor(null, true))
 //                .addInterceptor(LoggerInterceptor(null, true))
                 /*
             这里可以添加一个HttpLoggingInterceptor，因为Retrofit封装好了从Http请求到解析，
@@ -220,8 +220,8 @@ public class ApiManager {
      */
     public Observable<BaseResponse<BaseMusicModel>> requestSearchSong(PageModel pageModel) {
         return apiManagerService.requestSearchSong(RequestBody.create(
-                MediaType.parse("application/json;charset=UTF-8"),
-                GsonUtils.Companion.getGson().toJson(pageModel))).
+                        MediaType.parse("application/json;charset=UTF-8"),
+                        GsonUtils.Companion.getGson().toJson(pageModel))).
                 flatMap(it -> Observable.just(it));
     }
 
@@ -291,10 +291,10 @@ public class ApiManager {
     /**
      * 静音
      */
-    public Observable<BaseResponse<String>> requestToggleMic(
-            String userNo,
-            String roomNo) {
-        return apiManagerService.toggleMic(userNo, roomNo).flatMap(it -> Observable.just(it));
+    public Observable<BaseResponse<String>> requestToggleMic(int status,
+                                                             String userNo,
+                                                             String roomNo) {
+        return apiManagerService.toggleMic(status, userNo, roomNo).flatMap(it -> Observable.just(it));
     }
 
     /**
@@ -341,10 +341,10 @@ public class ApiManager {
     /**
      * 打开 关闭 摄像头
      */
-    public Observable<BaseResponse<String>> requestOpenCamera(
-            String userNo,
-            String roomNo) {
-        return apiManagerService.requestOpenCamera(userNo, roomNo).flatMap(it -> Observable.just(it));
+    public Observable<BaseResponse<String>> requestOpenCamera(int status,
+                                                              String userNo,
+                                                              String roomNo) {
+        return apiManagerService.requestOpenCamera(status, userNo, roomNo).flatMap(it -> Observable.just(it));
     }
 
     /**

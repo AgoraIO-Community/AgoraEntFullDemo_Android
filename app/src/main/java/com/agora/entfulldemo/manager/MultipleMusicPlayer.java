@@ -137,7 +137,7 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         options.clientRoleType = mRole;
         options.publishAudioTrack = false;
         options.publishMediaPlayerId = mPlayer.getMediaPlayerId();
-        if (ObjectsCompat.equals(musicModelReady.userNo, mUser.userNo)) {
+        if (musicModelReady != null && ObjectsCompat.equals(musicModelReady.userNo, mUser.userNo)) {
             options.publishMediaPlayerAudioTrack = true;
             options.enableAudioRecordingOrPlayout = false;
         } else if (ObjectsCompat.equals(musicModelReady.user1Id, mUser.userNo)) {
@@ -146,11 +146,11 @@ public class MultipleMusicPlayer extends BaseMusicPlayer {
         }
 
 //        int uid = (int) (Math.random() * (Integer.MAX_VALUE / 2));
-        if (ObjectsCompat.equals(mUser.userNo, musicModelReady.userNo)) {
+        if (musicModelReady != null && ObjectsCompat.equals(mUser.userNo, musicModelReady.userNo)) {
             if (musicModelReady.userbgId != null && musicModelReady.userbgId != 0) {
                 uid = musicModelReady.userbgId.intValue();
             }
-        } else if (ObjectsCompat.equals(mUser.userNo, musicModelReady.user1Id)) {
+        } else if (musicModelReady != null && ObjectsCompat.equals(mUser.userNo, musicModelReady.user1Id)) {
             if (musicModelReady.user1bgId != null && musicModelReady.user1bgId != 0) {
                 uid = musicModelReady.user1bgId.intValue();
             }

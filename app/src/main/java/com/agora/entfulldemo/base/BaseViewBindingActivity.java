@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewbinding.ViewBinding;
 
 import com.agora.entfulldemo.R;
+import com.agora.entfulldemo.manager.RTMManager;
 import com.agora.entfulldemo.utils.ToastUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,6 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializePermList();
         if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -64,16 +64,16 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        new Handler().postDelayed(() -> {
-            if (isFinishing()) {
-                return;
-            }
-            // 检测是否要动态申请相应的权限
-            int reqIndex = requestNextPermission();
-            if (reqIndex < 0) {
-                getPermissions();
-            }
-        }, 200);
+//        new Handler().postDelayed(() -> {
+//            if (isFinishing()) {
+//                return;
+//            }
+//            // 检测是否要动态申请相应的权限
+//            int reqIndex = requestNextPermission();
+//            if (reqIndex < 0) {
+//                getPermissions();
+//            }
+//        }, 200);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -88,39 +88,78 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
     public static final int PERM_REQID_MGSTORAGE = 0x1005;
     public static final int PERM_REQID_WIFISTATE = 0x1006;
     public static final int PERM_REQID_FINELOCAL = 0x1007;
-
-    protected void initializePermList() {
+    private void checkPermission(){
+        int reqIndex = requestNextPermission();
+        if (reqIndex < 0) {
+            getPermissions();
+        }
+    }
+    public void requestReadStoragePermission() {
         if (VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mPermissionArray = new PermissionItem[4];
+            mPermissionArray = new PermissionItem[1];
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = true;
+            }
+        } else if (VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, PERM_REQID_RDSTORAGE);
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
+            }
+        } else {
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, PERM_REQID_RDSTORAGE);
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
+            }
+        }
+        checkPermission();
+    }
+
+    protected void requestCameraPermission() {
+        if (VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mPermissionArray = new PermissionItem[1];
             for (PermissionItem item : mPermissionArray) {
                 item.granted = true;
             }
 
         } else if (VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            mPermissionArray = new PermissionItem[3];
-            mPermissionArray[0] = new PermissionItem(Manifest.permission.RECORD_AUDIO, PERM_REQID_RECORD_AUDIO);
-            mPermissionArray[1] = new PermissionItem(Manifest.permission.CAMERA, PERM_REQID_CAMERA);
-            mPermissionArray[2] = new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, PERM_REQID_RDSTORAGE);
-//            mPermissionArray[3] = new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERM_REQID_WRSTORAGE);
-//            mPermissionArray[4] = new PermissionItem(Manifest.permission.ACCESS_WIFI_STATE, PERM_REQID_WIFISTATE);
-//            mPermissionArray[5] = new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, PERM_REQID_FINELOCAL);
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.CAMERA, PERM_REQID_CAMERA);
             for (PermissionItem item : mPermissionArray) {
                 item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
             }
-
         } else {
-            mPermissionArray = new PermissionItem[3];
-            mPermissionArray[0] = new PermissionItem(Manifest.permission.RECORD_AUDIO, PERM_REQID_RECORD_AUDIO);
-            mPermissionArray[1] = new PermissionItem(Manifest.permission.CAMERA, PERM_REQID_CAMERA);
-            mPermissionArray[2] = new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, PERM_REQID_RDSTORAGE);
-//            mPermissionArray[3] = new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERM_REQID_WRSTORAGE);
-            //mPermissionArray[4] = new PermissionItem(Manifest.permission.MANAGE_EXTERNAL_STORAGE, PERM_REQID_MGSTORAGE);
-//            mPermissionArray[4] = new PermissionItem(Manifest.permission.ACCESS_WIFI_STATE, PERM_REQID_WIFISTATE);
-//            mPermissionArray[5] = new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, PERM_REQID_FINELOCAL);
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.CAMERA, PERM_REQID_CAMERA);
             for (PermissionItem item : mPermissionArray) {
                 item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
             }
         }
+        checkPermission();
+    }
+
+    protected void requestRecordPermission() {
+        if (VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mPermissionArray = new PermissionItem[1];
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = true;
+            }
+
+        } else if (VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.RECORD_AUDIO, PERM_REQID_RECORD_AUDIO);
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
+            }
+        } else {
+            mPermissionArray = new PermissionItem[1];
+            mPermissionArray[0] = new PermissionItem(Manifest.permission.RECORD_AUDIO, PERM_REQID_RECORD_AUDIO);
+            for (PermissionItem item : mPermissionArray) {
+                item.granted = (ContextCompat.checkSelfPermission(this, item.permissionName) == PackageManager.PERMISSION_GRANTED);
+            }
+        }
+        checkPermission();
     }
 
     /*
@@ -129,6 +168,7 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
      * @return 申请权限的索引, -1表示所有权限都有了，不再需要申请
      */
     protected int requestNextPermission() {
+        if (mPermissionArray == null) return -1;
         for (int i = 0; i < mPermissionArray.length; i++) {
             if (!mPermissionArray[i].granted) {
                 // 请求相应的权限i
@@ -158,7 +198,6 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
         int reqIndex = requestNextPermission();
         if (reqIndex < 0) {
             getPermissions();
-            return;
         }
     }
 
@@ -205,6 +244,7 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
     }
 
     public void getPermissions() {
+
     }
 
     public void getAlonePermissions() {
@@ -272,7 +312,7 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
             ToastUtils.showToast(R.string.try_again_to_exit);
             new Handler(Looper.getMainLooper()).postDelayed(() -> isExit = false, 2000);
         } else {
-            AgoraApplication.the().getRtmClient().release();
+            RTMManager.getInstance().mRtmClient.release();
             finish();
             System.exit(0);
         }

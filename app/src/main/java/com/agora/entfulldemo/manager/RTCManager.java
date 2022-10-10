@@ -9,6 +9,7 @@ import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.bean.room.RTCMessageBean;
 import com.agora.entfulldemo.bean.room.RTMMessageBean;
 import com.agora.entfulldemo.common.KtvConstant;
+import com.agora.entfulldemo.event.NetWorkEvent;
 import com.agora.entfulldemo.event.PreLoadEvent;
 import com.agora.entfulldemo.listener.ISingleCallback;
 import com.agora.entfulldemo.models.room.live.RoomLivingViewModel;
@@ -88,7 +89,15 @@ public final class RTCManager {
         }
         mRtcEngine.loadExtensionProvider("agora_drm_loader");
         mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_GAME_STREAMING);
-
+        mRtcEngine.addHandler(new IRtcEngineEventHandler() {
+            @Override
+            public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
+                super.onNetworkQuality(uid, txQuality, rxQuality);
+                if(uid == UserManager.getInstance().getUser().id) {
+                    EventBus.getDefault().post(new NetWorkEvent(txQuality));
+                }
+            }
+        });
     }
 
     public void initMcc() {
@@ -141,7 +150,6 @@ public final class RTCManager {
         } else {
             return true;
         }
-
     }
 
 

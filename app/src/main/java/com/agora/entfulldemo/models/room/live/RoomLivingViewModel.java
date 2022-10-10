@@ -22,6 +22,7 @@ import com.agora.entfulldemo.bean.MusicSettingBean;
 import com.agora.entfulldemo.bean.room.RTMMessageBean;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.dialog.MusicSettingDialog;
+import com.agora.entfulldemo.event.NetWorkEvent;
 import com.agora.entfulldemo.event.PlayerStatusEvent;
 import com.agora.entfulldemo.event.ReceivedMessageEvent;
 import com.agora.entfulldemo.manager.BaseMusicPlayer;
@@ -109,66 +110,66 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         if (RoomManager.mMine.isMaster) {
             ApiManager.getInstance().requestCloseRoom(agoraRoom.roomNo)
                     .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                    new ApiSubscriber<BaseResponse<String>>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
-                            addDispose(d);
-                        }
+                            new ApiSubscriber<BaseResponse<String>>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+                                    addDispose(d);
+                                }
 
-                        @Override
-                        public void onSuccess(BaseResponse<String> data) {
-                            RTMMessageBean bean = new RTMMessageBean();
-                            bean.messageType = MESSAGE_ROOM_TYPE_CREATOR_EXIT;
-                            bean.roomNo = agoraRoom.roomNo;
-                            RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                            getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
-                        }
+                                @Override
+                                public void onSuccess(BaseResponse<String> data) {
+                                    RTMMessageBean bean = new RTMMessageBean();
+                                    bean.messageType = MESSAGE_ROOM_TYPE_CREATOR_EXIT;
+                                    bean.roomNo = agoraRoom.roomNo;
+                                    RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                                    getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
+                                }
 
-                        @Override
-                        public void onFailure(@Nullable ApiException t) {
-                            if (t.getMessage().equals("无法关闭房间")) {
-                                RTMMessageBean bean = new RTMMessageBean();
-                                bean.messageType = MESSAGE_ROOM_TYPE_CREATOR_EXIT;
-                                bean.roomNo = agoraRoom.roomNo;
-                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
-                            } else {
-                                ToastUtils.showToast(t.getMessage());
+                                @Override
+                                public void onFailure(@Nullable ApiException t) {
+                                    if (t.getMessage().equals("无法关闭房间")) {
+                                        RTMMessageBean bean = new RTMMessageBean();
+                                        bean.messageType = MESSAGE_ROOM_TYPE_CREATOR_EXIT;
+                                        bean.roomNo = agoraRoom.roomNo;
+                                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
+                                    } else {
+                                        ToastUtils.showToast(t.getMessage());
+                                    }
+                                }
                             }
-                        }
-                    }
-            );
+                    );
         } else {
             ApiManager.getInstance().requestExitRoom(agoraRoom.roomNo)
                     .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                    new ApiSubscriber<BaseResponse<String>>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
-                            addDispose(d);
-                        }
+                            new ApiSubscriber<BaseResponse<String>>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+                                    addDispose(d);
+                                }
 
-                        @Override
-                        public void onSuccess(BaseResponse<String> data) {
-                            RTMMessageBean bean = new RTMMessageBean();
-                            bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                            bean.roomNo = agoraRoom.roomNo;
-                            bean.messageType = MESSAGE_ROOM_TYPE_LEAVE_SEAT;
-                            bean.userNo = UserManager.getInstance().getUser().userNo;
-                            bean.onSeat = RoomManager.getInstance().getMine().onSeat;
-                            bean.name = UserManager.getInstance().getUser().name;
-                            RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                            getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
-                            if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
-                                changeMusic();
+                                @Override
+                                public void onSuccess(BaseResponse<String> data) {
+                                    RTMMessageBean bean = new RTMMessageBean();
+                                    bean.headUrl = UserManager.getInstance().getUser().headUrl;
+                                    bean.roomNo = agoraRoom.roomNo;
+                                    bean.messageType = MESSAGE_ROOM_TYPE_LEAVE_SEAT;
+                                    bean.userNo = UserManager.getInstance().getUser().userNo;
+                                    bean.onSeat = RoomManager.getInstance().getMine().onSeat;
+                                    bean.name = UserManager.getInstance().getUser().name;
+                                    RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                                    getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_EXIT, null);
+                                    if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
+                                        changeMusic();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@Nullable ApiException t) {
+                                    ToastUtils.showToast(t.getMessage());
+                                }
                             }
-                        }
-
-                        @Override
-                        public void onFailure(@Nullable ApiException t) {
-                            ToastUtils.showToast(t.getMessage());
-                        }
-                    }
-            );
+                    );
         }
     }
 
@@ -204,99 +205,99 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
     private void requestGetRoomInfo(String password) {
         ApiManager.getInstance().requestGetRoomInfo(agoraRoom.roomNo, password)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<AgoraRoom>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<AgoraRoom>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<AgoraRoom> data) {
-                        agoraRoom = data.getData();
-                        RoomManager.getInstance().setAgoraRoom(data.getData());
-                        if (RoomManager.mMine.userNo.equals(agoraRoom.creatorNo)) {
-                            RoomManager.mMine.isMaster = true;
-                            RoomManager.mMine.role = AgoraMember.Role.Owner;
-                            RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+                            @Override
+                            public void onSuccess(BaseResponse<AgoraRoom> data) {
+                                agoraRoom = data.getData();
+                                RoomManager.getInstance().setAgoraRoom(data.getData());
+                                if (RoomManager.mMine.userNo.equals(agoraRoom.creatorNo)) {
+                                    RoomManager.mMine.isMaster = true;
+                                    RoomManager.mMine.role = AgoraMember.Role.Owner;
+                                    RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+                                }
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_JOIN_SUCCESS, null);
+                                onJoinRoom();
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_JOIN_FAIL, null);
+                                ToastUtils.showToast("无法加入房间 " + t.getMessage());
+                            }
                         }
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_JOIN_SUCCESS, null);
-                        onJoinRoom();
-                    }
-
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_JOIN_FAIL, null);
-                        ToastUtils.showToast("无法加入房间 " + t.getMessage());
-                    }
-                }
-        );
+                );
     }
 
     /**
      * 离开麦位
      */
-    public void leaveSeat(Context context, AgoraMember agoraMember) {
+    public void leaveSeat(AgoraMember agoraMember) {
         ApiManager.getInstance().requestRoomLeaveSeatRoomInfo(agoraRoom.roomNo, agoraMember.userNo).
                 compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<AgoraRoom>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<AgoraRoom>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<AgoraRoom> data) {
-                        if (agoraMember.isSelfMuted == 1) {
-                            if (agoraMember.userNo.equals(RoomManager.mMine.userNo)) {
-                                toggleMic(0);
-                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MIC_STATUS, true);
-                            }
-                        }
-                        //下麦成功 推送
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                        bean.messageType = MESSAGE_ROOM_TYPE_LEAVE_SEAT;
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.userNo = agoraMember.userNo;
-                        bean.onSeat = agoraMember.onSeat;
-                        bean.name = agoraMember.name;
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LEAVE_SEAT, bean);
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                            @Override
+                            public void onSuccess(BaseResponse<AgoraRoom> data) {
+                                if (agoraMember.isSelfMuted == 1) {
+                                    if (agoraMember.userNo.equals(RoomManager.mMine.userNo)) {
+                                        toggleMic(0);
+                                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_MIC_STATUS, true);
+                                    }
+                                }
+                                //下麦成功 推送
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.headUrl = UserManager.getInstance().getUser().headUrl;
+                                bean.messageType = MESSAGE_ROOM_TYPE_LEAVE_SEAT;
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.userNo = agoraMember.userNo;
+                                bean.onSeat = agoraMember.onSeat;
+                                bean.name = agoraMember.name;
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LEAVE_SEAT, bean);
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
 
-                        if (agoraMember.userNo.equals(RoomManager.mMine.userNo)) {
-                            RoomManager.mMine.role = AgoraMember.Role.Listener;
-                            RoomManager.mMine.onSeat = -1;
-                            if (mMusicPlayer != null) {
-                                mMusicPlayer.switchRole(Constants.CLIENT_ROLE_AUDIENCE);
-                            }
-                            RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
-                            if ((RoomManager.getInstance().mMusicModel != null && RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.user1Id))) {
-                                //我是合唱
-                                RoomManager.getInstance().mMusicModel.isChorus = false;
-                                RoomManager.getInstance().mMusicModel.user1Id = "";
-                                RoomManager.getInstance().mMusicModel.setType(MemberMusicModel.SingType.Single);
-                                getSongOrdersList(false);
-                                RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
-                            } else if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
-                                //推送切歌逻辑
-                                RTMMessageBean bean2 = new RTMMessageBean();
-                                bean2.headUrl = UserManager.getInstance().getUser().headUrl;
-                                bean2.messageType = MESSAGE_ROOM_TYPE_SWITCH_SONGS;
-                                bean2.roomNo = agoraRoom.roomNo;
-                                bean2.userNo = UserManager.getInstance().getUser().userNo;
-                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean2));
-                                getSongOrdersList(true);
-                            }
+                                if (agoraMember.userNo.equals(RoomManager.mMine.userNo)) {
+                                    RoomManager.mMine.role = AgoraMember.Role.Listener;
+                                    RoomManager.mMine.onSeat = -1;
+                                    if (mMusicPlayer != null) {
+                                        mMusicPlayer.switchRole(Constants.CLIENT_ROLE_AUDIENCE);
+                                    }
+                                    RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
+                                    if ((RoomManager.getInstance().mMusicModel != null && RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.user1Id))) {
+                                        //我是合唱
+                                        RoomManager.getInstance().mMusicModel.isChorus = false;
+                                        RoomManager.getInstance().mMusicModel.user1Id = "";
+                                        RoomManager.getInstance().mMusicModel.setType(MemberMusicModel.SingType.Single);
+                                        getSongOrdersList(false);
+                                        RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
+                                    } else if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
+                                        //推送切歌逻辑
+                                        RTMMessageBean bean2 = new RTMMessageBean();
+                                        bean2.headUrl = UserManager.getInstance().getUser().headUrl;
+                                        bean2.messageType = MESSAGE_ROOM_TYPE_SWITCH_SONGS;
+                                        bean2.roomNo = agoraRoom.roomNo;
+                                        bean2.userNo = UserManager.getInstance().getUser().userNo;
+                                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean2));
+                                        getSongOrdersList(true);
+                                    }
 //                        } else {
 //                            getSongOrdersList(false);
-                        }
-                    }
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                });
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
 
     /**
@@ -305,38 +306,38 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
     public void haveSeat(int seat) {
         ApiManager.getInstance().requestRoomHaveSeatRoomInfo(agoraRoom.roomNo, seat, UserManager.getInstance().getUser().userNo).
                 compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<AgoraRoom>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<AgoraRoom>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<AgoraRoom> data) {
-                        Log.d("cwtsw", "haveSeat onSuccess");
-                        //上麦成功 推送
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                        bean.messageType = MESSAGE_ROOM_TYPE_ON_SEAT;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.onSeat = seat;
-                        bean.id = UserManager.getInstance().getUser().id;
-                        bean.name = UserManager.getInstance().getUser().name;
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_ON_SEAT, bean);
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                            @Override
+                            public void onSuccess(BaseResponse<AgoraRoom> data) {
+                                Log.d("cwtsw", "haveSeat onSuccess");
+                                //上麦成功 推送
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.headUrl = UserManager.getInstance().getUser().headUrl;
+                                bean.messageType = MESSAGE_ROOM_TYPE_ON_SEAT;
+                                bean.userNo = UserManager.getInstance().getUser().userNo;
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.onSeat = seat;
+                                bean.id = UserManager.getInstance().getUser().id;
+                                bean.name = UserManager.getInstance().getUser().name;
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_ON_SEAT, bean);
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
 
-                        RoomManager.mMine.role = AgoraMember.Role.Speaker;
-                        RTCManager.getInstance().getRtcEngine()
-                                .setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-                        mMusicPlayer.switchRole(Constants.CLIENT_ROLE_BROADCASTER);
-                    }
+                                RoomManager.mMine.role = AgoraMember.Role.Speaker;
+                                RTCManager.getInstance().getRtcEngine()
+                                        .setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+                                mMusicPlayer.switchRole(Constants.CLIENT_ROLE_BROADCASTER);
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                });
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
 
     /**
@@ -346,50 +347,50 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         agoraRoom.bgOption = String.valueOf(bgPosition);
         ApiManager.getInstance().requestRoomInfoEdit(agoraRoom.roomNo, null, String.valueOf(bgPosition), null).
                 compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.headUrl = UserManager.getInstance().getUser().headUrl;
-                        bean.messageType = MESSAGE_ROOM_TYPE_CHANGE_MV;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.bgOption = agoraRoom.bgOption;
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.headUrl = UserManager.getInstance().getUser().headUrl;
+                                bean.messageType = MESSAGE_ROOM_TYPE_CHANGE_MV;
+                                bean.userNo = UserManager.getInstance().getUser().userNo;
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.bgOption = agoraRoom.bgOption;
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
 
-                    }
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                });
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
 
     public void requestRoomCancelChorus() {
         ApiManager.getInstance().requestRoomCancelChorus(RoomManager.mMine.userNo, RoomManager.getInstance().mMusicModel.songNo, agoraRoom.roomNo).
                 compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                });
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        });
     }
 
     public void onStart() {
@@ -859,72 +860,72 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         }
         ApiManager.getInstance().requestJoinChorus(musicModel.songNo, mUser.userNo, mRoom.roomNo)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        musicModel.user1Id = mUser.userNo;
-                        long uid = mUser.id * 10 + 1;
-                        musicModel.user1bgId = uid;
-                        mMusicPlayer.switchRole(Constants.CLIENT_ROLE_BROADCASTER);
-                        //合唱执行加入
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                musicModel.user1Id = mUser.userNo;
+                                long uid = mUser.id * 10 + 1;
+                                musicModel.user1bgId = uid;
+                                mMusicPlayer.switchRole(Constants.CLIENT_ROLE_BROADCASTER);
+                                //合唱执行加入
 //                        RoomManager.getInstance().onMemberJoinedChorus(musicModel);
 
-                        //通知主唱 有人加入了合唱
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_APPLY_JOIN_CHORUS;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.name = UserManager.getInstance().getUser().name;
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.bgUid = musicModel.user1bgId;
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                        Log.d("cwtsw", "发送消息11 加入合唱");
+                                //通知主唱 有人加入了合唱
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.messageType = RoomLivingViewModel.MESSAGE_ROOM_TYPE_APPLY_JOIN_CHORUS;
+                                bean.userNo = UserManager.getInstance().getUser().userNo;
+                                bean.name = UserManager.getInstance().getUser().name;
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.bgUid = musicModel.user1bgId;
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                                Log.d("cwtsw", "发送消息11 加入合唱");
 
-                    }
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                }
-        );
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        }
+                );
 
     }
 
     public void toggleSelfVideo(int isVideoMuted) {
-        ApiManager.getInstance().requestOpenCamera(RoomManager.mMine.userNo, agoraRoom.roomNo)
+        ApiManager.getInstance().requestOpenCamera(isVideoMuted, RoomManager.mMine.userNo, agoraRoom.roomNo)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        RtcEngineEx engine = RTCManager.getInstance().getRtcEngine();
-                        engine.enableLocalVideo(isVideoMuted == 1);
-                        //发送通知
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.messageType = MESSAGE_ROOM_TYPE_TO_VIDEO;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.id = RoomManager.mMine.getStreamId();
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.isVideoMuted = isVideoMuted;
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                    }
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                RtcEngineEx engine = RTCManager.getInstance().getRtcEngine();
+                                engine.enableLocalVideo(isVideoMuted == 1);
+                                //发送通知
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.messageType = MESSAGE_ROOM_TYPE_TO_VIDEO;
+                                bean.userNo = UserManager.getInstance().getUser().userNo;
+                                bean.id = RoomManager.mMine.getStreamId();
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.isVideoMuted = isVideoMuted;
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, false);
-                    }
-                }
-        );
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, false);
+                            }
+                        }
+                );
     }
 
     private boolean isOpnEar = false;
@@ -943,54 +944,54 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         mMine.isSelfMuted = isSelfMuted;
         boolean newValue = mMine.isSelfMuted == 0;
         //同步静音状态
-        ApiManager.getInstance().requestToggleMic(mMine.userNo, agoraRoom.roomNo)
+        ApiManager.getInstance().requestToggleMic(isSelfMuted, mMine.userNo, agoraRoom.roomNo)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
-
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        if (!newValue) {
-                            if (mSetting.isEar()) {
-                                isOpnEar = true;
-                                mSetting.setEar(false);
-                            } else {
-                                isOpnEar = false;
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
                             }
-                        } else {
-                            mSetting.setEar(isOpnEar);
-                        }
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, true);
-                        ChannelMediaOptions options = new ChannelMediaOptions();
-                        options.publishAudioTrack = newValue;
+
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                if (!newValue) {
+                                    if (mSetting.isEar()) {
+                                        isOpnEar = true;
+                                        mSetting.setEar(false);
+                                    } else {
+                                        isOpnEar = false;
+                                    }
+                                } else {
+                                    mSetting.setEar(isOpnEar);
+                                }
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, true);
+                                ChannelMediaOptions options = new ChannelMediaOptions();
+                                options.publishAudioTrack = newValue;
 //                        options.publishMediaPlayerAudioTrack = true;
-                        RTCManager.getInstance().getRtcEngine().updateChannelMediaOptions(options);
-                        if (mMusicPlayer != null) {
-                            if (newValue) {
-                                mMusicPlayer.setOldMicVolume();
-                            } else {
-                                mMusicPlayer.resetVolume();
+                                RTCManager.getInstance().getRtcEngine().updateChannelMediaOptions(options);
+                                if (mMusicPlayer != null) {
+                                    if (newValue) {
+                                        mMusicPlayer.setOldMicVolume();
+                                    } else {
+                                        mMusicPlayer.resetVolume();
+                                    }
+                                }
+                                //发送通知
+                                RTMMessageBean bean = new RTMMessageBean();
+                                bean.messageType = MESSAGE_ROOM_TYPE_TO_MUTE;
+                                bean.userNo = UserManager.getInstance().getUser().userNo;
+                                bean.roomNo = agoraRoom.roomNo;
+                                bean.isSelfMuted = isSelfMuted;
+                                bean.id = RoomManager.mMine.getStreamId();
+                                RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, false);
                             }
                         }
-                        //发送通知
-                        RTMMessageBean bean = new RTMMessageBean();
-                        bean.messageType = MESSAGE_ROOM_TYPE_TO_MUTE;
-                        bean.userNo = UserManager.getInstance().getUser().userNo;
-                        bean.roomNo = agoraRoom.roomNo;
-                        bean.isSelfMuted = isSelfMuted;
-                        bean.id = RoomManager.mMine.getStreamId();
-                        RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean));
-                    }
-
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_TOGGLE_MIC, false);
-                    }
-                }
-        );
+                );
     }
 
     private void toggleOriginal(LrcControlView lrcControlView) {
@@ -1016,34 +1017,35 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
      * 获取已点列表
      */
     public void getSongOrdersList(boolean isUpdateUi) {
+        Log.d("cwtsw", "获取已点列表 是否更新UI " + isUpdateUi);
         ApiManager.getInstance().requestGetSongsOrderedList(RoomManager.mRoom.roomNo)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<List<MemberMusicModel>>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
-
-                    @Override
-                    public void onSuccess(BaseResponse<List<MemberMusicModel>> data) {
-                        RoomManager.getInstance().onMusicEmpty(isUpdateUi);
-                        for (MemberMusicModel model : data.getData()) {
-                            if (model.isChorus) {
-                                model.setType(MemberMusicModel.SingType.Chorus);
+                        new ApiSubscriber<BaseResponse<List<MemberMusicModel>>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
                             }
-                            RoomManager.getInstance().onMusicAdd(model);
-                        }
-                        if (data.getData() != null && !data.getData().isEmpty() && isUpdateUi) {
-                            onMusicChanged(data.getData().get(0));
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        ToastUtils.showToast(t.getMessage());
-                    }
-                }
-        );
+                            @Override
+                            public void onSuccess(BaseResponse<List<MemberMusicModel>> data) {
+                                RoomManager.getInstance().onMusicEmpty(isUpdateUi);
+                                for (MemberMusicModel model : data.getData()) {
+                                    if (model.isChorus) {
+                                        model.setType(MemberMusicModel.SingType.Chorus);
+                                    }
+                                    RoomManager.getInstance().onMusicAdd(model);
+                                }
+                                if (data.getData() != null && !data.getData().isEmpty() && isUpdateUi) {
+                                    onMusicChanged(data.getData().get(0));
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                ToastUtils.showToast(t.getMessage());
+                            }
+                        }
+                );
     }
 
     /**
@@ -1068,30 +1070,30 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED, false);
         ApiManager.getInstance().requestSwitchSong(UserManager.getInstance().getUser().userNo, musicModel.songNo, mRoom.roomNo)
                 .compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                new ApiSubscriber<BaseResponse<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDispose(d);
-                    }
+                        new ApiSubscriber<BaseResponse<String>>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                                addDispose(d);
+                            }
 
-                    @Override
-                    public void onSuccess(BaseResponse<String> data) {
-                        startChangeMusic();
-                    }
+                            @Override
+                            public void onSuccess(BaseResponse<String> data) {
+                                startChangeMusic();
+                            }
 
-                    @Override
-                    public void onFailure(@Nullable ApiException t) {
-                        if ("歌曲不存在".equals(t.getMessage())) {
-                            Log.d("cwtsw", "歌曲不存在 切歌");
-                            startChangeMusic();
-                        } else {
-                            ToastUtils.showToast(t.getMessage());
+                            @Override
+                            public void onFailure(@Nullable ApiException t) {
+                                if ("歌曲不存在".equals(t.getMessage())) {
+                                    Log.d("cwtsw", "歌曲不存在 切歌");
+                                    startChangeMusic();
+                                } else {
+                                    ToastUtils.showToast(t.getMessage());
+                                }
+                                getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED, true);
+
+                            }
                         }
-                        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED, true);
-
-                    }
-                }
-        );
+                );
     }
 
     private void startChangeMusic() {
@@ -1142,6 +1144,8 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
     public static final String MESSAGE_ROOM_TYPE_SYNCHRO_PITCH = "14";// 同步打分信息
 
+    public static final String MESSAGE_ROOM_TYPE_SYSTEM_EXAMINE_TIP = "20";// 违规提示
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable ReceivedMessageEvent event) {
         if (getISingleCallback() != null) {
@@ -1191,6 +1195,10 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                 getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LEAVE_SEAT, bean);
             } else if (bean.messageType.equals(MESSAGE_ROOM_TYPE_ON_SEAT)) {
                 getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_ON_SEAT, bean);
+            } else if (bean.messageType.equals(MESSAGE_ROOM_TYPE_SYSTEM_EXAMINE_TIP)) {
+                if (RoomManager.mMine.userNo.equals(bean.userNo)) {
+                    ToastUtils.showToast("您的行为存在涉嫌违法违规内容，请规范行为。");
+                }
             } else if (bean.messageType.equals(MESSAGE_ROOM_TYPE_SWITCH_SONGS)) {
                 //切歌成功
                 getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_ENABLED, true);
@@ -1271,57 +1279,63 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(@Nullable NetWorkEvent event) {
+        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_NETWORK_STATUS, event.txQuality);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable PlayerStatusEvent event) {
         if (event.isPlay && RoomManager.getInstance().mMusicModel.status != 2) {
             ApiManager.getInstance().requestRoomSongBegin(
-                    RoomManager.getInstance().mMusicModel.sort,
-                    UserManager.getInstance().getUser().userNo,
-                    RoomManager.getInstance().mMusicModel.songNo,
-                    agoraRoom.roomNo).
+                            RoomManager.getInstance().mMusicModel.sort,
+                            UserManager.getInstance().getUser().userNo,
+                            RoomManager.getInstance().mMusicModel.songNo,
+                            agoraRoom.roomNo).
                     compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                    new ApiSubscriber<BaseResponse<String>>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
-                            addDispose(d);
-                        }
+                            new ApiSubscriber<BaseResponse<String>>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+                                    addDispose(d);
+                                }
 
-                        @Override
-                        public void onSuccess(BaseResponse<String> data) {
-                            Log.d("cwtsw", "歌曲开始播放");
-                            getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_STATUS,
-                                    KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_PLAY_STATUS);
-                            RoomManager.getInstance().mMusicModel.status = 2;
-                        }
+                                @Override
+                                public void onSuccess(BaseResponse<String> data) {
+                                    Log.d("cwtsw", "歌曲开始播放");
+                                    getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_CONTROL_VIEW_STATUS,
+                                            KtvConstant.TYPE_CONTROL_VIEW_STATUS_ON_PLAY_STATUS);
+                                    RoomManager.getInstance().mMusicModel.status = 2;
+                                }
 
-                        @Override
-                        public void onFailure(@Nullable ApiException t) {
-                        }
-                    });
+                                @Override
+                                public void onFailure(@Nullable ApiException t) {
+                                }
+                            });
         } else {
             ApiManager.getInstance().requestRoomSongOver(
-                    RoomManager.getInstance().mMusicModel.sort,
-                    UserManager.getInstance().getUser().userNo,
-                    RoomManager.getInstance().mMusicModel.songNo,
-                    agoraRoom.roomNo).
+                            RoomManager.getInstance().mMusicModel.sort,
+                            UserManager.getInstance().getUser().userNo,
+                            RoomManager.getInstance().mMusicModel.songNo,
+                            agoraRoom.roomNo).
                     compose(SchedulersUtil.INSTANCE.applyApiSchedulers()).subscribe(
-                    new ApiSubscriber<BaseResponse<String>>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
-                            addDispose(d);
-                        }
+                            new ApiSubscriber<BaseResponse<String>>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+                                    addDispose(d);
+                                }
 
-                        @Override
-                        public void onSuccess(BaseResponse<String> data) {
-                            Log.d("cwtsw", "歌曲停止播放");
-                            RoomManager.getInstance().mMusicModel.status = 1;
+                                @Override
+                                public void onSuccess(BaseResponse<String> data) {
+                                    Log.d("cwtsw", "歌曲停止播放");
+                                    RoomManager.getInstance().mMusicModel.status = 1;
 //                            changeMusic();
-                        }
+                                }
 
-                        @Override
-                        public void onFailure(@Nullable ApiException t) {
-                        }
-                    });
+                                @Override
+                                public void onFailure(@Nullable ApiException t) {
+                                }
+                            });
         }
     }
 

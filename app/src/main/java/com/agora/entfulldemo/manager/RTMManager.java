@@ -2,6 +2,7 @@ package com.agora.entfulldemo.manager;
 
 import android.util.Log;
 
+import com.agora.entfulldemo.agora.ChatManager;
 import com.agora.entfulldemo.base.AgoraApplication;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.event.ReceivedMessageEvent;
@@ -19,6 +20,7 @@ import io.agora.rtm.RtmChannel;
 import io.agora.rtm.RtmChannelAttribute;
 import io.agora.rtm.RtmChannelListener;
 import io.agora.rtm.RtmChannelMember;
+import io.agora.rtm.RtmClient;
 import io.agora.rtm.RtmFileMessage;
 import io.agora.rtm.RtmImageMessage;
 import io.agora.rtm.RtmMessage;
@@ -35,6 +37,15 @@ public final class RTMManager implements RtmChannelListener {
 
     public static RTMManager getInstance() {
         return RTMManager.SingletonHolder.INSTANCE;
+    }
+
+    private ChatManager mChatManager;
+    public RtmClient mRtmClient;
+
+    private RTMManager() {
+        mChatManager = new ChatManager(AgoraApplication.the());
+        mChatManager.init();
+        mRtmClient = mChatManager.getRtmClient();
     }
 
     private EventListener mRTMEvent;
@@ -59,7 +70,7 @@ public final class RTMManager implements RtmChannelListener {
      * 此处调用后台接口来创建不再app端创建
      */
     public void createRTMRoom(String roomId) {
-        mRtmChannel = AgoraApplication.the().getRtmClient().createChannel(roomId, this);
+        mRtmChannel = mRtmClient.createChannel(roomId, this);
     }
 
     /**
@@ -94,7 +105,6 @@ public final class RTMManager implements RtmChannelListener {
         mRtmChannel.leave(new ResultCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {
-
             }
 
             @Override
@@ -108,7 +118,7 @@ public final class RTMManager implements RtmChannelListener {
      * 推送消息
      */
     public void sendMessage(String json) {
-        RtmMessage message = AgoraApplication.the().getRtmClient().createMessage();
+        RtmMessage message = mRtmClient.createMessage();
         message.setRawMessage(json.getBytes(StandardCharsets.UTF_8));
         message.setText("send");
         mRtmChannel.sendMessage(message, new ResultCallback<Void>() {
@@ -129,7 +139,7 @@ public final class RTMManager implements RtmChannelListener {
      * 登录到RTM
      */
     public void doLoginRTM() {
-        AgoraApplication.the().getRtmClient().login(
+        mRtmClient.login(
                 KtvConstant.RTM_TOKEN,
                 UserManager.getInstance().getUser().id.toString(), new ResultCallback<Void>() {
                     @Override
@@ -150,7 +160,7 @@ public final class RTMManager implements RtmChannelListener {
      * 退出RTM
      */
     public void doLogoutRTM() {
-        AgoraApplication.the().getRtmClient().logout(null);
+        mRtmClient.logout(null);
     }
 
     private int memberCount;

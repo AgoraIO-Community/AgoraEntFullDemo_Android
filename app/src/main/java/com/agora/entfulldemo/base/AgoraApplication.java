@@ -20,8 +20,7 @@ import me.jessyan.autosize.utils.ScreenUtils;
 
 public class AgoraApplication extends MultiDexApplication {
     private static AgoraApplication sInstance;
-    private ChatManager mChatManager;
-    private RtmClient mRtmClient;
+
 
     public static AgoraApplication the() {
         return sInstance;
@@ -34,22 +33,12 @@ public class AgoraApplication extends MultiDexApplication {
         initAutoSize();
         RxJavaPlugins.setErrorHandler(KTVUtil::logE);
         XLog.init();
-        mChatManager = new ChatManager(this);
-        mChatManager.init();
-        mRtmClient = mChatManager.getRtmClient();
+
         DataRepository.Instance().setDataRepositoryImpl(new DataRepositoryImpl2());
     }
 
     private void initARouter() {
         ARouter.init(this);
-    }
-
-    public ChatManager getChatManager() {
-        return mChatManager;
-    }
-
-    public RtmClient getRtmClient() {
-        return mRtmClient;
     }
 
     private void initAutoSize() {
@@ -67,6 +56,15 @@ public class AgoraApplication extends MultiDexApplication {
                             .setDesignWidthInDp(375)
                             .setDesignHeightInDp(812);
                 }
+//                if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//                    AutoSizeConfig.getInstance()
+//                            .setDesignWidthInDp((int) (812 * 1.2))
+//                            .setDesignHeightInDp((int) (375 *  1.2));
+//                } else {
+//                    AutoSizeConfig.getInstance()
+//                            .setDesignWidthInDp((int) (375 *  1.2))
+//                            .setDesignHeightInDp((int) (812 *  1.2));
+//                }
             }
 
             @Override

@@ -68,11 +68,11 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
         mAdapter = new BaseRecyclerViewAdapter<>(null, new OnItemClickListener<AgoraRoom>() {
             @Override
             public void onItemClick(@NonNull AgoraRoom data, View view, int position, long viewType) {
-                if (!TextUtils.isEmpty(data.password) && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
+                if (data.isPrivate == 1 && !UserManager.getInstance().getUser().userNo.equals(data.creatorNo)) {
                     showInputPwdDialog(data);
                 } else {
                     RoomManager.getInstance().setAgoraRoom(data);
-                    PagePilotManager.pageRoomLiving();
+                    roomCreateViewModel.getRoomToken(data.roomNo, null);
                 }
 
             }
@@ -110,6 +110,11 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
                         getBinding().btnCreateRoom2.setVisibility(View.VISIBLE);
                     }
                 }
+            } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_RTM_RTC_TOKEN) {
+                PagePilotManager.pageRoomLiving();
+            } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_PASSWORD_ERROR) {
+                ToastUtils.showToast("密码不正确");
+                setDarkStatusIcon(isBlackDarkStatus());
             }
         });
         getBinding().smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
@@ -123,13 +128,9 @@ public class RoomListActivity extends BaseViewBindingActivity<ActivityRoomListBi
         }
         inputPasswordDialog.clearContent();
         inputPasswordDialog.iSingleCallback = (type, o) -> {
-            if (data.password.equals(o)) {
-                RoomManager.getInstance().setAgoraRoom(data);
-                PagePilotManager.pageRoomLiving();
-            } else {
-                ToastUtils.showToast("密码不正确");
-                setDarkStatusIcon(isBlackDarkStatus());
-            }
+            data.password = (String) o;
+            RoomManager.getInstance().setAgoraRoom(data);
+            roomCreateViewModel.getRoomToken(data.roomNo, (String) o);
         };
         inputPasswordDialog.show();
     }

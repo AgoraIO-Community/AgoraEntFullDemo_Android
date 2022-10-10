@@ -32,6 +32,8 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState) {
+        getBinding().ivAppLogo.postDelayed(this::checkStatusToStart, 500);
+
     }
 
     @Override
@@ -94,7 +96,7 @@ public class WelcomeActivity extends BaseViewBindingActivity<ActivityWelcomeBind
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void getPermissions() {
-        checkStatusToStart();
+
     }
 
     private void checkStatusToStart() {

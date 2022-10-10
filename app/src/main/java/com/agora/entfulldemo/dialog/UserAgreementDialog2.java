@@ -41,13 +41,13 @@ public class UserAgreementDialog2 extends BaseDialog<DialogUserAgreementBinding>
         ClickableSpan protocolClickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/user_agreement.html");
+                PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/service.html");
             }
         };
         ClickableSpan protocolClickableSpan2 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                PagePilotManager.pageWebView("https://beidou-releases.oss-cn-zhangjiakou.aliyuncs.com/agora/static/privacy_policy.html");
+                PagePilotManager.pageWebView("https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/privacy.html");
             }
         };
 

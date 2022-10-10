@@ -104,6 +104,7 @@ public class SongsFragment extends BaseViewBindingFragment<KtvFragmentSongListBi
                     getBinding().smartRefreshLayout.setVisibility(View.VISIBLE);
                     getBinding().recyclerSearchResult.setVisibility(View.GONE);
                     getBinding().hScrollView.setVisibility(View.VISIBLE);
+                    getBinding().llEmpty.setVisibility(View.GONE);
                 } else {
                     getBinding().iBtnClear.setVisibility(View.VISIBLE);
                     getBinding().smartRefreshLayout.setVisibility(View.GONE);

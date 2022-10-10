@@ -6,8 +6,8 @@
     <string name="try_again_to_exit">再按一次退出应用</string>
     <string name="exit">退出</string>
     <string name="user_agreement">用户协议</string>
-    <string name="privacy_agreement">隐私协议</string>
-    <string name="and">与</string>
+    <string name="privacy_agreement">隐私政策</string>
+    <string name="and">及</string>
     <string name="cancel">取消</string>
     <string name="close">关闭</string>
     <string name="agree">同意</string>
@@ -134,7 +134,9 @@
     <string name="encryption">加密</string>
     <string name="please_input_4_pwd">请设置4位数房间密码</string>
     <string name="net_status_good">本机网络好</string>
+    <string name="net_status_m">本机网络良</string>
     <string name="net_status_low">本机网络差</string>
+    <string name="net_status_un_know">本机网络未知</string>
     <string name="please_input_room_name">请输入房间名称</string>
     <string name="empty_search">未找到相关结果</string>
     <string name="song_and_singer" translatable="false">%s - %s</string>
@@ -195,4 +197,7 @@
     <string name="people">人</string>
     <string name="ktv_music_menu_dialog_mv">MV</string>
     <string name="room_has_close">房主已解散房间，请确认离开房间</string>
+    <string name="confirm_to_dismiss_room">确认解散该房间吗？</string>
+    <string name="confirm_to_exit_room">确认退出该房间吗？</string>
+    <string name="exit_room">退出房间</string>
 </resources>

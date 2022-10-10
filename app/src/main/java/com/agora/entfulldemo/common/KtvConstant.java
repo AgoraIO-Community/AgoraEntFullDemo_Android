@@ -98,6 +98,12 @@ public class KtvConstant {
     public static final int CALLBACK_TYPE_ROOM_SEAT_CHANGE = 23;
     /* 用户数更新 */
     public static final int CALLBACK_TYPE_ROOM_MEMBER_COUNT_UPDATE = 24;
+    /* 网络波动 */
+    public static final int CALLBACK_TYPE_ROOM_NETWORK_STATUS = 25;
+    /* 获取token成功 */
+    public static final int CALLBACK_TYPE_ROOM_RTM_RTC_TOKEN = 26;
+    /* 密码错误 */
+    public static final int CALLBACK_TYPE_ROOM_PASSWORD_ERROR = 27;
 
 
     /* 登录成功*/

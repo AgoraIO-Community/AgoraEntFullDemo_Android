@@ -25,9 +25,9 @@ public class RoomHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomL
                     .transform(new CenterCropRoundCornerTransform(40)).into(mBinding.ivRoomCover);
             mBinding.tvRoomName.setText(data.name);
             mBinding.tvPersonNum.setText(String.format("%d%s", data.roomPeopleNum, itemView.getContext().getString(R.string.people)));
-            if (!TextUtils.isEmpty(data.password)) {
+            if (data.isPrivate == 1){
                 mBinding.ivLock.setVisibility(View.VISIBLE);
-            } else {
+            } else{
                 mBinding.ivLock.setVisibility(View.GONE);
             }
         }

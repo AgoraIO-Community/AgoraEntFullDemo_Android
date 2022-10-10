@@ -203,12 +203,14 @@ public interface ApiManagerService {
 
     @GET(UrlConstants.REQUEST_USER_CHANGE_IF_QUIET)
     Observable<BaseResponse<String>> toggleMic(
+            @Query("setStatus") int status,
             @Query("userNo") String userNo,
             @Query("roomNo") String roomNo
     );
 
     @GET(UrlConstants.REQUEST_USER_CHANGE_OPEN_CAMERA)
     Observable<BaseResponse<String>> requestOpenCamera(
+            @Query("setStatus") int status,
             @Query("userNo") String userNo,
             @Query("roomNo") String roomNo
     );
