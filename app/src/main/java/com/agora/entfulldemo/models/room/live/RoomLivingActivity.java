@@ -2,7 +2,10 @@ package com.agora.entfulldemo.models.room.live;
 
 import static io.agora.rtc2.Constants.QUALITY_BAD;
 import static io.agora.rtc2.Constants.QUALITY_DOWN;
+import static io.agora.rtc2.Constants.QUALITY_EXCELLENT;
+import static io.agora.rtc2.Constants.QUALITY_GOOD;
 import static io.agora.rtc2.Constants.QUALITY_POOR;
+import static io.agora.rtc2.Constants.QUALITY_UNKNOWN;
 import static io.agora.rtc2.Constants.QUALITY_VBAD;
 
 import android.annotation.SuppressLint;
@@ -100,11 +103,6 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
     private void setNetWorkStatus(int txQuality) {
         switch (txQuality) {
-//            case QUALITY_GOOD:
-//            case QUALITY_EXCELLENT:
-//                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
-//                getBinding().tvNetStatus.setText(R.string.net_status_good);
-//                break;
             case QUALITY_BAD:
             case QUALITY_POOR:
                 getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_yellow);
@@ -114,6 +112,15 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             case QUALITY_DOWN:
                 getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_red);
                 getBinding().tvNetStatus.setText(R.string.net_status_low);
+                break;
+            case QUALITY_EXCELLENT:
+            case QUALITY_GOOD:
+                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
+                getBinding().tvNetStatus.setText(R.string.net_status_good);
+                break;
+            case QUALITY_UNKNOWN:
+                getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_red);
+                getBinding().tvNetStatus.setText(R.string.net_status_un_know);
                 break;
             default:
                 getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
