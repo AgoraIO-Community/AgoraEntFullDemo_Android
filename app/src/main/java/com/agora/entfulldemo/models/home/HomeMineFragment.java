@@ -1,5 +1,8 @@
 package com.agora.entfulldemo.models.home;
 
+import static com.agora.entfulldemo.base.BaseViewBindingActivity.PERM_REQID_RDSTORAGE;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,6 +22,7 @@ import com.agora.entfulldemo.BuildConfig;
 import com.agora.entfulldemo.R;
 import com.agora.entfulldemo.api.model.User;
 import com.agora.entfulldemo.base.BaseViewBindingFragment;
+import com.agora.entfulldemo.base.PermissionItem;
 import com.agora.entfulldemo.common.CenterCropRoundCornerTransform;
 import com.agora.entfulldemo.common.KtvConstant;
 import com.agora.entfulldemo.common.GlideApp;
@@ -106,7 +111,8 @@ public class HomeMineFragment extends BaseViewBindingFragment<FragmentHomeMineBi
         });
         getBinding().ivUserAvatar.setOnClickListener(view -> {
 //            showSelectPhotoFromDialog();
-            ((MainActivity) requireActivity()).requestReadStoragePermission();
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERM_REQID_RDSTORAGE);
+//            ((MainActivity) requireActivity()).requestReadStoragePermission();
         });
     }
 

@@ -88,12 +88,14 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
     public static final int PERM_REQID_MGSTORAGE = 0x1005;
     public static final int PERM_REQID_WIFISTATE = 0x1006;
     public static final int PERM_REQID_FINELOCAL = 0x1007;
-    private void checkPermission(){
+
+    private void checkPermission() {
         int reqIndex = requestNextPermission();
         if (reqIndex < 0) {
             getPermissions();
         }
     }
+
     public void requestReadStoragePermission() {
         if (VERSION.SDK_INT < Build.VERSION_CODES.M) {
             mPermissionArray = new PermissionItem[1];
@@ -188,9 +190,8 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             setPermGrantedByReqId(requestCode);
-
         } else { // 拒绝了该权限
-            finish();
+            ToastUtils.showToast(R.string.ktv_error_permisstion);
             return;
         }
 
@@ -207,6 +208,7 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends Bas
      * @return 相应的索引, -1表示没有找到 request Id 对应的项
      */
     protected int setPermGrantedByReqId(int reqId) {
+        if(mPermissionArray==null) return -1;
         for (int i = 0; i < mPermissionArray.length; i++) {
             if (mPermissionArray[i].requestId == reqId) {
                 mPermissionArray[i].granted = true;
