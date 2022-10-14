@@ -94,7 +94,7 @@ public final class RTCManager {
             public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
                 super.onNetworkQuality(uid, txQuality, rxQuality);
                 if(uid == UserManager.getInstance().getUser().id) {
-                    EventBus.getDefault().post(new NetWorkEvent(txQuality));
+                    EventBus.getDefault().post(new NetWorkEvent(txQuality, rxQuality));
                 }
             }
         });

@@ -276,7 +276,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                                         RoomManager.getInstance().mMusicModel.isChorus = false;
                                         RoomManager.getInstance().mMusicModel.user1Id = "";
                                         RoomManager.getInstance().mMusicModel.setType(MemberMusicModel.SingType.Single);
-                                        getSongOrdersList(false);
+                                        getSongOrdersList(true);
                                         RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
                                     } else if (RoomManager.mMine.userNo.equals(RoomManager.getInstance().mMusicModel.userNo)) {
                                         //推送切歌逻辑
@@ -1175,7 +1175,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                         RoomManager.getInstance().mMusicModel.isChorus = false;
                         RoomManager.getInstance().mMusicModel.user1Id = "";
                         RoomManager.getInstance().mMusicModel.setType(MemberMusicModel.SingType.Single);
-                        getSongOrdersList(false);
+                        getSongOrdersList(true);
                         RTCManager.getInstance().getRtcEngine().setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
                     } else {
                         getSongOrdersList(false);
@@ -1282,7 +1282,7 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(@Nullable NetWorkEvent event) {
-        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_NETWORK_STATUS, event.txQuality);
+        getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_NETWORK_STATUS, event);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
