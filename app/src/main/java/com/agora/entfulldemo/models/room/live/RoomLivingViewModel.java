@@ -288,8 +288,12 @@ public class RoomLivingViewModel extends SimpleRoomEventCallback {
                                         RTMManager.getInstance().sendMessage(GsonUtils.Companion.getGson().toJson(bean2));
                                         getSongOrdersList(true);
                                     }
-//                        } else {
-//                            getSongOrdersList(false);
+                                } else if ((RoomManager.getInstance().mMusicModel != null && agoraMember.userNo.equals(RoomManager.getInstance().mMusicModel.user1Id))) {
+                                    //被房主下麦克的合唱者
+                                    RoomManager.getInstance().mMusicModel.isChorus = false;
+                                    RoomManager.getInstance().mMusicModel.user1Id = "";
+                                    RoomManager.getInstance().mMusicModel.setType(MemberMusicModel.SingType.Single);
+                                    getISingleCallback().onSingleCallback(KtvConstant.CALLBACK_TYPE_ROOM_SEAT_CHANGE, null);
                                 }
                             }
 

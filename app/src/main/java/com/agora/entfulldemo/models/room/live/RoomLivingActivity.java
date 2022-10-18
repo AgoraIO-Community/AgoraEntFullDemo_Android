@@ -104,27 +104,22 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
 
 
     private void setNetWorkStatus(int txQuality, int rxQuality) {
-        if(txQuality == QUALITY_BAD || txQuality == QUALITY_POOR
-                || rxQuality == QUALITY_BAD || rxQuality == QUALITY_POOR)
-        {
+        if (txQuality == QUALITY_BAD || txQuality == QUALITY_POOR
+                || rxQuality == QUALITY_BAD || rxQuality == QUALITY_POOR) {
             getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_yellow);
             getBinding().tvNetStatus.setText(R.string.net_status_m);
-        }
-        else if(txQuality == QUALITY_VBAD || txQuality == QUALITY_DOWN
+        } else if (txQuality == QUALITY_VBAD || txQuality == QUALITY_DOWN
                 || rxQuality == QUALITY_VBAD || rxQuality == QUALITY_VBAD) {
             getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_red);
             getBinding().tvNetStatus.setText(R.string.net_status_low);
-        }
-        else if(txQuality == QUALITY_EXCELLENT || txQuality == QUALITY_GOOD
+        } else if (txQuality == QUALITY_EXCELLENT || txQuality == QUALITY_GOOD
                 || rxQuality == QUALITY_EXCELLENT || rxQuality == QUALITY_GOOD) {
             getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
             getBinding().tvNetStatus.setText(R.string.net_status_good);
-        }
-        else if(txQuality == QUALITY_UNKNOWN || rxQuality == QUALITY_UNKNOWN){
+        } else if (txQuality == QUALITY_UNKNOWN || rxQuality == QUALITY_UNKNOWN) {
             getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_red);
             getBinding().tvNetStatus.setText(R.string.net_status_un_know);
-        }
-        else {
+        } else {
             getBinding().ivNetStatus.setImageResource(R.drawable.bg_round_green);
             getBinding().tvNetStatus.setText(R.string.net_status_good);
         }
@@ -322,7 +317,7 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_COUNT_DOWN) {
                     getBinding().lrcControlView.setCountDown((Integer) o);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_NETWORK_STATUS) {
-                    NetWorkEvent event = (NetWorkEvent)(o);
+                    NetWorkEvent event = (NetWorkEvent) (o);
                     setNetWorkStatus(event.txQuality, event.rxQuality);
                 } else if (type == KtvConstant.CALLBACK_TYPE_ROOM_LIVING_ON_JOINED_CHORUS) {
                     getBinding().lrcControlView.onMemberJoinedChorus();
@@ -536,6 +531,10 @@ public class RoomLivingActivity extends BaseViewBindingActivity<ActivityRoomLivi
             mRoomSpeakerAdapter.notifyItemChanged(RoomManager.mMine.onSeat);
             roomLivingViewModel.toggleSelfVideo(RoomManager.mMine.isVideoMuted);
             isOpenSelfVideo = false;
+        }
+        if (RoomManager.mMine.isSelfMuted == 0) {
+            RTCManager.getInstance().getRtcEngine().disableAudio();
+            RTCManager.getInstance().getRtcEngine().enableAudio();
         }
     }
 
